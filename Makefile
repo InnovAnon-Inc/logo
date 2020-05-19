@@ -87,12 +87,10 @@ logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_ANIM)
 $(LOGO): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 	chmod -v -w $@
-	#BLEND=10 $(SHELL) -c '$(GENLOGO)'
 #$(LOGO_VISIBLE): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
 $(LOGO_VISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
 	chmod -v -w $@
-	#BLEND=30 $(SHELL) -c '$(GENLOGO)'
 
 $(LOGO_ANIM): logo-rot-0.$(LOGOEXT) $(foreach d,$(shell seq $(NROT)),logo-rot-$(shell echo 'scale=$(SCALE); $(d) * -$(DEG)' | bc).$(LOGOEXT))
 	$(CONVERT) $^ -loop 0 -delay $(FPS) $@
@@ -102,7 +100,6 @@ $(LOGO_ANIM): logo-rot-0.$(LOGOEXT) $(foreach d,$(shell seq $(NROT)),logo-rot-$(
 logo-rot-%.$(LOGOEXT): shiva-rot-%.$(LOGOEXT) kali.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
 	chmod -v -w $@
-	#BLEND=30 $(SHELL) -c '$(GENLOGO)'
 shiva-rot-%.$(LOGOEXT): shiva-small.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -rotate $(patsubst shiva-rot-%.$(LOGOEXT),%,$@) $^ $@
 	chmod -v -w $@
