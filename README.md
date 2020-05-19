@@ -2,7 +2,7 @@
 Download artwork and use it to generate InnovAnon, Inc. (Ministries) branding
 
 ## Usage
-	make -j`nproc`
+	make -j`nproc` -e QUALITY=30
 
 ## Issues
 	<policy domain="resource" name="memory" value="10GiB"/>
