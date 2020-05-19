@@ -18,8 +18,17 @@ jobs:
           name:    Cleanup
           command: make clean
       - store_artifacts:
-          path: logo.png logo-visible.png logo-animated.gif \
-                apple-touch-icon-*.png                      \
-                syslinux-splash.bmp grub-splash.xpm.gz      \
-                favicon*.ico
+          path: logo.png
+      - store_artifacts:
+          path: logo-visible.png
+      - store_artifacts:
+          path: logo-animated.gif
+      - store_artifacts:
+          path: apple-touch-icon-*.png
+      - store_artifacts:
+          path: syslinux-splash.bmp
+      - store_artifacts:
+          path: grub-splash.xpm.gz
+      - store_artifacts:
+          path: favicon.ico
 
