@@ -22,6 +22,7 @@ LOGO=logo.$(LOGOEXT)
 LOGO_VISIBLE=logo-visible.$(LOGOEXT)
 ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
+LOGO_ANIM_SMALL=logo-animated-small.$(ANIMEXT)
 
 WGET=[ -f $@ ] || wget -nc -O $@ `cat $^`
 RM=rm -fv
@@ -56,11 +57,22 @@ boot-splashes: grub-splash.xpm.gz \
                syslinux-splash.bmp
 grub-splash.xpm.gz: grub-splash.xpm
 	pigz -c9 $^ > $@
-grub-splash.xpm: $(LOGO_VISIBLE)
-	$(CONVERT) -resize 640x480 -colors 14 $^ $@
+grub-splash.xpm: boot.$(LOGOEXT)
+	$(CONVERT) -colors 14 $^ $@
+	#$(CONVERT) -resize 640x480^ -gravity center -extent 640x480 -colors 14 $^ $@
 
-syslinux-splash.bmp: $(LOGO_VISIBLE)
-	$(CONVERT) -resize 640x480 -colors 14 -depth 16 $^ $@
+syslinux-splash.bmp: boot.$(LOGOEXT)
+	$(CONVERT) -colors 14 -depth 16 $^ $@
+	#$(CONVERT) -resize 640x480^ -gravity center -extent 640x480 -colors 14 -depth 16 $^ $@
+
+#$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
+boot.$(LOGOEXT): shiva-boot.$(LOGOEXT) kali-boot.$(LOGOEXT)
+	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
+BOOTSZ=-gravity center -extent 640x480
+shiva-boot.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize 640x480\< $(BOOTSZ) $^ $@
+kali-boot.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize 640x480^ $(BOOTSZ) $^ $@
 
 
 
@@ -78,11 +90,11 @@ favicon-%.ico: $(LOGO_VISIBLE)
 
 profiles: github.$(LOGOEXT)
 github.$(LOGOEXT): $(LOGO_VISIBLE)
-	$(RESIZE) -resize 500x500\< -extent 500x500 $< $@
+	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_ANIM)
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
 
 #$(LOGO): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
 $(LOGO): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
@@ -91,6 +103,8 @@ $(LOGO): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 $(LOGO_VISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
 
+$(LOGO_ANIM_SMALL): $(LOGO_ANIM)
+	$(CONVERT) -layers optimize -fuzz 7% $^ $@
 $(LOGO_ANIM): logo-rot-0.$(LOGOEXT) $(foreach d,$(shell seq $(NROT)),logo-rot-$(shell echo 'scale=$(SCALE); $(d) * -$(DEG)' | bc).$(LOGOEXT))
 	$(CONVERT) $^ -loop 0 -delay $(FPS) $@
 
@@ -100,7 +114,7 @@ logo-rot-%.$(LOGOEXT): shiva-rot-%.$(LOGOEXT) kali.$(LOGOEXT)
 shiva-rot-%.$(LOGOEXT): shiva-small.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -rotate $(patsubst shiva-rot-%.$(LOGOEXT),%,$@) $^ $@
 shiva-small.$(LOGOEXT): shiva-2.$(LOGOEXT) kali-small.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat kali-small.dim`\< -extent `cat kali-small.dim` $< $@
+	$(RESIZE) -resize `cat kali-small.dim`\< -extent `cat kali-small.dim` $< $@
 
 kali-small.dim: kali-d.dim
 	D=`cat $<` \
@@ -113,7 +127,7 @@ kali-d.dim: kali.dim
 
 #shiva-resize.$(LOGOEXT): shiva-transparent.$(LOGOEXT) kali.dim
 shiva-resize.$(LOGOEXT): shiva-2.$(LOGOEXT) kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat kali.dim`\< -extent `cat kali.dim` $< $@
+	$(RESIZE) -resize `cat kali.dim`\< -extent `cat kali.dim` $< $@
 kali.dim: kali.$(LOGOEXT)
 	$(IDENTIFY) '%wx%h' $< > $@
 
@@ -134,12 +148,13 @@ shiva.jpg: shiva.url
 distclean: cleaner
 	$(RM) shiva.jpg kali.jpg
 cleaner: clean
-	$(RM) $(LOGO) $(LOGO_VISIBLE) $(LOGO_ANIM)   \
+	$(RM) $(LOGO) $(LOGO_VISIBLE)                \
+	      $(LOGO_ANIM) $(LOGO_ANIM_SMALL)        \
 	      apple-touch-icon-*.png                 \
 	      syslinux-splash.bmp grub-splash.xpm.gz \
 	      favicon*.ico github.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali.$(LOGOEXT) shiva*.$(LOGOEXT)          \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
-	      favicon-*.ico grub-splash.xpm
+	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)
 

@@ -29,6 +29,8 @@ jobs:
       - store_artifacts:
           path: logo-animated.gif
       - store_artifacts:
+          path: logo-animated-small.gif
+      - store_artifacts:
           path: apple-touch-icon-120x120.png
       - store_artifacts:
           path: apple-touch-icon-152x152.png
