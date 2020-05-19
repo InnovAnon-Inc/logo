@@ -24,7 +24,13 @@ jobs:
       - store_artifacts:
           path: logo-animated.gif
       - store_artifacts:
-          path: apple-touch-icon-*.png
+          path: apple-touch-icon-120x120.png
+      - store_artifacts:
+          path: apple-touch-icon-152x152.png
+      - store_artifacts:
+          path: apple-touch-icon-60x60.png
+      - store_artifacts:
+          path: apple-touch-icon-76x76.png
       - store_artifacts:
           path: syslinux-splash.bmp
       - store_artifacts:
