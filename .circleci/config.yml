@@ -63,4 +63,6 @@ jobs:
           path: linkedin-banner.png
       - store_artifacts:
           path: youtube-banner.png
+      - store_artifacts:
+          path: soundcloud-banner.png
 

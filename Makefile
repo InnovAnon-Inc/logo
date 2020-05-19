@@ -91,7 +91,7 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT)
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
 
@@ -124,6 +124,16 @@ shiva-linkedin-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -resize $(LINKEDINSZ)\< $(LINKEDINARGS) $^ $@
 kali-linkedin-banner.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(LINKEDINSZ)^ $(LINKEDINARGS) $^ $@
+
+#$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
+soundcloud-banner.$(LOGOEXT): shiva-soundcloud-banner.$(LOGOEXT) kali-soundcloud-banner.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+SOUNDCLOUDSZ=2480x520
+SOUNDCLOUDARGS=-gravity center -extent $(SOUNDCLOUDSZ)
+shiva-soundcloud-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(SOUNDCLOUDSZ)\< $(SOUNDCLOUDARGS) $^ $@
+kali-soundcloud-banner.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(SOUNDCLOUDSZ)^ $(SOUNDCLOUDARGS) $^ $@
 
 
 
@@ -190,7 +200,8 @@ cleaner: clean
 	      favicon*.ico github.$(LOGOEXT)             \
 	      youtube-banner.$(LOGOEXT)                  \
 	      twitter-banner.$(LOGOEXT)                  \
-	      linkedin-banner.$(LOGOEXT)
+	      linkedin-banner.$(LOGOEXT)                 \
+	      soundcloud-banner.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
