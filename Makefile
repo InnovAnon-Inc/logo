@@ -43,7 +43,7 @@ favicon.ico: favicon-8x8.ico   \
              favicon-32x32.ico \
              favicon-64x64.ico
 	$(CONVERT) $^ $@
-favicon-%.ico: $(LOGO_ANIM)
+favicon-%.ico: $(LOGO_VISIBLE)
 	DIM=$(patsubst favicon-%.ico,%,$@) $(SHELL) -c \
 	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
 
@@ -100,6 +100,6 @@ cleaner: clean
 	$(RM) syslinux-splash.bmp grub-splash.xpm.gz
 	$(RM) favicon*.ico
 clean:
-	$(RM) kali.dim kali.$(LOGOEXT) shiva*.$(LOGOEXT) logo-rot-*.$(LOGOEXT) shiva-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT)
+	$(RM) kali.dim kali.$(LOGOEXT) shiva*.$(LOGOEXT) logo-rot-*.$(LOGOEXT) shiva-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) favicon-*.ico
 	$(RM) grub-splash.xpm
 
