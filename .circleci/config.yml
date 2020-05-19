@@ -6,6 +6,12 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - run:
+          name:    Update
+          command: sudo apt update
+      - run:
+          name:    Upgrade
+          command: sudo apt full-upgrade -qy
+      - run:
           name:    Installing Binary Calculator and Parallel Gzip
           command: sudo apt install -qy bc pigz
       - run:
@@ -15,7 +21,7 @@ jobs:
           command: sudo sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
       - run:
           name:    Increasing Memory Limit for ImageMagick
-          command: sudo sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\14GiB\1#' /etc/ImageMagick-6/policy.xml
+          command: sudo sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\12GiB\1#' /etc/ImageMagick-6/policy.xml
       - run:
           name:    Making the Project
           #command: make -j`nproc`
