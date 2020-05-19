@@ -35,6 +35,8 @@ jobs:
       - store_artifacts:
           path: logo-visible.png
       - store_artifacts:
+          path: logo-midvisible.png
+      - store_artifacts:
           path: logo-animated.gif
       - store_artifacts:
           path: logo-animated-small.gif
@@ -54,4 +56,10 @@ jobs:
           path: favicon.ico
       - store_artifacts:
           path: github.png
+      - store_artifacts:
+          path: twitter-banner.png
+      - store_artifacts:
+          path: linkedin-banner.png
+      - store_artifacts:
+          path: youtube-banner.png
 
