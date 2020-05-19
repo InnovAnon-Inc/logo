@@ -91,7 +91,7 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT)
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
 
@@ -112,6 +112,18 @@ shiva-twitter-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -resize $(TWITTERSZ)\< $(TWITTERARGS) $^ $@
 kali-twitter-banner.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(TWITTERSZ)^ $(TWITTERARGS) $^ $@
+
+#$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
+linkedin-banner.$(LOGOEXT): shiva-linkedin-banner.$(LOGOEXT) kali-linkedin-banner.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+#LINKEDINSZ=1128x191
+#LINKEDINSZ=1536x768
+LINKEDINSZ=1584x396
+LINKEDINARGS=-gravity center -extent $(LINKEDINSZ)
+shiva-linkedin-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(LINKEDINSZ)\< $(LINKEDINARGS) $^ $@
+kali-linkedin-banner.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(LINKEDINSZ)^ $(LINKEDINARGS) $^ $@
 
 
 
@@ -177,7 +189,8 @@ cleaner: clean
 	      syslinux-splash.bmp grub-splash.xpm.gz     \
 	      favicon*.ico github.$(LOGOEXT)             \
 	      youtube-banner.$(LOGOEXT)                  \
-	      twitter-banner.$(LOGOEXT)
+	      twitter-banner.$(LOGOEXT)                  \
+	      linkedin-banner.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
