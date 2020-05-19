@@ -139,7 +139,7 @@ $(LOGO_MIDVISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
 $(LOGO_ANIM_SMALL): $(LOGO_ANIM)
-	$(CONVERT) -layers optimize -fuzz 7% $^ $@
+	convert -quality $$(($(QUALITY) < 10 ? $(QUALITY) : 10)) -resize 256x256^ -gravity center -extent 256x256 -layers optimize -fuzz 7% $^ $@
 $(LOGO_ANIM): logo-rot-0.$(LOGOEXT) $(foreach d,$(shell seq $(NROT)),logo-rot-$(shell echo 'scale=$(SCALE); $(d) * -$(DEG)' | bc).$(LOGOEXT))
 	$(CONVERT) $^ -loop 0 -delay $(FPS) $@
 
