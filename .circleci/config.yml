@@ -18,10 +18,12 @@ jobs:
           command: sudo sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\14GiB\1#' /etc/ImageMagick-6/policy.xml
       - run:
           name:    Making the Project
-          command: make -j`nproc`
+          #command: make -j`nproc`
+          command: make -j2
       - run:
           name:    Cleanup
-          command: make -j`nproc` clean
+          #command: make -j`nproc` clean
+          command: make -j2 clean
       - store_artifacts:
           path: logo.png
       - store_artifacts:
