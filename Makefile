@@ -24,7 +24,7 @@ LOGO_VISIBLE=logo-visible.$(LOGOEXT)
 LOGO_MIDVISIBLE=logo-midvisible.$(LOGOEXT)
 ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
-LOGO_ANIM_SMALL=logo-animated-small.$(ANIMEXT)
+LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
 
 WGET=[ -f $@ ] || wget -nc -O $@ `cat $^`
 RM=rm -fv

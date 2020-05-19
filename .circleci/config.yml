@@ -3,6 +3,7 @@ jobs:
   build:
     docker: 
       - image: circleci/node:4.8.2 # the primary container, where your job's commands are run
+    #parallelism: 2
     steps:
       - checkout # check out the code in the project directory
       - run:
@@ -39,7 +40,7 @@ jobs:
       - store_artifacts:
           path: logo-animated.gif
       - store_artifacts:
-          path: logo-animated-small.gif
+          path: logo-small-animated.gif
       - store_artifacts:
           path: apple-touch-icon-120x120.png
       - store_artifacts:
