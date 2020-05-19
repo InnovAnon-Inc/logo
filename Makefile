@@ -6,6 +6,7 @@
 #VISIBLE=0.9
 #INVISIBLE=0.6
 VISIBLE=40
+MIDVISIBLE=30
 INVISIBLE=10
 
 TRANCE=7.83
@@ -20,6 +21,7 @@ QUAL=-quality $(QUALITY)
 LOGOEXT=png
 LOGO=logo.$(LOGOEXT)
 LOGO_VISIBLE=logo-visible.$(LOGOEXT)
+LOGO_MIDVISIBLE=logo-midvisible.$(LOGOEXT)
 ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
 LOGO_ANIM_SMALL=logo-animated-small.$(ANIMEXT)
@@ -67,7 +69,7 @@ syslinux-splash.bmp: boot.$(LOGOEXT)
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 boot.$(LOGOEXT): shiva-boot.$(LOGOEXT) kali-boot.$(LOGOEXT)
-	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 BOOTSZ=-gravity center -extent 640x480
 shiva-boot.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -resize 640x480\< $(BOOTSZ) $^ $@
@@ -82,7 +84,7 @@ favicon.ico: favicon-8x8.ico   \
              favicon-32x32.ico \
              favicon-64x64.ico
 	$(CONVERT) $^ $@
-favicon-%.ico: $(LOGO_VISIBLE)
+favicon-%.ico: $(LOGO_MIDVISIBLE)
 	DIM=$(patsubst favicon-%.ico,%,$@) $(SHELL) -c \
 	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
 
@@ -94,7 +96,7 @@ github.$(LOGOEXT): $(LOGO_VISIBLE)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
 
 #$(LOGO): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
 $(LOGO): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
@@ -102,6 +104,8 @@ $(LOGO): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 #$(LOGO_VISIBLE): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
 $(LOGO_VISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
+$(LOGO_MIDVISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
 $(LOGO_ANIM_SMALL): $(LOGO_ANIM)
 	$(CONVERT) -layers optimize -fuzz 7% $^ $@
@@ -148,10 +152,10 @@ shiva.jpg: shiva.url
 distclean: cleaner
 	$(RM) shiva.jpg kali.jpg
 cleaner: clean
-	$(RM) $(LOGO) $(LOGO_VISIBLE)                \
-	      $(LOGO_ANIM) $(LOGO_ANIM_SMALL)        \
-	      apple-touch-icon-*.png                 \
-	      syslinux-splash.bmp grub-splash.xpm.gz \
+	$(RM) $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) \
+	      $(LOGO_ANIM) $(LOGO_ANIM_SMALL)            \
+	      apple-touch-icon-*.png                     \
+	      syslinux-splash.bmp grub-splash.xpm.gz     \
 	      favicon*.ico github.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali.$(LOGOEXT) shiva*.$(LOGOEXT)          \
