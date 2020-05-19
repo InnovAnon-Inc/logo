@@ -14,6 +14,8 @@ FPS=20
 DEG=$(shell  echo 'scale=$(SCALE); 360 * $(TRANCE) / $(FPS)' | bc)
 NROT=$(shell echo 'scale=$(SCALE); 360 * $(TRANCE) / $(DEG)' | bc)
 
+QUALITY=-quality 10
+
 LOGOEXT=png
 LOGO=logo.$(LOGOEXT)
 LOGO_VISIBLE=logo-visible.$(LOGOEXT)
@@ -24,10 +26,10 @@ WGET=[ -f $@ ] || wget -nc -O $@ `cat $^`
 RM=rm -fv
 IDENTIFY=identify -ping -format
 
-CONVERT=convert -quality 100
+CONVERT=convert $(QUALITY)
 TRANSPARENT=-fuzz 90% -transparent white
 RESIZE=$(CONVERT) -gravity center $(TRANSPARENT)
-GENLOGO=composite -quality 100 -blend $$BLEND -gravity center $^ $@
+GENLOGO=composite $(QUALITY) -blend $$BLEND -gravity center $^ $@
 #GENLOGO=$(CONVERT) $^ -gravity center             \
 #        \( -clone 0 -alpha extract \)             \
 #        \( -clone 1 -clone 2 -alpha off           \
