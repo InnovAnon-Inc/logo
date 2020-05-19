@@ -70,11 +70,12 @@ syslinux-splash.bmp: boot.$(LOGOEXT)
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 boot.$(LOGOEXT): shiva-boot.$(LOGOEXT) kali-boot.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
-BOOTSZ=-gravity center -extent 640x480
+BOOTSZ=640x480
+BOOTARGS=-gravity center -extent $(BOOTSZ)
 shiva-boot.$(LOGOEXT): shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize 640x480\< $(BOOTSZ) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(BOOTSZ)\< $(BOOTARGS) $^ $@
 kali-boot.$(LOGOEXT): kali.$(LOGOEXT)
-	$(CONVERT) -resize 640x480^ $(BOOTSZ) $^ $@
+	$(CONVERT) -resize $(BOOTSZ)^ $(BOOTARGS) $^ $@
 
 
 
@@ -90,9 +91,19 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT)
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
+
+#$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
+youtube-banner.$(LOGOEXT): shiva-youtube-banner.$(LOGOEXT) kali-youtube-banner.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+YTSZ=2560x1440
+YTARGS=-gravity center -extent $(YTSZ)
+shiva-youtube-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(YTSZ)\< $(YTARGS) $^ $@
+kali-youtube-banner.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(YTSZ)^ $(YTARGS) $^ $@
 
 
 
