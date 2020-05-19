@@ -7,3 +7,5 @@ jobs:
       - checkout # check out the code in the project directory
       - run: sudo apt install -qy bc pigz
       - run: make
+      - run: make clean
+
