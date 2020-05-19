@@ -91,19 +91,27 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT)
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 youtube-banner.$(LOGOEXT): shiva-youtube-banner.$(LOGOEXT) kali-youtube-banner.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
-YTSZ=2560x1440
-YTARGS=-gravity center -extent $(YTSZ)
 shiva-youtube-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(YTSZ)\< $(YTARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize 1546x423\< -gravity center -extent 1546x423 $^ $@
 kali-youtube-banner.$(LOGOEXT): kali.$(LOGOEXT)
-	$(CONVERT) -resize $(YTSZ)^ $(YTARGS) $^ $@
+	$(CONVERT) -resize 2560x1440^ -gravity center -extent 2560x1440 $^ $@
+
+#$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
+twitter-banner.$(LOGOEXT): shiva-twitter-banner.$(LOGOEXT) kali-twitter-banner.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+TWITTERSZ=1263x421
+TWITTERARGS=-gravity center -extent $(TWITTERSZ)
+shiva-twitter-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(TWITTERSZ)\< $(TWITTERARGS) $^ $@
+kali-twitter-banner.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(TWITTERSZ)^ $(TWITTERARGS) $^ $@
 
 
 
@@ -167,9 +175,11 @@ cleaner: clean
 	      $(LOGO_ANIM) $(LOGO_ANIM_SMALL)            \
 	      apple-touch-icon-*.png                     \
 	      syslinux-splash.bmp grub-splash.xpm.gz     \
-	      favicon*.ico github.$(LOGOEXT)
+	      favicon*.ico github.$(LOGOEXT)             \
+	      youtube-banner.$(LOGOEXT)                  \
+	      twitter-banner.$(LOGOEXT)
 clean:
-	$(RM) *.dim kali.$(LOGOEXT) shiva*.$(LOGOEXT)          \
+	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
 	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)
 
