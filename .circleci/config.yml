@@ -9,8 +9,13 @@ jobs:
           name:    Installing Binary Calculator and Parallel Gzip
           command: sudo apt install -qy bc pigz
       - run:
-          name:    Increasing Resource Limits for ImageMagick
-          command: sudo sed -i 's#^\( *<policy domain="resource" name="\(disk\|memory\)" value="\).*\("/>\)$#\110GiB\3#' /etc/ImageMagick-6/policy.xml
+          #name:    Increasing Resource Limits for ImageMagick
+          #command: sudo sed -i 's#^\( *<policy domain="resource" name="\(disk\|memory\)" value="\).*\("/>\)$#\110GiB\3#' /etc/ImageMagick-6/policy.xml
+          name:    Increasing Disk Cache Limit for ImageMagick
+          command: sudo sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
+      - run:
+          name:    Increasing Memory Limit for ImageMagick
+          command: sudo sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\14GiB\1#' /etc/ImageMagick-6/policy.xml
       - run:
           name:    Making the Project
           command: make -j`nproc`
@@ -37,4 +42,6 @@ jobs:
           path: grub-splash.xpm.gz
       - store_artifacts:
           path: favicon.ico
+      - store_artifacts:
+          path: github.png
 

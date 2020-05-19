@@ -1,5 +1,5 @@
 .PHONY: all distclean cleaner clean \
-        logos apple-touch-icons boot-splashes favicons
+        logos apple-touch-icons boot-splashes favicons profiles
 .PRECIOUS:  shiva-rot-*.png
 .SECONDARY: shiva-rot-*.png
 
@@ -39,7 +39,7 @@ GENLOGO=composite $(QUAL) -blend $$BLEND -gravity center $^ $@
 #           -evaluate multiply $$BLEND +channel \) \
 #        -delete 1,2 -compose overlay -composite $@
 
-all: logos apple-touch-icons boot-splashes favicons
+all: logos apple-touch-icons boot-splashes favicons profiles
 
 
 
@@ -73,6 +73,12 @@ favicon.ico: favicon-8x8.ico   \
 favicon-%.ico: $(LOGO_VISIBLE)
 	DIM=$(patsubst favicon-%.ico,%,$@) $(SHELL) -c \
 	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
+
+
+
+profiles: github.$(LOGOEXT)
+github.$(LOGOEXT): $(LOGO_VISIBLE)
+	$(RESIZE) -resize 500x500\< -extent 500x500 $< $@
 
 
 
@@ -131,7 +137,7 @@ cleaner: clean
 	$(RM) $(LOGO) $(LOGO_VISIBLE) $(LOGO_ANIM)   \
 	      apple-touch-icon-*.png                 \
 	      syslinux-splash.bmp grub-splash.xpm.gz \
-	      favicon*.ico
+	      favicon*.ico github.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali.$(LOGOEXT) shiva*.$(LOGOEXT)          \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
