@@ -21,7 +21,7 @@ jobs:
           command: sudo sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
       - run:
           name:    Increasing Memory Limit for ImageMagick
-          command: sudo sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\12GiB\1#' /etc/ImageMagick-6/policy.xml
+          command: sudo sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
       - run:
           name:    Making the Project
           #command: make -j`nproc`
