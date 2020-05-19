@@ -1,6 +1,9 @@
 *.jpg
 *.png
 *.bmp
+*.ico
 *.gif
 *.xpm*
 *.dim
+
+.*.swp
