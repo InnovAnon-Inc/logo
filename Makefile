@@ -8,7 +8,7 @@ LOGO_VISIBLE=logo-visible.$(LOGOEXT)
 ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
 
-WGET=wget -nc -O $@
+WGET=[ -f $@ ] || wget -nc -O $@ `cat $^`
 CONVERT=convert -quality 100
 RM=rm -fv
 
@@ -69,8 +69,12 @@ $(LOGO_ANIM): $(foreach d,$(shell seq $(NROT)),logo-rot-$(shell echo 'scale=$(SC
 
 logo-rot-%.$(LOGOEXT): shiva-rot-%.$(LOGOEXT) kali.$(LOGOEXT)
 	BLEND=30 $(SHELL) -c '$(GENLOGO)'
-shiva-rot-%.$(LOGOEXT): shiva-resize.$(LOGOEXT)
+shiva-rot-%.$(LOGOEXT): shiva-small.$(LOGOEXT)
 	$(CONVERT) -rotate $(patsubst shiva-rot-%.$(LOGOEXT),%,$@) $^ $@
+shiva-small.$(LOGOEXT): shiva-2.$(LOGOEXT) kali-small.dim
+	$(CONVERT) $< -resize `cat kali.dim`\< -gravity center -extent `cat kali.dim` -fuzz 90% -transparent white $@
+kali-small.dim: kali.$(LOGOEXT) shiva-2.$(LOGOEXT)
+	
 
 #shiva-resize.$(LOGOEXT): shiva-transparent.$(LOGOEXT) kali.dim
 shiva-resize.$(LOGOEXT): shiva-2.$(LOGOEXT) kali.dim
@@ -85,10 +89,10 @@ shiva-2.$(LOGOEXT): shiva.$(LOGOEXT)
 
 %.$(LOGOEXT): %.jpg
 	$(CONVERT) $^ $@
-kali.jpg:
-	$(WGET) http://www.kalibhakti.com/wp-content/uploads/2012/09/kali-yantra-effects.jpg
-shiva.jpg:
-	$(WGET) https://clipartstation.com/wp-content/uploads/2018/10/natraj-clipart-7.jpg
+kali.jpg: kali.url
+	[ -f $@ ] || $(WGET) `cat $^`
+shiva.jpg: shiva.url
+	[ -f $@ ] || $(WGET) `cat $^`
 
 
 
@@ -100,6 +104,6 @@ cleaner: clean
 	$(RM) syslinux-splash.bmp grub-splash.xpm.gz
 	$(RM) favicon*.ico
 clean:
-	$(RM) kali.dim kali.$(LOGOEXT) shiva*.$(LOGOEXT) logo-rot-*.$(LOGOEXT) shiva-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) favicon-*.ico
+	$(RM) *.dim kali.$(LOGOEXT) shiva*.$(LOGOEXT) logo-rot-*.$(LOGOEXT) shiva-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) favicon-*.ico
 	$(RM) grub-splash.xpm
 
