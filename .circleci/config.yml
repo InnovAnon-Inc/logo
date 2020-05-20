@@ -7,18 +7,18 @@ jobs:
     #parallelism: 2
     steps:
       - checkout # check out the code in the project directory
-      - run:
-          name:    Update
-          #command: sudo apt update
-          command: apt update
-      - run:
-          name:    Upgrade
-          #command: sudo apt full-upgrade -qy
-          command: apt full-upgrade -qy
+      #- run:
+      #    name:    Update
+      #    #command: sudo apt update
+      #    command: apt update
+      #- run:
+      #    name:    Upgrade
+      #    #command: sudo apt full-upgrade -qy
+      #    command: apt full-upgrade -qy
       - run:
           name:    Installing Binary Calculator and Parallel Gzip
           #command: sudo apt install -qy bc pigz
-          command: apt install -qy bc pigz
+          command: apt install -qy bc pigz imagemagick
       - run:
           #name:    Increasing Resource Limits for ImageMagick
           #command: sudo sed -i 's#^\( *<policy domain="resource" name="\(disk\|memory\)" value="\).*\("/>\)$#\110GiB\3#' /etc/ImageMagick-6/policy.xml
