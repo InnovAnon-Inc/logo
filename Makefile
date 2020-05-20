@@ -135,9 +135,19 @@ shiva-soundcloud-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
 kali-soundcloud-banner.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(SOUNDCLOUDSZ)^ $(SOUNDCLOUDARGS) $^ $@
 
+#$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
+doxygen-logo.$(LOGOEXT): shiva-doxygen-logo.$(LOGOEXT) kali-doxygen-logo.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+DOXYGENSZ=55x200
+DOXYGENARGS=-gravity center -extent $(DOXYGENSZ)
+shiva-doxygen-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(DOXYGENSZ)\< $(DOXYGENARGS) $^ $@
+kali-doxygen-logo.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(DOXYGENSZ)^ $(DOXYGENARGS) $^ $@
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
+
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT)
 
 #$(LOGO): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
 $(LOGO): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
@@ -201,7 +211,8 @@ cleaner: clean
 	      youtube-banner.$(LOGOEXT)                  \
 	      twitter-banner.$(LOGOEXT)                  \
 	      linkedin-banner.$(LOGOEXT)                 \
-	      soundcloud-banner.$(LOGOEXT)
+	      soundcloud-banner.$(LOGOEXT)               \
+	      doxygen-logo.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
