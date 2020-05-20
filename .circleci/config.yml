@@ -4,7 +4,7 @@ jobs:
     docker: 
       #- image: circleci/node:4.8.2 # the primary container, where your job's commands are run
       - image: innovanon/poobuntu:latest
-    #parallelism: 2
+    parallelism: 4
     steps:
       - checkout # check out the code in the project directory
       #- run:
@@ -18,7 +18,7 @@ jobs:
       - run:
           name:    Installing Binary Calculator and Parallel Gzip
           #command: sudo apt install -qy bc pigz
-          command: apt install -qy bc pigz imagemagick
+          command: apt-fast install -qy bc pigz imagemagick
       - run:
           #name:    Increasing Resource Limits for ImageMagick
           #command: sudo sed -i 's#^\( *<policy domain="resource" name="\(disk\|memory\)" value="\).*\("/>\)$#\110GiB\3#' /etc/ImageMagick-6/policy.xml
