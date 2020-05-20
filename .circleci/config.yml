@@ -18,7 +18,7 @@ jobs:
       - run:
           name:    Installing Binary Calculator and Parallel Gzip
           #command: sudo apt install -qy bc pigz
-          command: apt-fast install -qy bc pigz imagemagick
+          command: apt-fast install -qy bc pigz imagemagick make
       - run:
           #name:    Increasing Resource Limits for ImageMagick
           #command: sudo sed -i 's#^\( *<policy domain="resource" name="\(disk\|memory\)" value="\).*\("/>\)$#\110GiB\3#' /etc/ImageMagick-6/policy.xml
