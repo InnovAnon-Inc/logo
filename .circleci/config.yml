@@ -9,6 +9,10 @@ jobs:
       - run:
           command: |
             set -exu
+            echo -e "$GPG_KEY" | gpg --import
+      - run:
+          command: |
+            set -exu
             apt-fast install bc imagemagick
             sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
             sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
@@ -28,6 +32,10 @@ jobs:
             make -j2 clean
             rm -v Makefile *.url LICENSE README.md .gitignore
             rm -rf .git .circleci
+
+            for k in * ; do
+              gpg --local-user 53F31F9711F06089\! --sign $k
+            done
 
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} v${VERSION} .
 
