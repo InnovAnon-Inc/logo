@@ -1,0 +1,111 @@
+version: 2.1
+jobs:
+  build:
+    docker: 
+      #- image: circleci/node:4.8.2 # the primary container, where your job's commands are run
+      - image: innovanon/poobuntu-ci:latest
+    parallelism: 4
+    steps:
+      #- checkout # check out the code in the project directory
+      #- run:
+      #    name:    Update
+      #    #command: sudo apt update
+      #    command: apt update
+      #- run:
+      #    name:    Upgrade
+      #    #command: sudo apt full-upgrade -qy
+      #    command: apt full-upgrade -qy
+      - run:
+          name: Check out the code in the project directory
+          command: |
+            set -exu
+            git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
+            cd ${CIRCLE_PROJECT_REPONAME}
+            PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
+
+            [ ! -z "`git tag`" ] || git tag v1.0
+            git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' || git tag v1.0
+            revisioncount=`git log --oneline | wc -l`
+            cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
+            VERSION="$cleanversion.$revisioncount"
+      #- run:
+      #    name: Import signing key
+      #    command: |
+      #      set -exu
+      #      echo -e "$GPG_KEY" | gpg --import
+      #- run:
+      #    name:    Installing Binary Calculator and Parallel Gzip
+      #    #command: sudo apt install -qy bc pigz
+      #    #command: apt-fast install -qy bc imagemagick make wget
+      #    command: |
+      #      set -exu
+            apt-fast install bc imagemagick
+      #- run:
+      #    #name:    Increasing Resource Limits for ImageMagick
+      #    #command: sudo sed -i 's#^\( *<policy domain="resource" name="\(disk\|memory\)" value="\).*\("/>\)$#\110GiB\3#' /etc/ImageMagick-6/policy.xml
+      #    name:    Increasing Disk Cache Limit for ImageMagick
+      #    #command: sudo sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
+      #    command: |
+      #      set -exu
+            sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
+      #- run:
+      #    name:    Increasing Memory Limit for ImageMagick
+      #    #command: sudo sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
+      #    command: |
+      #      set -exu
+            sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
+      #- run:
+      #    name:    Making the Project
+      #    #command: make -j`nproc`
+      #    command: |
+      #      set -exu
+            make -j2
+      #- run:
+      #    name:    Cleanup
+      #    #command: make -j`nproc` clean
+      #    command: |
+      #      set -exu
+            make -j2 clean
+            rm -v Makefile *.url LICENSE README.md .gitignore
+            rm -rf .git .circleci
+      #- run:
+      #    name:    Release Artifacts
+      #    command: |
+      #      set -exu
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} v${VERSION}
+            
+      #- store_artifacts:
+      #    path: logo.png
+      #- store_artifacts:
+      #    path: logo-visible.png
+      #- store_artifacts:
+      #    path: logo-midvisible.png
+      #- store_artifacts:
+      #    path: logo-animated.gif
+      #- store_artifacts:
+      #    path: logo-small-animated.gif
+      #- store_artifacts:
+      #    path: apple-touch-icon-120x120.png
+      #- store_artifacts:
+      #    path: apple-touch-icon-152x152.png
+      #- store_artifacts:
+      #    path: apple-touch-icon-60x60.png
+      #- store_artifacts:
+      #    path: apple-touch-icon-76x76.png
+      #- store_artifacts:
+      #    path: syslinux-splash.bmp
+      #- store_artifacts:
+      #    path: grub-splash.xpm.gz
+      #- store_artifacts:
+      #    path: favicon.ico
+      #- store_artifacts:
+      #    path: github.png
+      #- store_artifacts:
+      #    path: twitter-banner.png
+      #- store_artifacts:
+      #    path: linkedin-banner.png
+      #- store_artifacts:
+      #    path: youtube-banner.png
+      #- store_artifacts:
+      #    path: soundcloud-banner.png
+
