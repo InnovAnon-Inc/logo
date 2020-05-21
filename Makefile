@@ -17,6 +17,7 @@ NROT=$(shell echo 'scale=$(SCALE); 360 * $(TRANCE) / $(DEG)' | bc)
 
 QUALITY?=100
 QUAL=-quality $(QUALITY)
+LOWQUALITY=convert -quality $$(($(QUALITY) < 10 ? $(QUALITY) : 10)) -fuzz 7%
 
 LOGOEXT=png
 LOGO=logo.$(LOGOEXT)
@@ -147,7 +148,18 @@ kali-doxygen-logo.$(LOGOEXT): kali.$(LOGOEXT)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT)
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg
+
+gpg-logo.jpg: tmp-gpg-logo.$(LOGOEXT)
+	$(LOWQUALITY) $^ $@
+tmp-gpg-logo.$(LOGOEXT): shiva-gpg-logo.$(LOGOEXT) kali-gpg-logo.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+GPGSZ=240x288
+GPGARGS=-gravity center -extent $(GPGSZ)
+shiva-gpg-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(GPGSZ)\< $(GPGARGS) $^ $@
+kali-gpg-logo.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(GPGSZ)^ $(GPGARGS) $^ $@
 
 #$(LOGO): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
 $(LOGO): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
@@ -159,7 +171,7 @@ $(LOGO_MIDVISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
 $(LOGO_ANIM_SMALL): $(LOGO_ANIM)
-	convert -quality $$(($(QUALITY) < 10 ? $(QUALITY) : 10)) -resize 256x256^ -gravity center -extent 256x256 -layers optimize -fuzz 7% $^ $@
+	$(LOWQUALITY) -resize 256x256^ -gravity center -extent 256x256 -layers optimize $^ $@
 $(LOGO_ANIM): logo-rot-0.$(LOGOEXT) $(foreach d,$(shell seq $(NROT)),logo-rot-$(shell echo 'scale=$(SCALE); $(d) * -$(DEG)' | bc).$(LOGOEXT))
 	$(CONVERT) $^ -loop 0 -delay $(FPS) $@
 
@@ -212,9 +224,11 @@ cleaner: clean
 	      twitter-banner.$(LOGOEXT)                  \
 	      linkedin-banner.$(LOGOEXT)                 \
 	      soundcloud-banner.$(LOGOEXT)               \
-	      doxygen-logo.$(LOGOEXT)
+	      doxygen-logo.$(LOGOEXT)                    \
+              gpg-logo.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
-	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)
+	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)   \
+              tmp*.$(LOGOEXT)
 
