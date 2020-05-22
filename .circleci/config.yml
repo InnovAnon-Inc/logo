@@ -33,7 +33,7 @@ jobs:
             make -j2 clean
             #rm -v Makefile *.url LICENSE README.md
             rm -v Makefile *.url LICENSE README.md .gitignore
-            rm -rf .git .circleci
+            #rm -rf .git .circleci
 
             for k in * ; do
               gpg --local-user 53F31F9711F06089\! --sign $k
@@ -48,7 +48,9 @@ jobs:
             cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
             VERSION="$cleanversion.$revisioncount"
 
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} .
+            mkdir -v tmp
+            mv -v * tmp
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} tmp
 
             #git remote set-url origin https://github.com:${GITHUB_TOKEN}@github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
             #git tag v$VERSION
