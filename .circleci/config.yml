@@ -23,32 +23,33 @@ jobs:
 
             [ ! -z "`git tag`" ] || git tag v1.0
             git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' || git tag v1.0
-            revisioncount=`git log --oneline | wc -l`
+            revisioncount=$(expr `git log --oneline | wc -l` + 1)
             cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
             VERSION="$cleanversion.$revisioncount"
 
             make -j2
 
             make -j2 clean
-            rm -v Makefile *.url LICENSE README.md
-            #rm -v Makefile *.url LICENSE README.md .gitignore
-            #rm -rf .git .circleci
+            #rm -v Makefile *.url LICENSE README.md
+            rm -v Makefile *.url LICENSE README.md .gitignore
+            rm -rf .git .circleci
 
             for k in * ; do
               gpg --local-user 53F31F9711F06089\! --sign $k
             done
 
-            #ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} .
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} .
 
-            git tag v$VERSION
-            git push
-            git push --tags
-
-            github-release release --security-token $GITHUB_TOKEN --user $CIRCLE_PROJECT_USERNAME --repo $CIRCLE_PROJECT_REPONAME \
-              --tag v$VERSION
-
-            for k in * ; do
-            github-release upload  --security-token $GITHUB_TOKEN --user $CIRCLE_PROJECT_USERNAME --repo $CIRCLE_PROJECT_REPONAME \
-              --tag v$VERSION --name $k --file $k
-            done
+            #git remote set-url origin https://github.com:${GITHUB_TOKEN}@github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
+            #git tag v$VERSION
+            #git push
+            #git push --tags
+            #
+            #github-release release --security-token $GITHUB_TOKEN --user $CIRCLE_PROJECT_USERNAME --repo $CIRCLE_PROJECT_REPONAME \
+            #  --tag v$VERSION
+            #
+            #for k in * ; do
+            #github-release upload  --security-token $GITHUB_TOKEN --user $CIRCLE_PROJECT_USERNAME --repo $CIRCLE_PROJECT_REPONAME \
+            #  --tag v$VERSION --name $k --file $k
+            #done
 
