@@ -23,7 +23,8 @@ jobs:
 
             [ ! -z "`git tag`" ] || git tag v1.0
             git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' || git tag v1.0
-            revisioncount=$(expr `git log --oneline | wc -l` + 1)
+            #revisioncount=$(expr `git log --oneline | wc -l` + 1)
+            revisioncount=`git log --oneline | wc -l`
             cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
             VERSION="$cleanversion.$revisioncount"
 
