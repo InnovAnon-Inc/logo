@@ -55,12 +55,12 @@ jobs:
             #done
 workflows:
   version: 2.1
-    approval:
-      jobs:
-        - build
-        - hold:
-            type: approval
-        - deploy:
-            requires:
-              - hold
+  approval:
+    jobs:
+      - build
+      - hold:
+          type: approval
+      - deploy:
+          requires:
+            - hold
 
