@@ -30,8 +30,9 @@ jobs:
             make -j2
 
             make -j2 clean
-            rm -v Makefile *.url LICENSE README.md .gitignore
-            rm -rf .git .circleci
+            rm -v Makefile *.url LICENSE README.md
+            #rm -v Makefile *.url LICENSE README.md .gitignore
+            #rm -rf .git .circleci
 
             for k in * ; do
               gpg --local-user 53F31F9711F06089\! --sign $k
