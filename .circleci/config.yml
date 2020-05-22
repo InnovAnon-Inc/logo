@@ -38,15 +38,7 @@ jobs:
             for k in * ; do
               gpg --local-user 53F31F9711F06089\! --sign $k
             done
-  #deploy:
-  #  docker: 
-  #    #- image: circleci/node:4.8.2 # the primary container, where your job's commands are run
-  #    - image: innovanon/poobuntu-ci:latest
-  #  #parallelism: 4
-  #  steps:
-  #    - run:
-  #        command: |
-  #          cd ${CIRCLE_PROJECT_REPONAME}
+
             PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
 
             [ ! -z "`git tag`" ] || git tag v1.0
