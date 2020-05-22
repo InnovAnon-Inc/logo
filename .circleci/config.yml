@@ -53,4 +53,14 @@ jobs:
             #github-release upload  --security-token $GITHUB_TOKEN --user $CIRCLE_PROJECT_USERNAME --repo $CIRCLE_PROJECT_REPONAME \
             #  --tag v$VERSION --name $k --file $k
             #done
+workflows:
+  version: 2.1
+    approval:
+      jobs:
+        - build
+        - hold:
+            type: approval
+        - deploy:
+            requires:
+              - hold
 
