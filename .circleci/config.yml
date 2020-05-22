@@ -37,5 +37,17 @@ jobs:
               gpg --local-user 53F31F9711F06089\! --sign $k
             done
 
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} .
+            #ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} .
+
+            git tag v$VERSION
+            git push
+            git push --tags
+
+            github-release release --security-token $GITHUB_TOKEN --user $CIRCLE_PROJECT_USERNAME --repo $CIRCLE_PROJECT_REPONAME \
+              --tag v$VERSION
+
+            for k in * ; do
+            github-release upload  --security-token $GITHUB_TOKEN --user $CIRCLE_PROJECT_USERNAME --repo $CIRCLE_PROJECT_REPONAME \
+              --tag v$VERSION --name $k --file $k
+            done
 
