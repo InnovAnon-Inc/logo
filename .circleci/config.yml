@@ -19,14 +19,14 @@ jobs:
 
             git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
             cd ${CIRCLE_PROJECT_REPONAME}
-            PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
-
-            [ ! -z "`git tag`" ] || git tag v1.0
-            git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' || git tag v1.0
-            #revisioncount=$(expr `git log --oneline | wc -l` + 1)
-            revisioncount=`git log --oneline | wc -l`
-            cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
-            VERSION="$cleanversion.$revisioncount"
+            #PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
+            #
+            #[ ! -z "`git tag`" ] || git tag v1.0
+            #git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' || git tag v1.0
+            ##revisioncount=$(expr `git log --oneline | wc -l` + 1)
+            #revisioncount=`git log --oneline | wc -l`
+            #cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
+            #VERSION="$cleanversion.$revisioncount"
 
             make -j2
 
@@ -38,6 +38,23 @@ jobs:
             for k in * ; do
               gpg --local-user 53F31F9711F06089\! --sign $k
             done
+  deploy:
+    docker: 
+      #- image: circleci/node:4.8.2 # the primary container, where your job's commands are run
+      - image: innovanon/poobuntu-ci:latest
+    parallelism: 4
+    steps:
+      - run:
+          command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
+            PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
+
+            [ ! -z "`git tag`" ] || git tag v1.0
+            git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' || git tag v1.0
+            #revisioncount=$(expr `git log --oneline | wc -l` + 1)
+            revisioncount=`git log --oneline | wc -l`
+            cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
+            VERSION="$cleanversion.$revisioncount"
 
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} .
 
@@ -55,9 +72,11 @@ jobs:
             #done
 workflows:
   version: 2.1
-  approval:
+  commit:
     jobs:
       - build
+  approval:
+    jobs:
       - hold:
           type: approval
       #- deploy:
