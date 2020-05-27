@@ -1,5 +1,5 @@
 .PHONY: all distclean cleaner clean \
-        logos apple-touch-icons boot-splashes favicons profiles
+        logos apple-touch-icons boot-splashes favicons profiles wallpapers
 .PRECIOUS:  shiva-rot-*.png
 .SECONDARY: shiva-rot-*.png
 
@@ -43,7 +43,7 @@ GENLOGO=composite $(QUAL) -blend $$BLEND -gravity center $^ $@
 #           -evaluate multiply $$BLEND +channel \) \
 #        -delete 1,2 -compose overlay -composite $@
 
-all: logos apple-touch-icons boot-splashes favicons profiles
+all: logos apple-touch-icons boot-splashes favicons profiles wallpapers
 
 
 
@@ -92,9 +92,11 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT)
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
+avatar.$(LOGOEXT): $(LOGO_VISIBLE)
+	$(CONVERT) -resize 80x80^ -gravity center -extent 80x80 $^ $@
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 youtube-banner.$(LOGOEXT): shiva-youtube-banner.$(LOGOEXT) kali-youtube-banner.$(LOGOEXT)
@@ -146,6 +148,66 @@ shiva-doxygen-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
 kali-doxygen-logo.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(DOXYGENSZ)^ $(DOXYGENARGS) $^ $@
 
+small-thumbnail.$(LOGOEXT): shiva-small-thumbnail.$(LOGOEXT) kali-small-thumbnail.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+THUMBNAIL_SMALLSZ=150x112
+THUMBNAIL_SMALLARGS=-gravity center -extent $(THUMBNAIL_SMALLSZ)
+shiva-small-thumbnail.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_SMALLSZ)\> $(THUMBNAIL_SMALLARGS) $^ $@
+	#$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_SMALLSZ)\< $(THUMBNAIL_SMALLARGS) $^ $@
+kali-small-thumbnail.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(THUMBNAIL_SMALLSZ)^ $(THUMBNAIL_SMALLARGS) $^ $@
+
+large-thumbnail.$(LOGOEXT): shiva-large-thumbnail.$(LOGOEXT) kali-large-thumbnail.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+THUMBNAIL_LARGESZ=320x240
+THUMBNAIL_LARGEARGS=-gravity center -extent $(THUMBNAIL_LARGESZ)
+shiva-large-thumbnail.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_LARGESZ)\> $(THUMBNAIL_LARGEARGS) $^ $@
+	#$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_LARGESZ)\< $(THUMBNAIL_LARGEARGS) $^ $@
+kali-large-thumbnail.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(THUMBNAIL_LARGESZ)^ $(THUMBNAIL_LARGEARGS) $^ $@
+
+
+
+wallpapers: wallpaper1.$(LOGOEXT) wallpaper2.$(LOGOEXT) wallpaper3.$(LOGOEXT) wallpaper4.$(LOGOEXT)
+
+wallpaper1.$(LOGOEXT): shiva-wallpaper1.$(LOGOEXT) kali-wallpaper1.$(LOGOEXT)
+	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+WALLPAPER1SZ=800x600
+WALLPAPER1ARGS=-gravity center -extent $(WALLPAPER1SZ)
+shiva-wallpaper1.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER1SZ)\< $(WALLPAPER1ARGS) $^ $@
+kali-wallpaper1.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(WALLPAPER1SZ)^ $(WALLPAPER1ARGS) $^ $@
+
+wallpaper2.$(LOGOEXT): shiva-wallpaper2.$(LOGOEXT) kali-wallpaper2.$(LOGOEXT)
+	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+WALLPAPER2SZ=1024x768
+WALLPAPER2ARGS=-gravity center -extent $(WALLPAPER2SZ)
+shiva-wallpaper2.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER2SZ)\< $(WALLPAPER2ARGS) $^ $@
+kali-wallpaper2.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(WALLPAPER2SZ)^ $(WALLPAPER2ARGS) $^ $@
+
+wallpaper3.$(LOGOEXT): shiva-wallpaper3.$(LOGOEXT) kali-wallpaper3.$(LOGOEXT)
+	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+WALLPAPER3SZ=1280x1024
+WALLPAPER3ARGS=-gravity center -extent $(WALLPAPER3SZ)
+shiva-wallpaper3.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER3SZ)\< $(WALLPAPER3ARGS) $^ $@
+kali-wallpaper3.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(WALLPAPER3SZ)^ $(WALLPAPER3ARGS) $^ $@
+
+wallpaper4.$(LOGOEXT): shiva-wallpaper4.$(LOGOEXT) kali-wallpaper4.$(LOGOEXT)
+	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+WALLPAPER4SZ=1600x1200
+WALLPAPER4ARGS=-gravity center -extent $(WALLPAPER4SZ)
+shiva-wallpaper4.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER4SZ)\< $(WALLPAPER4ARGS) $^ $@
+kali-wallpaper4.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(WALLPAPER4SZ)^ $(WALLPAPER4ARGS) $^ $@
+
 
 
 logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg
@@ -157,7 +219,8 @@ tmp-gpg-logo.$(LOGOEXT): shiva-gpg-logo.$(LOGOEXT) kali-gpg-logo.$(LOGOEXT)
 GPGSZ=240x288
 GPGARGS=-gravity center -extent $(GPGSZ)
 shiva-gpg-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(GPGSZ)\< $(GPGARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(GPGSZ)\> $(GPGARGS) $^ $@
+	#$(CONVERT) $(TRANSPARENT) -resize $(GPGSZ)\< $(GPGARGS) $^ $@
 kali-gpg-logo.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(GPGSZ)^ $(GPGARGS) $^ $@
 
@@ -225,7 +288,10 @@ cleaner: clean
 	      linkedin-banner.$(LOGOEXT)                 \
 	      soundcloud-banner.$(LOGOEXT)               \
 	      doxygen-logo.$(LOGOEXT)                    \
-              gpg-logo.$(LOGOEXT)
+              gpg-logo.jpg avatar.$(LOGOEXT)             \
+	      small-thumbnail.$(LOGOEXT)                 \
+	      large-thumbnail.$(LOGOEXT)                 \
+	      wallpaper*.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
