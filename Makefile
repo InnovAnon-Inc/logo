@@ -17,7 +17,9 @@ NROT=$(shell echo 'scale=$(SCALE); 360 * $(TRANCE) / $(DEG)' | bc)
 
 QUALITY?=100
 QUAL=-quality $(QUALITY)
-LOWQUALITY=convert -quality $$(($(QUALITY) < 10 ? $(QUALITY) : 10)) -fuzz 7%
+LOWQUALITYARGS=-quality $$(($(QUALITY) < 10 ? $(QUALITY) : 10)) -fuzz  7%
+LOWQUALITY=convert $(LOWQUALITYARGS)
+STRIPEQUALITY=-quality  $$(($(QUALITY) < 5  ? $(QUALITY) : 5))  -fuzz 19%
 
 LOGOEXT=png
 LOGO=logo.$(LOGOEXT)
@@ -34,7 +36,8 @@ IDENTIFY=identify -ping -format
 CONVERT=convert $(QUAL)
 TRANSPARENT=-fuzz 90% -transparent white
 RESIZE=$(CONVERT) -gravity center $(TRANSPARENT)
-GENLOGO=composite $(QUAL) -blend $$BLEND -gravity center $^ $@
+GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
+GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #GENLOGO=$(CONVERT) $^ -gravity center             \
 #        \( -clone 0 -alpha extract \)             \
 #        \( -clone 1 -clone 2 -alpha off           \
@@ -92,11 +95,13 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT) stripe.jpg stripe-icon.$(LOGOEXT) patreon.$(LOGOEXT) patreon-banner.$(LOGOEXT)
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
 avatar.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 80x80^ -gravity center -extent 80x80 $^ $@
+patreon.$(LOGOEXT): $(LOGO_VISIBLE)
+	$(CONVERT) -resize 256x256^ -gravity center -extent 256x256 $^ $@
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 youtube-banner.$(LOGOEXT): shiva-youtube-banner.$(LOGOEXT) kali-youtube-banner.$(LOGOEXT)
@@ -105,6 +110,13 @@ shiva-youtube-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -resize 1546x423\< -gravity center -extent 1546x423 $^ $@
 kali-youtube-banner.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize 2560x1440^ -gravity center -extent 2560x1440 $^ $@
+
+patreon-banner.$(LOGOEXT): shiva-patreon-banner.$(LOGOEXT) kali-patreon-banner.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+shiva-patreon-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize 1600x400\< -gravity center -extent 1600x400 $^ $@
+kali-patreon-banner.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize 1600x400^ -gravity center -extent 1600x400 $^ $@
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 twitter-banner.$(LOGOEXT): shiva-twitter-banner.$(LOGOEXT) kali-twitter-banner.$(LOGOEXT)
@@ -167,6 +179,18 @@ shiva-large-thumbnail.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	#$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_LARGESZ)\< $(THUMBNAIL_LARGEARGS) $^ $@
 kali-large-thumbnail.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(THUMBNAIL_LARGESZ)^ $(THUMBNAIL_LARGEARGS) $^ $@
+
+stripe.jpg: shiva-stripe.$(LOGOEXT) kali-stripe.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c 'composite $(GENLOGOARGS)' $(STRIPEQUALITY)
+STRIPESZ=1000x2000
+STRIPEARGS=-gravity center -extent $(STRIPESZ)
+shiva-stripe.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(STRIPESZ)\< $(STRIPEARGS) $^ $@
+kali-stripe.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(STRIPESZ)^ $(STRIPEARGS) $^ $@
+
+stripe-icon.$(LOGOEXT): $(LOGO_VISIBLE)
+	$(CONVERT) -resize 128x128^ -gravity center -extent 128x128 $^ $@
 
 
 
@@ -291,7 +315,8 @@ cleaner: clean
               gpg-logo.jpg avatar.$(LOGOEXT)             \
 	      small-thumbnail.$(LOGOEXT)                 \
 	      large-thumbnail.$(LOGOEXT)                 \
-	      wallpaper*.$(LOGOEXT)
+	      wallpaper*.$(LOGOEXT) stripe.jpg           \
+	      stripe-icon.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \

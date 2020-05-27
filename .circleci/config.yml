@@ -32,7 +32,7 @@ jobs:
 
             make -j2 clean
             #rm -v Makefile *.url LICENSE README.md
-            rm -v Makefile *.url LICENSE README.md .gitignore
+            rm -v Makefile *.url LICENSE README.md .gitignore shiva.jpg kali.jpg
             #rm -rf .git .circleci
 
             for k in * ; do
