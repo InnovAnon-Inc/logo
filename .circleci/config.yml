@@ -13,7 +13,7 @@ jobs:
       - run:
           command: |
             set -exu
-            apt-fast install bc imagemagick
+            apt-fast install bc imagemagick caca-utils
             sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
             sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
 

@@ -234,7 +234,7 @@ kali-wallpaper4.$(LOGOEXT): kali.$(LOGOEXT)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt
 
 gpg-logo.jpg: tmp-gpg-logo.$(LOGOEXT)
 	$(LOWQUALITY) $^ $@
@@ -269,6 +269,9 @@ shiva-rot-%.$(LOGOEXT): shiva-small.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -rotate $(patsubst shiva-rot-%.$(LOGOEXT),%,$@) $^ $@
 shiva-small.$(LOGOEXT): shiva-2.$(LOGOEXT) kali-small.dim
 	$(RESIZE) -resize `cat kali-small.dim`\< -extent `cat kali-small.dim` $< $@
+
+logo.txt: logo-visible.$(LOGOEXT)
+	img2txt $^ > $@
 
 kali-small.dim: kali-d.dim
 	D=`cat $<` \
@@ -316,7 +319,7 @@ cleaner: clean
 	      small-thumbnail.$(LOGOEXT)                 \
 	      large-thumbnail.$(LOGOEXT)                 \
 	      wallpaper*.$(LOGOEXT) stripe.jpg           \
-	      stripe-icon.$(LOGOEXT)
+	      stripe-icon.$(LOGOEXT) logo.txt
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
