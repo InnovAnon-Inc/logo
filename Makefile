@@ -29,7 +29,8 @@ ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
 LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
 
-WGET=[ -f $@ ] || pcurl `cat $^` $@
+WGET=[ -f $@ ] || curl -o $@ `cat $^`
+#WGET=[ -f $@ ] || pcurl `cat $^` $@
 RM=rm -fv
 IDENTIFY=identify -ping -format
 
