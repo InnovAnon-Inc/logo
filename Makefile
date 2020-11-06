@@ -235,7 +235,17 @@ kali-wallpaper4.$(LOGOEXT): kali.$(LOGOEXT)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT)
+
+sphinx-logo.$(LOGOEXT): shiva-sphinx-logo.$(LOGOEXT) kali-sphinx-logo.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+SPHINX_LOGOSZ=200x200
+SPHINX_LOGOARGS=-gravity center -extent $(SPHINX_LOGOSZ)
+shiva-sphinx-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(SPHINX_LOGOSZ)\> $(SPHINX_LOGOARGS) $^ $@
+	#$(CONVERT) $(TRANSPARENT) -resize $(SPHINX_LOGOSZ)\< $(SPHINX_LOGOARGS) $^ $@
+kali-sphinx-logo.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(SPHINX_LOGOSZ)^ $(SPHINX_LOGOARGS) $^ $@
 
 gpg-logo.jpg: tmp-gpg-logo.$(LOGOEXT)
 	$(LOWQUALITY) $^ $@
@@ -317,6 +327,7 @@ cleaner: clean
 	      soundcloud-banner.$(LOGOEXT)               \
 	      doxygen-logo.$(LOGOEXT)                    \
               gpg-logo.jpg avatar.$(LOGOEXT)             \
+	      sphinx-logo.$(LOGOEXT)                     \
 	      small-thumbnail.$(LOGOEXT)                 \
 	      large-thumbnail.$(LOGOEXT)                 \
 	      wallpaper*.$(LOGOEXT) stripe.jpg           \
