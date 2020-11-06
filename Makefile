@@ -235,7 +235,7 @@ kali-wallpaper4.$(LOGOEXT): kali.$(LOGOEXT)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT)
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT)
 
 sphinx-logo.$(LOGOEXT): shiva-sphinx-logo.$(LOGOEXT) kali-sphinx-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -246,6 +246,16 @@ shiva-sphinx-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	#$(CONVERT) $(TRANSPARENT) -resize $(SPHINX_LOGOSZ)\< $(SPHINX_LOGOARGS) $^ $@
 kali-sphinx-logo.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(SPHINX_LOGOSZ)^ $(SPHINX_LOGOARGS) $^ $@
+
+stackoverflow-logo.$(LOGOEXT): shiva-stackoverflow-logo.$(LOGOEXT) kali-stackoverflow-logo.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+STACKOVERFLOW_LOGOSZ=2893x2893
+STACKOVERFLOW_LOGOARGS=-gravity center -extent $(STACKOVERFLOW_LOGOSZ)
+shiva-stackoverflow-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(STACKOVERFLOW_LOGOSZ)\> $(STACKOVERFLOW_LOGOARGS) $^ $@
+	#$(CONVERT) $(TRANSPARENT) -resize $(STACKOVERFLOW_LOGOSZ)\< $(STACKOVERFLOW_LOGOARGS) $^ $@
+kali-stackoverflow-logo.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(STACKOVERFLOW_LOGOSZ)^ $(STACKOVERFLOW_LOGOARGS) $^ $@
 
 gpg-logo.jpg: tmp-gpg-logo.$(LOGOEXT)
 	$(LOWQUALITY) $^ $@
@@ -328,6 +338,7 @@ cleaner: clean
 	      doxygen-logo.$(LOGOEXT)                    \
               gpg-logo.jpg avatar.$(LOGOEXT)             \
 	      sphinx-logo.$(LOGOEXT)                     \
+	      stackoverflow-logo.$(LOGOEXT)              \
 	      small-thumbnail.$(LOGOEXT)                 \
 	      large-thumbnail.$(LOGOEXT)                 \
 	      wallpaper*.$(LOGOEXT) stripe.jpg           \
