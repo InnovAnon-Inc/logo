@@ -249,6 +249,7 @@ kali-sphinx-logo.$(LOGOEXT): kali.$(LOGOEXT)
 
 stackoverflow-logo.$(LOGOEXT): shiva-stackoverflow-logo.$(LOGOEXT) kali-stackoverflow-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+#STACKOVERFLOW_LOGOSZ=2560x2560
 STACKOVERFLOW_LOGOSZ=2560x2560
 STACKOVERFLOW_LOGOARGS=-gravity center -extent $(STACKOVERFLOW_LOGOSZ)
 shiva-stackoverflow-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
