@@ -96,7 +96,8 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT) stripe.jpg stripe-icon.$(LOGOEXT) patreon.$(LOGOEXT) patreon-banner.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT) stripe.jpg stripe-icon.$(LOGOEXT) patreon.$(LOGOEXT) patreon-banner.$(LOGOEXT) youtube-watermark-logo.$(LOGOEXT)
+
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
 avatar.$(LOGOEXT): $(LOGO_VISIBLE)
@@ -206,6 +207,15 @@ shiva-wallpaper1.$(LOGOEXT): shiva-2.$(LOGOEXT)
 kali-wallpaper1.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(WALLPAPER1SZ)^ $(WALLPAPER1ARGS) $^ $@
 
+dtube-banner.$(LOGOEXT): shiva-dtube-banner.$(LOGOEXT) kali-dtube-banner.$(LOGOEXT)
+	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+DTUBE_BANNERSZ=1900x265
+DTUBE_BANNERARGS=-gravity center -extent $(DTUBE_BANNERSZ)
+shiva-dtube-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(DTUBE_BANNERSZ)\< $(DTUBE_BANNERARGS) $^ $@
+kali-dtube-banner.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(DTUBE_BANNERSZ)^ $(DTUBE_BANNERARGS) $^ $@
+
 wallpaper2.$(LOGOEXT): shiva-wallpaper2.$(LOGOEXT) kali-wallpaper2.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 WALLPAPER2SZ=1024x768
@@ -235,7 +245,7 @@ kali-wallpaper4.$(LOGOEXT): kali.$(LOGOEXT)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT)
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT) google-cover-logo.$(LOGOEXT)
 
 sphinx-logo.$(LOGOEXT): shiva-sphinx-logo.$(LOGOEXT) kali-sphinx-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -257,6 +267,28 @@ shiva-stackoverflow-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -resize $(STACKOVERFLOW_LOGOSZ)\< $(STACKOVERFLOW_LOGOARGS) $^ $@
 kali-stackoverflow-logo.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(STACKOVERFLOW_LOGOSZ)^ $(STACKOVERFLOW_LOGOARGS) $^ $@
+
+google-cover-logo.$(LOGOEXT): shiva-google-cover-logo.$(LOGOEXT) kali-google-cover-logo.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+#GOOGLE_COVER_LOGOSZ=2560x2560
+GOOGLE_COVER_LOGOSZ=2120x1192
+GOOGLE_COVER_LOGOARGS=-gravity center -extent $(GOOGLE_COVER_LOGOSZ)
+shiva-google-cover-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	#$(CONVERT) $(TRANSPARENT) -resize $(GOOGLE_COVER_LOGOSZ)\> $(GOOGLE_COVER_LOGOARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(GOOGLE_COVER_LOGOSZ)\< $(GOOGLE_COVER_LOGOARGS) $^ $@
+kali-google-cover-logo.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(GOOGLE_COVER_LOGOSZ)^ $(GOOGLE_COVER_LOGOARGS) $^ $@
+
+youtube-watermark-logo.$(LOGOEXT): shiva-youtube-watermark-logo.$(LOGOEXT) kali-youtube-watermark-logo.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+#YOUTUBE_WATERMARK_LOGOSZ=2560x2560
+YOUTUBE_WATERMARK_LOGOSZ=150x150
+YOUTUBE_WATERMARK_LOGOARGS=-gravity center -extent $(YOUTUBE_WATERMARK_LOGOSZ)
+shiva-youtube-watermark-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	#$(CONVERT) $(TRANSPARENT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)\> $(YOUTUBE_WATERMARK_LOGOARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)\> $(YOUTUBE_WATERMARK_LOGOARGS) $^ $@
+kali-youtube-watermark-logo.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)^ $(YOUTUBE_WATERMARK_LOGOARGS) $^ $@
 
 gpg-logo.jpg: tmp-gpg-logo.$(LOGOEXT)
 	$(LOWQUALITY) $^ $@
@@ -343,7 +375,10 @@ cleaner: clean
 	      small-thumbnail.$(LOGOEXT)                 \
 	      large-thumbnail.$(LOGOEXT)                 \
 	      wallpaper*.$(LOGOEXT) stripe.jpg           \
-	      stripe-icon.$(LOGOEXT) logo.txt
+	      stripe-icon.$(LOGOEXT) logo.txt            \
+	      google-cover-logo.$(LOGOEXT)               \
+	      youtube-watermark-logo.$(LOGOEXT)          \
+	      dtube-banner.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
