@@ -13,7 +13,7 @@ jobs:
       - run:
           command: |
             set -exu
-            apt-fast install bc imagemagick caca-utils stegosuite zpaq lrzip
+            apt-fast install bc imagemagick caca-utils stegosuite zpaq lrzip makeself
             sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
             sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
 
@@ -28,13 +28,24 @@ jobs:
             #cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
             #VERSION="$cleanversion.$revisioncount"
             
-            tar cf archive.tar --exclude archive.tar .
+            rm -v LICENSE README.md .gitignore
+            #tar cf archive.tar --exclude archive.tar .
+            tar cf -                  \
+              --exclude archive.tar   \
+              --exclude .circleci     \
+              --exclude-vcs           \
+              --exclude-vcs-ignores . |
+            ( mkdir -v /tmp/archive &&
+              cd       /tmp/archive &&
+              tar xf   - )
+            makeself --nocomp /tmp/archive archive.tar quine \
+            env RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
 
-            make -j2
+            RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
 
-            make -j2 clean
+            make -j$(nproc) clean
             #rm -v Makefile *.url LICENSE README.md
-            rm -v Makefile *.url LICENSE README.md .gitignore shiva.jpg kali.jpg stego.mk archive.*
+            rm -v Makefile *.url shiva.jpg kali.jpg stego.mk archive.*
             #rm -rf .git .circleci
 
             for k in * ; do
