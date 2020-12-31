@@ -64,11 +64,13 @@ jobs:
       - run:
           name: Build Project
           command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
             make -j$(nproc)
       - run:
           name: Release Project
           command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
             make -j$(nproc) clean
             #rm -v Makefile *.url LICENSE README.md
             rm -v Makefile *.url shiva.jpg kali.jpg stego.mk archive.* .gitignore
