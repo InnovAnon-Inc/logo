@@ -439,6 +439,7 @@ shiva.jpg: shiva.url
 
 distclean: cleaner
 	$(RM) shiva.jpg kali.jpg
+	$(MAKE) -f stego.mk distclean
 cleaner: clean
 	$(RM) $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) \
 	      $(LOGO_ANIM) $(LOGO_ANIM_SMALL)            \
@@ -465,10 +466,14 @@ cleaner: clean
 	      opencollective-banner.$(LOGOEXT)           \
 	      bitbucket.$(LOGOEXT)                       \
 	      bitbucket-banner.$(LOGOEXT)                \
-	      hashvault-banner.$(LOGOEXT)
+	      hashvault-banner.$(LOGOEXT)                \
+	      patreon.$(LOGOEXT)                         \
+	      patreon-banner.$(LOGOEXT)
+	$(MAKE) -f stego.mk cleaner
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
 	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)   \
               tmp*.$(LOGOEXT)
+	$(MAKE) -f stego.mk clean
 
