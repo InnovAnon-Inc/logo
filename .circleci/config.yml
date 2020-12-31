@@ -13,7 +13,7 @@ jobs:
       - run:
           command: |
             set -exu
-            apt-fast install bc imagemagick caca-utils
+            apt-fast install bc imagemagick caca-utils stegosuite zpaq lrzip
             sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#' /etc/ImageMagick-6/policy.xml
             sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
 
@@ -27,12 +27,14 @@ jobs:
             #revisioncount=`git log --oneline | wc -l`
             #cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
             #VERSION="$cleanversion.$revisioncount"
+            
+            tar cf archive.tar --exclude archive.tar .
 
             make -j2
 
             make -j2 clean
             #rm -v Makefile *.url LICENSE README.md
-            rm -v Makefile *.url LICENSE README.md .gitignore shiva.jpg kali.jpg
+            rm -v Makefile *.url LICENSE README.md .gitignore shiva.jpg kali.jpg stego.mk archive.*
             #rm -rf .git .circleci
 
             for k in * ; do

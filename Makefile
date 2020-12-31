@@ -48,6 +48,7 @@ GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #        -delete 1,2 -compose overlay -composite $@
 
 all: logos apple-touch-icons boot-splashes favicons profiles wallpapers
+	[ ! -f archive.tar ] || $(MAKE) -f stego.mk
 
 
 
