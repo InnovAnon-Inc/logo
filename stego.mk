@@ -10,8 +10,10 @@
 # optional
 #PW=-k$(PW)
 
-# mandatory
-#RECP=<gpg encryp-to recipient>
+# optional
+ifdef RECP
+RECP := --encrypt -r $(RECP)
+endif
 
 #VISIBLE=0.9
 #INVISIBLE=0.6
@@ -38,7 +40,7 @@ LOGO_VISIBLE=logo-visible.$(LOGOEXT)
 LOGO_MIDVISIBLE=logo-midvisible.$(LOGOEXT)
 ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
-LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
+LOGO_ANIM_SMALL=logo-stego-animated.$(ANIMEXT)
 
 WGET=[ -f $@ ] || curl -o $@ `cat $^`
 #WGET=[ -f $@ ] || pcurl `cat $^` $@
@@ -109,16 +111,24 @@ parts: archive.tlrzpq.gpg
 	split -d -n $(NROT) $< $<.part
 %.gpg: %
 	rm -vf $@
-	gpg --encrypt --sign -r $(RECP) -o $@ $<
+	gpg --sign $(RECP) -o $@ $<
+#gpg --encrypt --sign -r $(RECP) -o $@ $<
 %.tlrzpq: %.tar.lrz.zpaq
 	cp -v $^ $@
 %.zpaq: %
 	zpaq a $@ $^ -m511.7
 %.lrz: %
 	lrzip -fUno $@ $^
-# TODO strip exe, metadata
 %.tar: %
-	tar vcf $@ $^
+	tar vcf $@ \
+	  --absolute-names \
+	  --group=nogroup  \
+	  --mtime=0        \
+	  --no-acls        \
+	  --numeric-owner  \
+	  --owner=nobody   \
+	  --sort=name      \
+	  --sparse $^
 
 # delete downloaded files, too
 distclean: cleaner

@@ -1,7 +1,10 @@
 .PHONY: all distclean cleaner clean \
-        logos apple-touch-icons boot-splashes favicons profiles wallpapers
+        logos apple-touch-icons boot-splashes favicons profiles wallpapers release stego test
 .PRECIOUS:  shiva-rot-*.png
 .SECONDARY: shiva-rot-*.png
+
+# infinite recursion, optional
+LOL ?= 0
 
 #VISIBLE=0.9
 #INVISIBLE=0.6
@@ -48,7 +51,33 @@ GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #        -delete 1,2 -compose overlay -composite $@
 
 all: logos apple-touch-icons boot-splashes favicons profiles wallpapers
-	[ ! -f archive.tar ] || $(MAKE) -f stego.mk
+	[ ! -f archive.tar ] || $(MAKE) stego
+#test: logo-stego-animated.$(LOGOEXT)
+test:
+	# extract frames
+	convert -coalesce logo-stego-animated.$(ANIMEXT) logo-stego-rot-%02d.$(LOGOEXT)
+	# de-stego
+	for k in `seq -w 0 1 $$(($(NROT) - 1))` ; do \
+	  stegosuite -x -f archive.tlrzpq.gpg.part$(D) logo-stego-rot-%02d.$(LOGOEXT) || exit 2 ; \
+	done
+	# unsplit
+	cat `ls -v archive.tlrzpq.gpg.part*` > archive.tlrzpq.gpg
+	# decrypt/verify
+	gpg --decrypt -o archive.tlrzpq --yes  archive.tlrzpq.gpg
+	# extract
+	mv -v            archive.tlrzpq archive.tar.lrz.zpaq
+	zpaq x                          archive.tar.lrz.zpaq -f
+	lrunzip -f                      archive.tar.lrz
+	# run
+	chmod -v +x                     archive.tar
+	./archive.tar
+release:
+	LOL=$(LOL) ./quine.sh
+	$(MAKE) stego
+	[ $(LOL) -eq 0 ] || $(MAKE) test
+#logo-stego-animated.$(LOGOEXT): stego
+stego:
+	$(MAKE) -f stego.mk
 
 
 
@@ -296,7 +325,8 @@ kali-wallpaper4.$(LOGOEXT): kali.$(LOGOEXT)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT) google-cover-logo.$(LOGOEXT) # $(LOGO_ANIM)
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT) google-cover-logo.$(LOGOEXT)
+# $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
 
 sphinx-logo.$(LOGOEXT): shiva-sphinx-logo.$(LOGOEXT) kali-sphinx-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'

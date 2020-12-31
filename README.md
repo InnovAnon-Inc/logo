@@ -1,12 +1,35 @@
 # logo
 Download artwork and use it to generate InnovAnon, Inc. (Ministries) branding
 
+## Specifications
+	- background: Kali Yantra,    for credits see  kali.url
+	- foreground: Shiva Tandavam, for credits see shiva.url
+	- steganographic executable
+
 ## Usage
-	make -j`nproc` -e QUALITY=30
+	- normal usage: build all variants
+	  ```bash
+	  make [-j`nproc`] [-e QUALITY=30]
+	  ```
+	- stego usage              (archive.tar             ==> logo-stego-animated.gif):
+	  ```bash
+	  [RECP=InnovAnon-Inc@protonmail.com] make [-j`nproc`] stego
+	  ```
+	- extract steganologo data (logo-stego-animated.gif ==> archive.tar):
+	  ```bash
+	  make test
+	  ```
+	- steganologo-quine:
+	  steganographically embedded, cryptographically signed, highly compressed self-extracting archive that rebuilds itself.
+	  ```bash
+	  [LOL=1] make release
+	  ```
 
 ## Issues
+	```html
 	<policy domain="resource" name="memory" value="4GiB"/>
 	<policy domain="resource" name="disk"   value="10GiB"/>
+	```
 [reference](http://www.newbienote.com/2019/07/imagemagick-memory-issue-convert-cache.html)
 [reference](https://p-s.co.nz/wordpress/imagemagick-cache-resources-exhausted-resolved/)
 ----------

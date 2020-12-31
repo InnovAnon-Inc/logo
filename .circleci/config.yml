@@ -34,14 +34,24 @@ jobs:
               --exclude archive.tar   \
               --exclude .circleci     \
               --exclude-vcs           \
-              --exclude-vcs-ignores . |
+              --exclude-vcs-ignores   \
+              --absolute-names        \
+              --group=nogroup         \
+              --mtime=0               \
+              --no-acls               \
+              --numeric-owner         \
+              --owner=nobody          \
+              --sort=name             \
+              --sparse              . |
             ( mkdir -v /tmp/archive &&
               cd       /tmp/archive &&
               tar xf   - )
             makeself --nocomp /tmp/archive archive.tar quine \
-            env RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
+            make -j$(nproc)
+            #env RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
 
-            RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
+            #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
+            make -j$(nproc)
 
             make -j$(nproc) clean
             #rm -v Makefile *.url LICENSE README.md
