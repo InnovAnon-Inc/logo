@@ -87,6 +87,10 @@ jobs:
             #github-release upload  --security-token $GITHUB_TOKEN --user $CIRCLE_PROJECT_USERNAME --repo $CIRCLE_PROJECT_REPONAME \
             #  --tag v$VERSION --name $k --file $k
             #done
+
+            git clone --depth=1 --recursive https://github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git
+            cd                                                               InnovAnon-Inc.github.io
+
 workflows:
   version: 2.1
   commit:
