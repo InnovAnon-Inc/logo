@@ -113,6 +113,7 @@ jobs:
             cp -v /tmp/logo.png    assets/images/logo.png
             cp -v /tmp/logo.png           images/3600x3600.png
             cp -v /tmp/logo.png    assets/images/3600x3600.png
+            cp -v /tmp/logo-stego-animated.gif ./logo.gif
             git add .
             git commit -m '[CircleCI] updated corporate logo'
             git push

@@ -26,6 +26,7 @@ Download artwork and use it to generate InnovAnon, Inc. (Ministries) branding
     ```
 
 ## Issues
+increase resource limits in /etc/ImageMagick-6/policy.xml:
   ```html
   <policy domain="resource" name="memory" value="4GiB"/>
   <policy domain="resource" name="disk"   value="10GiB"/>
