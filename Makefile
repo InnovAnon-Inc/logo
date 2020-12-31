@@ -35,7 +35,7 @@ RM=rm -fv
 IDENTIFY=identify -ping -format
 
 CONVERT=convert $(QUAL)
-TRANSPARENT=-fuzz 90% -transparent white
+TRANSPARENT=-fuzz 90% -transparent white -background 'rgba(0,0,0,0)'
 RESIZE=$(CONVERT) -gravity center $(TRANSPARENT)
 GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
 GENLOGO=composite $(QUAL) $(GENLOGOARGS)
@@ -96,7 +96,7 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT) stripe.jpg stripe-icon.$(LOGOEXT) patreon.$(LOGOEXT) patreon-banner.$(LOGOEXT) youtube-watermark-logo.$(LOGOEXT) dtube-banner.$(LOGOEXT) tumblr-banner.$(LOGOEXT) gab-banner.$(LOGOEXT) gab.$(LOGOEXT) opencollective-banner.$(LOGOEXT) bitbucket.$(LOGOEXT) bitbucket-banner.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT) stripe.jpg stripe-icon.$(LOGOEXT) patreon.$(LOGOEXT) patreon-banner.$(LOGOEXT) youtube-watermark-logo.$(LOGOEXT) dtube-banner.$(LOGOEXT) tumblr-banner.$(LOGOEXT) gab-banner.$(LOGOEXT) gab.$(LOGOEXT) opencollective-banner.$(LOGOEXT) bitbucket.$(LOGOEXT) bitbucket-banner.$(LOGOEXT) hashvault-banner.$(LOGOEXT)
 
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
@@ -133,6 +133,15 @@ shiva-twitter-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -resize $(TWITTERSZ)\< $(TWITTERARGS) $^ $@
 kali-twitter-banner.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(TWITTERSZ)^ $(TWITTERARGS) $^ $@
+
+hashvault-banner.$(LOGOEXT): shiva-hashvault-banner.$(LOGOEXT) kali-hashvault-banner.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+HASHVAULTSZ=1133x378
+HASHVAULTARGS=-gravity center -extent $(HASHVAULTSZ)
+shiva-hashvault-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(HASHVAULTSZ)\< $(HASHVAULTARGS) $^ $@
+kali-hashvault-banner.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(HASHVAULTSZ)^ $(HASHVAULTARGS) $^ $@
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 linkedin-banner.$(LOGOEXT): shiva-linkedin-banner.$(LOGOEXT) kali-linkedin-banner.$(LOGOEXT)
@@ -286,7 +295,7 @@ kali-wallpaper4.$(LOGOEXT): kali.$(LOGOEXT)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT) google-cover-logo.$(LOGOEXT)
+logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) $(LOGO_ANIM_SMALL) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT) google-cover-logo.$(LOGOEXT) $(LOGO_ANIM)
 
 sphinx-logo.$(LOGOEXT): shiva-sphinx-logo.$(LOGOEXT) kali-sphinx-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -424,7 +433,8 @@ cleaner: clean
 	      gab-banner.$(LOGOEXT) gab.$(LOGOEXT)       \
 	      opencollective-banner.$(LOGOEXT)           \
 	      bitbucket.$(LOGOEXT)                       \
-	      bitbucket-banner.$(LOGOEXT)
+	      bitbucket-banner.$(LOGOEXT)                \
+	      hashvault-banner.$(LOGOEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
