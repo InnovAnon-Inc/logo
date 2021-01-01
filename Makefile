@@ -127,7 +127,7 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 
 
 
-profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT) stripe.jpg stripe-icon.$(LOGOEXT) patreon.$(LOGOEXT) patreon-banner.$(LOGOEXT) youtube-watermark-logo.$(LOGOEXT) dtube-banner.$(LOGOEXT) tumblr-banner.$(LOGOEXT) gab-banner.$(LOGOEXT) gab.$(LOGOEXT) opencollective-banner.$(LOGOEXT) bitbucket.$(LOGOEXT) bitbucket-banner.$(LOGOEXT) hashvault-banner.$(LOGOEXT)
+profiles: github.$(LOGOEXT) youtube-banner.$(LOGOEXT) twitter-banner.$(LOGOEXT) linkedin-banner.$(LOGOEXT) soundcloud-banner.$(LOGOEXT) avatar.$(LOGOEXT) avatar.$(LOGOEXT) small-thumbnail.$(LOGOEXT) large-thumbnail.$(LOGOEXT) stripe.jpg stripe-icon.$(LOGOEXT) patreon.$(LOGOEXT) patreon-banner.$(LOGOEXT) youtube-watermark-logo.$(LOGOEXT) dtube-banner.$(LOGOEXT) tumblr-banner.$(LOGOEXT) gab-banner.$(LOGOEXT) gab.$(LOGOEXT) opencollective-banner.$(LOGOEXT) bitbucket.$(LOGOEXT) bitbucket-banner.$(LOGOEXT) hashvault-banner.$(LOGOEXT) facebook-banner.$(LOGOEXT)
 
 github.$(LOGOEXT): $(LOGO_VISIBLE)
 	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
@@ -164,6 +164,17 @@ shiva-twitter-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -resize $(TWITTERSZ)\< $(TWITTERARGS) $^ $@
 kali-twitter-banner.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(TWITTERSZ)^ $(TWITTERARGS) $^ $@
+
+facebook-banner.$(LOGOEXT): shiva-facebook-banner.$(LOGOEXT) kali-facebook-banner.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+FACEBOOKSZ1=720x461.25
+FACEBOOKARGS=-gravity center -extent $(FACEBOOKSZ1)
+shiva-facebook-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(FACEBOOKSZ1)\< $(FACEBOOKARGS1) $^ $@
+FACEBOOKSZ2=820x461.25
+FACEBOOKARGS=-gravity center -extent $(FACEBOOKSZ2)
+kali-facebook-banner.$(LOGOEXT): kali.$(LOGOEXT)
+	$(CONVERT) -resize $(FACEBOOKSZ2)^ $(FACEBOOKARGS2) $^ $@
 
 hashvault-banner.$(LOGOEXT): shiva-hashvault-banner.$(LOGOEXT) kali-hashvault-banner.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -469,7 +480,8 @@ cleaner: clean
 	      bitbucket-banner.$(LOGOEXT)                \
 	      hashvault-banner.$(LOGOEXT)                \
 	      patreon.$(LOGOEXT)                         \
-	      patreon-banner.$(LOGOEXT)
+	      patreon-banner.$(LOGOEXT)                  \
+	      facebook-banner.$(LOGOEXT)
 	$(MAKE) -f stego.mk cleaner
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
