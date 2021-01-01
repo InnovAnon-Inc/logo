@@ -114,7 +114,7 @@ jobs:
             cp -v ../tmp/favicon.ico            assets/images/favicon.ico
             cp -v ../tmp/logo-visible.png       assets/images/logo.png
             cp -v ../tmp/logo-midvisible.png           images/3600x3600.png
-            cp -v ../tmp/logo-midvisible.png    assets/images/3600x3600.png
+            #cp -v ../tmp/logo-midvisible.png    assets/images/3600x3600.png
             cp -v ../tmp/logo-stego-animated.gif            ./logo.gif
             git config --global user.email "InnovAnon-Inc@gmail.com"
             git config --global user.name  "Innovations Anonymous"
