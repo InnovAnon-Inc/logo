@@ -112,7 +112,7 @@ jobs:
             git clone --depth=1 --recursive https://github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git
             cd                                                               InnovAnon-Inc.github.io
             cp -v ../tmp/favicon.ico            assets/images/favicon.ico
-            cp -v ../tmp/logo-midvisible.png    assets/images/logo.png
+            cp -v ../tmp/logo-visible.png       assets/images/logo.png
             cp -v ../tmp/logo-midvisible.png           images/3600x3600.png
             cp -v ../tmp/logo-midvisible.png    assets/images/3600x3600.png
             cp -v ../tmp/logo-stego-animated.gif            ./logo.gif
