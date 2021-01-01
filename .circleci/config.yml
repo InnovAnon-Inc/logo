@@ -116,6 +116,8 @@ jobs:
             cp -v ../tmp/logo.png           images/3600x3600.png
             cp -v ../tmp/logo.png    assets/images/3600x3600.png
             cp -v ../tmp/logo-stego-animated.gif ./logo.gif
+            git config --global user.email "InnovAnon-Inc@gmail.com"
+            git config --global user.name  "Innovations Anonymous"
             git add .
             git commit -m '[CircleCI] updated corporate logo'
             git push
