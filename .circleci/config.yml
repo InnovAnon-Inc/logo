@@ -120,7 +120,7 @@ jobs:
             git config --global user.name  "Innovations Anonymous"
             git add .
             git commit -m '[CircleCI] updated corporate logo'
-            git push
+            git push "https://${GITHUB_TOKEN}@github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git"
 
 workflows:
   version: 2.1
