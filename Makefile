@@ -472,7 +472,7 @@ shiva:                       $(LOGO)               $(LOGO_VISIBLE)              
 
 %-logo.txt: %-$(LOGO_VISIBLE)
 	img2txt $^ > $@
-logo.txt:   %-$(LOGO_VISIBLE)
+logo.txt:     $(LOGO_VISIBLE)
 	img2txt $^ > $@
 
 %-$(LOGO):              %-resize.$(LOGOEXT) kali-2.$(LOGOEXT)
