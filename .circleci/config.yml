@@ -66,11 +66,11 @@ jobs:
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
-            # TODO make dist
-            make -j$(nproc)
-            make -j$(nproc) clean
-            mkdir -v   /tmp/shiva
-            mv    -v * /tmp/shiva/
+            ./dist.sh
+            #make -j$(nproc)
+            #make -j$(nproc) clean
+            #mkdir -v   /tmp/shiva
+            #mv    -v * /tmp/shiva/
       - run:
           name: Release Project
           command: |
@@ -78,8 +78,10 @@ jobs:
             #make -j$(nproc) clean
             #rm -v Makefile *.url LICENSE README.md
             rm -rf *
-            mv -v /tmp/shiva/*  .
-            rm -v Makefile .Makefile make support* nohup.out *.url *.jpg *.mk archive.* .gitignore
+            #mv -v /tmp/shiva/*  .
+            #rm -v Makefile .Makefile make support* nohup.out *.url *.jpg *.mk archive.* .gitignore
+            tar xvf /tmp/logo.txz
+            rm -v   /tmp/logo.txz
             #rm -rf .git .circleci
 
             for k in * ; do

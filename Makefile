@@ -16,7 +16,9 @@ distclean:
 	MAKE="$(MAKE)" ./make $@
 archive.tar: check
 	MAKE="$(MAKE)" ./make $@
+#dist: stego
 dist:
+	[ ! -d .git ]
 	MAKE="$(MAKE)" ./make $@
 
 check: check-sh check-misc

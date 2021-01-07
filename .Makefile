@@ -69,11 +69,13 @@ GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #        -delete 1,2 -compose overlay -composite $@
 
 all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers stego
-dist: all
-	$(MAKE) clean
+dist: distclean
 	[ ! -d .git ]
-	$(RM) Makefile .Makefile make support* nohup.out *.url *.jpg *.mk archive.* .gitignore
+	$(MAKE)
+	$(MAKE) clean
+	$(RM) Makefile .Makefile make support* nohup.out *.url *.jpg hermes.png *.mk archive.* .gitignore
 	[ $(LOL) -eq 0 ] || $(MAKE) test
+	tar acvf /tmp/logo.txz .
 #test: logo-stego-animated.$(LOGOEXT)
 test:
 	# extract frames
@@ -636,11 +638,13 @@ umbrella.$(LOGOEXT): umbrella.url
 
 
 distclean: cleaner
-	$(RM) *.jpg archive.tar
+	$(RM) *.jpg archive.tar hermes.png
 cleaner: clean
 	$(RM) $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) \
-	      *-$(LOGO) *-$(LOGO_VISIBLE) *-$(LOGO_MIDVISIBLE) \
+	      *-$(LOGO) *-$(LOGO_VISIBLE)                \
+	      *-$(LOGO_MIDVISIBLE)                       \
 	      $(LOGO_ANIM) $(LOGO_ANIM_SMALL)            \
+	      logo-stego-animated.$(ANIMEXT)             \
 	      apple-touch-icon-*.png                     \
 	      syslinux-splash.bmp grub-splash.xpm.gz     \
 	      favicon*.ico github.$(LOGOEXT)             \
@@ -681,7 +685,8 @@ cleaner: clean
 	      sith.$(LOGOEXT)                            \
 	      umbrella.$(LOGOEXT)                        \
 	      wolfram.$(LOGOEXT)                         \
-	      archive.tlrzpq.gpg
+	      archive.tlrzpq.gpg                         \
+	      logo-stego-animated.$(ANIMEXT)
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
