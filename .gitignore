@@ -9,6 +9,7 @@
 *.xpm*
 *.dim
 logo.txt
+nohup.out
 
 # Miserable desktop garbage
 

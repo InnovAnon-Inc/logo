@@ -66,6 +66,7 @@ jobs:
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
+            # TODO make dist
             make -j$(nproc)
             make -j$(nproc) clean
             mkdir -v   /tmp/shiva
@@ -78,7 +79,7 @@ jobs:
             #rm -v Makefile *.url LICENSE README.md
             rm -rf *
             mv -v /tmp/shiva/*  .
-            rm -v Makefile *.url *.jpg *.mk archive.* .gitignore
+            rm -v Makefile .Makefile make support* nohup.out *.url *.jpg *.mk archive.* .gitignore
             #rm -rf .git .circleci
 
             for k in * ; do
