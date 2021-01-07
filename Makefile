@@ -1,11 +1,24 @@
-.PHONY: all distclean cleaner clean \
-        logos apple-touch-icons boot-splashes favicons profiles wallpapers release stego test \
-        aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy maltese maltese-round sauron sith umbrella wolfram
-.PRECIOUS:  shiva-rot-*.png
-.SECONDARY: shiva-rot-*.png
+.PHONY: all distclean cleaner clean parts release test stego logos   \
+        apple-touch-icons boot-splashes favicons profiles wallpapers \
+        aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy   \
+        maltese maltese-round sauron sith umbrella wolfram
+.PRECIOUS: archive.tar archive.tar.lrz archive.tar.lrz.zpaq          \
+           archive.tlrzpq archive.tlrzpq.gpg                         \
+           shiva-small.png kali-small.png shiva-2.png shiva.png      \
+           kali.png shiva.jpg kali.jpg
+#.SECONDARY: shiva-rot-*.png kali-*.png
 
 # infinite recursion, optional
 LOL ?= 0
+
+# optional
+ifdef RECP
+RECP := --encrypt -r $(RECP)
+endif
+
+ifdef PW
+PW := -k$(PW)
+endif
 
 #VISIBLE=0.9
 #INVISIBLE=0.6
@@ -18,7 +31,8 @@ TRANCE=7.83
 SCALE=2
 FPS=20
 DEG=$(shell  echo 'scale=$(SCALE); 360 * $(TRANCE) / $(FPS)' | bc)
-NROT=$(shell echo 'scale=$(SCALE); 360 * $(TRANCE) / $(DEG)' | bc)
+#NROT=$(shell echo 'scale=$(SCALE); 360 * $(TRANCE) / $(DEG)' | bc)
+NROT=$(shell echo 'scale=0; 360 * $(TRANCE) / $(DEG)' | bc)
 
 QUALITY?=100
 QUAL=-quality $(QUALITY)
@@ -54,7 +68,6 @@ GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #        -delete 1,2 -compose overlay -composite $@
 
 all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers
-	[ ! -f archive.tar ] || $(MAKE) stego
 #test: logo-stego-animated.$(LOGOEXT)
 test:
 	# extract frames
@@ -75,12 +88,12 @@ test:
 	chmod -v +x                     archive.tar
 	./archive.tar
 release:
-	LOL=$(LOL) ./quine.sh
-	$(MAKE) stego
+	#LOL=$(LOL) ./quine.sh
+	#$(MAKE) stego
 	[ $(LOL) -eq 0 ] || $(MAKE) test
 #logo-stego-animated.$(LOGOEXT): stego
-stego:
-	$(MAKE) -f stego.mk
+#stego:
+#	$(MAKE) -f stego.mk
 
 
 
@@ -407,10 +420,74 @@ kali-gpg-logo.$(LOGOEXT): kali.$(LOGOEXT)
 #$(LOGO_MIDVISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
 #	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
-$(LOGO_ANIM_SMALL): $(LOGO_ANIM)
-	$(LOWQUALITY) -resize 256x256^ -gravity center -extent 256x256 -layers optimize $^ $@
+#$(LOGO_ANIM_SMALL): $(LOGO_ANIM)
+#	$(LOWQUALITY) -resize 256x256^ -gravity center -extent 256x256 -layers optimize $^ $@
 $(LOGO_ANIM): logo-rot-0.$(LOGOEXT) $(foreach d,$(shell seq $(NROT)),logo-rot-$(shell echo 'scale=$(SCALE); $(d) * -$(DEG)' | bc).$(LOGOEXT))
 	$(CONVERT) $^ -loop 0 -delay $(FPS) $@
+	
+	
+	
+$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),logo-stego-rot-$(d).$(LOGOEXT))
+	$(CONVERT) $^ -loop 0 -delay $(FPS) -layers optimize $@
+# embed data in logo frames
+logo-stego-rot-%.$(LOGOEXT): logo-rot-%.$(LOGOEXT) parts
+	[ -f $(patsubst logo-stego-rot-%.$(LOGOEXT),archive.tlrzpq.gpg.part%,$@) ]
+	cp -v $< $@
+	stegosuite $(PW) -d -f $(patsubst logo-stego-rot-%.$(LOGOEXT),archive.tlrzpq.gpg.part%,$@) $@ || { rm -fv $@ ; exit 2 ; }
+# generate logo frames
+logo-rot-%.$(LOGOEXT): shiva-rot-%.$(LOGOEXT) kali-%.$(LOGOEXT)
+	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
+# dancing shiva
+shiva-rot-%.$(LOGOEXT): shiva-small-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -rotate $(shell echo 'scale=$(SCALE); $(patsubst shiva-rot-%.$(LOGOEXT),%,$@) * -$(DEG)' | bc) $^ $@
+
+# kali yantra background with randomized fingerprint
+kali-%.$(LOGOEXT): random-%.$(LOGOEXT) kali-small.$(LOGOEXT)
+	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+random-%.$(LOGOEXT): small.dim fingerprint
+	head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom | \
+	convert -depth 8 -size `cat $<` RGB:- $@
+
+# animated logo is 256x256
+shiva-small-2.$(LOGOEXT): shiva-transparent.$(LOGOEXT) small.dim
+	$(RESIZE) $(TRANSPARENT) -resize `cat small.dim`\> -extent `cat small.dim` $< $@
+kali-small.$(LOGOEXT): kali.$(LOGOEXT) small.dim
+	$(RESIZE) -resize `cat small.dim`^ -extent `cat small.dim` $< $@	
+small.dim:
+	echo 256x256 > $@
+	
+# data to hide
+archive.tlrzpq.gpg.part%: parts
+parts: archive.tlrzpq.gpg
+	split -d -n $(NROT) $< $<.part
+%.gpg: %
+	rm -vf $@
+	gpg --sign $(RECP) -o $@ $<
+#gpg --encrypt --sign -r $(RECP) -o $@ $<
+%.tlrzpq: %.tar.lrz.zpaq
+	cp -v $^ $@
+%.zpaq: %
+	zpaq a $@ $^ -m511.7
+%.lrz: %
+	lrzip -fUno $@ $^
+%.tar: %
+	tar vcf $@ \
+	  --absolute-names \
+	  --group=nogroup  \
+	  --mtime=0        \
+	  --no-acls        \
+	  --numeric-owner  \
+	  --owner=nobody   \
+	  --sort=name      \
+	  --sparse $^	
+archive.tar: quine.sh
+	LOL=$(LOL) ./quine.sh	
+	
+	
+	
+	
+	
+	
 
 #logo-rot-%.$(LOGOEXT): kali.$(LOGOEXT) shiva-rot-%.$(LOGOEXT)
 logo-rot-%.$(LOGOEXT): shiva-rot-%.$(LOGOEXT) kali.$(LOGOEXT)
@@ -516,7 +593,6 @@ fingerprint: # unique every time
 
 distclean: cleaner
 	$(RM) *.jpg
-	$(MAKE) -f stego.mk distclean
 cleaner: clean
 	$(RM) $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) \
 	      *-$(LOGO) *-$(LOGO_VISIBLE) *-$(LOGO_MIDVISIBLE) \
@@ -560,14 +636,17 @@ cleaner: clean
 	      sauron.$(LOGOEXT)                          \
 	      sith.$(LOGOEXT)                            \
 	      umbrella.$(LOGOEXT)                        \
-	      wolfram.$(LOGOEXT)
-	$(MAKE) -f stego.mk cleaner
+	      wolfram.$(LOGOEXT)                         \
+	      archive.tlrzpq.gpg
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
 	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)   \
-              tmp*.$(LOGOEXT) random.$(LOGOEXT)                \
+	      tmp*.$(LOGOEXT) random.$(LOGOEXT)                \
 	      *-resize.$(LOGOEXT) *-transparent.$(LOGOEXT)     \
-	      *-2.$(LOGOEXT)
-	$(MAKE) -f stego.mk clean
-
+	      *-2.$(LOGOEXT)                                   \
+	      kali*.$(LOGOEXT) shiva*.$(LOGOEXT)               \
+	      logo-rot-*.$(LOGOEXT)                            \
+	      logo-stego-rot-*.$(LOGOEXT)                      \
+	      logo-animated-*.$(LOGOEXT)                       \
+	      archive.tar.* archive.tlrzpq archive.tlrzpq.gpg.*
