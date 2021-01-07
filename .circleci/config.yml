@@ -135,6 +135,14 @@ jobs:
             mkdir -v   /tmp/wolfram
             mv    -v * /tmp/wolfram/
       - run:
+          name: Build Project (Cthulhu)
+          command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
+            make -j$(nproc) -f cthulhu.mk
+            make -j$(nproc) -f cthulhu.mk clean
+            mkdir -v   /tmp/cthulhu
+            mv    -v * /tmp/cthulhu/
+      - run:
           name: Release Project
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
@@ -149,7 +157,8 @@ jobs:
                   /tmp/fawkes   \
                   /tmp/aperture \
                   /tmp/sauron   \
-                  /tmp/wolfram  .
+                  /tmp/wolfram  \
+                  /tmp/chtulhu  .
             rm -v Makefile *.url *.jpg *.mk archive.* .gitignore
             #rm -rf .git .circleci
 
