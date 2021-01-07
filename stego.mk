@@ -49,7 +49,7 @@ IDENTIFY=identify -ping -format
 
 CONVERT=convert $(QUAL)
 TRANSPARENT=-fuzz 90% -transparent white
-RESIZE=$(CONVERT) -gravity center $(TRANSPARENT)
+RESIZE=$(CONVERT) -gravity center
 GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
 GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #GENLOGO=$(CONVERT) $^ -gravity center             \
@@ -87,12 +87,14 @@ random-%.$(LOGOEXT): fingerprint
 fingerprint: # unique every time
 
 # animated logo is 256x256
-shiva-small.$(LOGOEXT): shiva-2.$(LOGOEXT)
-	$(RESIZE) -resize 256x256\> -extent 256x256 $< $@
+shiva-small.$(LOGOEXT): shiva-transparent.$(LOGOEXT)
+	$(RESIZE) $(TRANSPARENT) -background 'rgba(0,0,0,0)' -resize 256x256\> -extent 256x256 $< $@
 kali-small.$(LOGOEXT): kali.$(LOGOEXT)
 	$(RESIZE) -resize 256x256^ -extent 256x256 $< $@
 
 # shiva image is black (foreground) and white (background)
+shiva-transparent.$(LOGOEXT): shiva-2.$(LOGOEXT)
+	$(CONVERT) $^ $(TRANSPARENT) -background 'rgba(0,0,0,0)' $@
 shiva-2.$(LOGOEXT): shiva.$(LOGOEXT)
 	$(CONVERT) $< -colorspace gray -colors 2 -type bilevel $@
 

@@ -39,8 +39,8 @@ RM=rm -fv
 IDENTIFY=identify -ping -format
 
 CONVERT=convert $(QUAL)
-TRANSPARENT=-fuzz 70% -transparent white -background 'rgba(0,0,0,0)'
-RESIZE=$(CONVERT) -gravity center $(TRANSPARENT)
+TRANSPARENT=-fuzz 70% -transparent white
+RESIZE=$(CONVERT) -gravity center
 GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
 GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #GENLOGO=$(CONVERT) $^ -gravity center             \
@@ -115,12 +115,12 @@ kali-resize.$(LOGOEXT): kali.$(LOGOEXT) aperture.dim
 aperture.dim:
 	echo 2000x2000 > $@
 
-#aperture-resize.$(LOGOEXT): aperture-transparent.$(LOGOEXT) aperture.dim
-aperture-resize.$(LOGOEXT): aperture-2.$(LOGOEXT) aperture.dim
-	$(RESIZE) -resize `cat aperture.dim`^ -extent `cat aperture.dim` $< $@
+#aperture-resize.$(LOGOEXT): aperture-2.$(LOGOEXT) aperture.dim
+aperture-resize.$(LOGOEXT): aperture-transparent.$(LOGOEXT) aperture.dim
+	$(RESIZE) $(TRANSPARENT) -background 'rgba(0,0,0,0)' -resize `cat aperture.dim`^ -extent `cat aperture.dim` $< $@
 
-aperture-transparent.$(LOGOEXT): aperture.$(LOGOEXT)
-	$(CONVERT) $^ $(TRANSPARENT) $@
+aperture-transparent.$(LOGOEXT): aperture-2.$(LOGOEXT)
+	$(CONVERT) $^ $(TRANSPARENT) -background 'rgba(0,0,0,0)' $@
 aperture-2.$(LOGOEXT): aperture.$(LOGOEXT)
 	$(CONVERT) $< -colorspace gray -colors 2 -type bilevel $@
 

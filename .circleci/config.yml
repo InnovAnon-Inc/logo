@@ -143,6 +143,46 @@ jobs:
             mkdir -v   /tmp/cthulhu
             mv    -v * /tmp/cthulhu/
       - run:
+          name: Build Project (Kabuto)
+          command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
+            make -j$(nproc) -f kabuto.mk
+            make -j$(nproc) -f kabuto.mk clean
+            mkdir -v   /tmp/kabuto
+            mv    -v * /tmp/kabuto/
+      - run:
+          name: Build Project (Lucy)
+          command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
+            make -j$(nproc) -f lucy.mk
+            make -j$(nproc) -f lucy.mk clean
+            mkdir -v   /tmp/lucy
+            mv    -v * /tmp/lucy/
+      - run:
+          name: Build Project (Baphomet)
+          command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
+            make -j$(nproc) -f baphomet.mk
+            make -j$(nproc) -f baphomet.mk clean
+            mkdir -v   /tmp/baphomet
+            mv    -v * /tmp/baphomet/
+      - run:
+          name: Build Project (Maltese)
+          command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
+            make -j$(nproc) -f maltese.mk
+            make -j$(nproc) -f maltese.mk clean
+            mkdir -v   /tmp/maltese
+            mv    -v * /tmp/maltese/
+      - run:
+          name: Build Project (Maltese-round)
+          command: |
+            cd ${CIRCLE_PROJECT_REPONAME}
+            make -j$(nproc) -f maltese-round.mk
+            make -j$(nproc) -f maltese-round.mk clean
+            mkdir -v   /tmp/maltese-round
+            mv    -v * /tmp/maltese-round/
+      - run:
           name: Release Project
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}

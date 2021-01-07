@@ -1,5 +1,6 @@
 .PHONY: all distclean cleaner clean \
-        logos apple-touch-icons boot-splashes favicons profiles wallpapers release stego test
+        logos apple-touch-icons boot-splashes favicons profiles wallpapers release stego test \
+        aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy maltese maltese-round sauron sith umbrella wolfram
 .PRECIOUS:  shiva-rot-*.png
 .SECONDARY: shiva-rot-*.png
 
@@ -40,7 +41,7 @@ IDENTIFY=identify -ping -format
 
 CONVERT=convert $(QUAL)
 TRANSPARENT=-fuzz 90% -transparent white -background 'rgba(0,0,0,0)'
-RESIZE=$(CONVERT) -gravity center $(TRANSPARENT)
+RESIZE=$(CONVERT) -gravity center
 GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
 GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #GENLOGO=$(CONVERT) $^ -gravity center             \
@@ -51,7 +52,7 @@ GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #           -evaluate multiply $$BLEND +channel \) \
 #        -delete 1,2 -compose overlay -composite $@
 
-all: logos apple-touch-icons boot-splashes favicons profiles wallpapers
+all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers
 	[ ! -f archive.tar ] || $(MAKE) stego
 #test: logo-stego-animated.$(LOGOEXT)
 test:
@@ -167,6 +168,7 @@ kali-twitter-banner.$(LOGOEXT): kali.$(LOGOEXT)
 
 facebook-banner.$(LOGOEXT): shiva-facebook-banner.$(LOGOEXT) kali-facebook-banner.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+# TODO this is still cutting off parts of shiva
 FACEBOOKSZ1=720x461.25
 FACEBOOKARGS=-gravity center -extent $(FACEBOOKSZ1)
 shiva-facebook-banner.$(LOGOEXT): shiva-2.$(LOGOEXT)
@@ -337,7 +339,7 @@ kali-wallpaper4.$(LOGOEXT): kali.$(LOGOEXT)
 
 
 
-logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT) google-cover-logo.$(LOGOEXT)
+logos: shiva doxygen-logo.$(LOGOEXT) gpg-logo.jpg logo.txt sphinx-logo.$(LOGOEXT) stackoverflow-logo.$(LOGOEXT) google-cover-logo.$(LOGOEXT)
 # $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
 
 sphinx-logo.$(LOGOEXT): shiva-sphinx-logo.$(LOGOEXT) kali-sphinx-logo.$(LOGOEXT)
@@ -395,14 +397,14 @@ shiva-gpg-logo.$(LOGOEXT): shiva-2.$(LOGOEXT)
 kali-gpg-logo.$(LOGOEXT): kali.$(LOGOEXT)
 	$(CONVERT) -resize $(GPGSZ)^ $(GPGARGS) $^ $@
 
-#$(LOGO): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
-$(LOGO): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
-	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
-#$(LOGO_VISIBLE): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
-$(LOGO_VISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
-	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
-$(LOGO_MIDVISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
-	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+##$(LOGO): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
+#$(LOGO):            shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
+#	BLEND=$(INVISIBLE)  $(SHELL) -c '$(GENLOGO)'
+##$(LOGO_VISIBLE): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
+#$(LOGO_VISIBLE):    shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
+#	BLEND=$(VISIBLE)    $(SHELL) -c '$(GENLOGO)'
+#$(LOGO_MIDVISIBLE): shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
+#	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
 $(LOGO_ANIM_SMALL): $(LOGO_ANIM)
 	$(LOWQUALITY) -resize 256x256^ -gravity center -extent 256x256 -layers optimize $^ $@
@@ -415,10 +417,10 @@ logo-rot-%.$(LOGOEXT): shiva-rot-%.$(LOGOEXT) kali.$(LOGOEXT)
 shiva-rot-%.$(LOGOEXT): shiva-small.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -rotate $(patsubst shiva-rot-%.$(LOGOEXT),%,$@) $^ $@
 shiva-small.$(LOGOEXT): shiva-2.$(LOGOEXT) kali-small.dim
-	$(RESIZE) -resize `cat kali-small.dim`\< -extent `cat kali-small.dim` $< $@
+	$(RESIZE) $(TRANSPARENT) -resize `cat kali-small.dim`\< -extent `cat kali-small.dim` $< $@
 
-logo.txt: logo-visible.$(LOGOEXT)
-	img2txt $^ > $@
+#logo.txt: logo-visible.$(LOGOEXT)
+#	img2txt $^ > $@
 
 kali-small.dim: kali-d.dim
 	D=`cat $<` \
@@ -428,32 +430,94 @@ kali-d.dim: kali.dim
 	H=`awk 'BEGIN{FS="x"}{print $$2}' $<` \
 	D=$$((W < H ? W : H))                 \
 	$(SHELL) -c 'echo "scale=0; sqrt($$D * $$D / 2)" | bc' > $@
-
+#
+##shiva-resize.$(LOGOEXT): shiva-2.$(LOGOEXT) kali.dim
 #shiva-resize.$(LOGOEXT): shiva-transparent.$(LOGOEXT) kali.dim
-shiva-resize.$(LOGOEXT): shiva-2.$(LOGOEXT) kali.dim
-	$(RESIZE) -resize `cat kali.dim`\< -extent `cat kali.dim` $< $@
+#	$(RESIZE) $(TRANSPARENT) -resize `cat kali.dim`\< -extent `cat kali.dim` $< $@
 kali.dim: kali.$(LOGOEXT)
 	$(IDENTIFY) '%wx%h' $< > $@
 
-shiva-transparent.$(LOGOEXT): shiva-2.$(LOGOEXT)
+#shiva-transparent.$(LOGOEXT): shiva-2.$(LOGOEXT)
+#	$(CONVERT) $^ $(TRANSPARENT) $@
+#shiva-2.$(LOGOEXT): shiva.$(LOGOEXT)
+#	$(CONVERT) $< -colorspace gray -colors 2 -type bilevel $@
+#
+#%.$(LOGOEXT): %.jpg
+#	$(CONVERT) $^ $@
+#kali.jpg: kali.url
+#	$(WGET)
+#shiva.jpg: shiva.url
+#	$(WGET)
+
+
+
+extra_logos: aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy maltese maltese-round sauron sith umbrella wolfram
+
+#%:                        %-$(LOGO)             %-$(LOGO_VISIBLE)             %-$(LOGO_MIDVISIBLE)
+aperture:           aperture-$(LOGO)      aperture-$(LOGO_VISIBLE)      aperture-$(LOGO_MIDVISIBLE)
+baphomet:           baphomet-$(LOGO)      baphomet-$(LOGO_VISIBLE)      baphomet-$(LOGO_MIDVISIBLE)
+cthulhu:             cthulhu-$(LOGO)       cthulhu-$(LOGO_VISIBLE)       cthulhu-$(LOGO_MIDVISIBLE)
+e-corp:               e-corp-$(LOGO)        e-corp-$(LOGO_VISIBLE)        e-corp-$(LOGO_MIDVISIBLE)
+fawkes:               fawkes-$(LOGO)        fawkes-$(LOGO_VISIBLE)        fawkes-$(LOGO_MIDVISIBLE)
+hermes:               hermes-$(LOGO)        hermes-$(LOGO_VISIBLE)        hermes-$(LOGO_MIDVISIBLE)
+kabuto:               kabuto-$(LOGO)        kabuto-$(LOGO_VISIBLE)        kabuto-$(LOGO_MIDVISIBLE)
+lucy:                   lucy-$(LOGO)          lucy-$(LOGO_VISIBLE)          lucy-$(LOGO_MIDVISIBLE)
+maltese:             maltese-$(LOGO)       maltese-$(LOGO_VISIBLE)       maltese-$(LOGO_MIDVISIBLE)
+maltese-round: maltese-round-$(LOGO) maltese-round-$(LOGO_VISIBLE) maltese-round-$(LOGO_MIDVISIBLE)
+sauron:               sauron-$(LOGO)        sauron-$(LOGO_VISIBLE)        sauron-$(LOGO_MIDVISIBLE)
+sith:                   sith-$(LOGO)          sith-$(LOGO_VISIBLE)          sith-$(LOGO_MIDVISIBLE)
+umbrella:           umbrella-$(LOGO)      umbrella-$(LOGO_VISIBLE)      umbrella-$(LOGO_MIDVISIBLE)
+wolfram:             wolfram-$(LOGO)       wolfram-$(LOGO_VISIBLE)       wolfram-$(LOGO_MIDVISIBLE)
+shiva:                       $(LOGO)               $(LOGO_VISIBLE)               $(LOGO_MIDVISIBLE)
+
+%-logo.txt: %-$(LOGO_VISIBLE)
+	img2txt $^ > $@
+logo.txt:   %-$(LOGO_VISIBLE)
+	img2txt $^ > $@
+
+%-$(LOGO):              %-resize.$(LOGOEXT) kali-2.$(LOGOEXT)
+	BLEND=$(INVISIBLE)  $(SHELL) -c '$(GENLOGO)'
+$(LOGO):            shiva-resize.$(LOGOEXT) kali-2.$(LOGOEXT)
+	BLEND=$(INVISIBLE)  $(SHELL) -c '$(GENLOGO)'
+%-$(LOGO_VISIBLE):      %-resize.$(LOGOEXT) kali-2.$(LOGOEXT)
+	BLEND=$(VISIBLE)    $(SHELL) -c '$(GENLOGO)'
+$(LOGO_VISIBLE):    shiva-resize.$(LOGOEXT) kali-2.$(LOGOEXT)
+	BLEND=$(VISIBLE)    $(SHELL) -c '$(GENLOGO)'
+%-$(LOGO_MIDVISIBLE):   %-resize.$(LOGOEXT) kali-2.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+$(LOGO_MIDVISIBLE): shiva-resize.$(LOGOEXT) kali-2.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+
+%-resize.$(LOGOEXT): %-transparent.$(LOGOEXT) kali.dim
+	$(RESIZE) $(TRANSPARENT) -resize `cat kali.dim`^ -extent `cat kali.dim` $< $@
+%-transparent.$(LOGOEXT):         %-2.$(LOGOEXT)
 	$(CONVERT) $^ $(TRANSPARENT) $@
-shiva-2.$(LOGOEXT): shiva.$(LOGOEXT)
+# not a black-and-white image
+sauron-transparent.$(LOGOEXT): sauron.$(LOGOEXT)
+	$(CONVERT) $^ $(TRANSPARENT) $@
+%-2.$(LOGOEXT):                         %.$(LOGOEXT)
 	$(CONVERT) $< -colorspace gray -colors 2 -type bilevel $@
+
+kali-2.$(LOGOEXT): random.$(LOGOEXT) kali.$(LOGOEXT)
+	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+random.$(LOGOEXT): kali.dim fingerprint
+	head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom | \
+	convert -depth 8 -size `cat kali.dim` RGB:- $@
+fingerprint: # unique every time
 
 %.$(LOGOEXT): %.jpg
 	$(CONVERT) $^ $@
-kali.jpg: kali.url
-	$(WGET)
-shiva.jpg: shiva.url
+%.jpg: %.url
 	$(WGET)
 
 
 
 distclean: cleaner
-	$(RM) shiva.jpg kali.jpg
+	$(RM) *.jpg
 	$(MAKE) -f stego.mk distclean
 cleaner: clean
 	$(RM) $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) \
+	      *-$(LOGO) *-$(LOGO_VISIBLE) *-$(LOGO_MIDVISIBLE) \
 	      $(LOGO_ANIM) $(LOGO_ANIM_SMALL)            \
 	      apple-touch-icon-*.png                     \
 	      syslinux-splash.bmp grub-splash.xpm.gz     \
@@ -469,7 +533,7 @@ cleaner: clean
 	      small-thumbnail.$(LOGOEXT)                 \
 	      large-thumbnail.$(LOGOEXT)                 \
 	      wallpaper*.$(LOGOEXT) stripe.jpg           \
-	      stripe-icon.$(LOGOEXT) logo.txt            \
+	      stripe-icon.$(LOGOEXT) logo.txt *-logo.txt \
 	      google-cover-logo.$(LOGOEXT)               \
 	      youtube-watermark-logo.$(LOGOEXT)          \
 	      dtube-banner.$(LOGOEXT)                    \
@@ -481,12 +545,27 @@ cleaner: clean
 	      hashvault-banner.$(LOGOEXT)                \
 	      patreon.$(LOGOEXT)                         \
 	      patreon-banner.$(LOGOEXT)                  \
-	      facebook-banner.$(LOGOEXT)
+	      facebook-banner.$(LOGOEXT)                 \
+	      aperture.$(LOGOEXT)                        \
+	      baphomet.$(LOGOEXT)                        \
+	      cthulhu.$(LOGOEXT)                         \
+	      e-corp.$(LOGOEXT)                          \
+	      fawkes.$(LOGOEXT)                          \
+	      kabuto.$(LOGOEXT)                          \
+	      lucy.$(LOGOEXT)                            \
+	      maltese.$(LOGOEXT)                         \
+	      maltese-round.$(LOGOEXT)                   \
+	      sauron.$(LOGOEXT)                          \
+	      sith.$(LOGOEXT)                            \
+	      umbrella.$(LOGOEXT)                        \
+	      wolfram.$(LOGOEXT)
 	$(MAKE) -f stego.mk cleaner
 clean:
 	$(RM) *.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
 	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
 	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)   \
-              tmp*.$(LOGOEXT)
+              tmp*.$(LOGOEXT) random.$(LOGOEXT)                \
+	      *-resize.$(LOGOEXT) *-transparent.$(LOGOEXT)     \
+	      *-2.$(LOGOEXT)
 	$(MAKE) -f stego.mk clean
 

@@ -1,7 +1,7 @@
 .PHONY: all distclean cleaner clean \
         logos apple-touch-icons boot-splashes favicons profiles wallpapers release stego test
-.PRECIOUS:  cthulhu-rot-*.png
-.SECONDARY: cthulhu-rot-*.png
+.PRECIOUS:  lucy-rot-*.png
+.SECONDARY: lucy-rot-*.png
 
 # infinite recursion, optional
 LOL ?= 0
@@ -26,12 +26,12 @@ LOWQUALITY=convert $(LOWQUALITYARGS)
 STRIPEQUALITY=-quality  $$(($(QUALITY) < 5  ? $(QUALITY) : 5))  -fuzz 19%
 
 LOGOEXT=png
-LOGO=cthulhu-logo.$(LOGOEXT)
-LOGO_VISIBLE=cthulhu-logo-visible.$(LOGOEXT)
-LOGO_MIDVISIBLE=cthulhu-logo-midvisible.$(LOGOEXT)
+LOGO=lucy-logo.$(LOGOEXT)
+LOGO_VISIBLE=lucy-logo-visible.$(LOGOEXT)
+LOGO_MIDVISIBLE=lucy-logo-midvisible.$(LOGOEXT)
 ANIMEXT=gif
-LOGO_ANIM=cthulhu-logo-animated.$(ANIMEXT)
-LOGO_ANIM_SMALL=cthulhu-logo-small-animated.$(ANIMEXT)
+LOGO_ANIM=lucy-logo-animated.$(ANIMEXT)
+LOGO_ANIM_SMALL=lucy-logo-small-animated.$(ANIMEXT)
 
 WGET=[ -f $@ ] || curl -o $@ `cat $^`
 #WGET=[ -f $@ ] || pcurl `cat $^` $@
@@ -40,7 +40,7 @@ IDENTIFY=identify -ping -format
 
 CONVERT=convert $(QUAL)
 TRANSPARENT=-fuzz 70% -transparent white -background 'rgba(0,0,0,0)'
-RESIZE=$(CONVERT) -gravity center
+RESIZE=$(CONVERT) -gravity center $(TRANSPARENT)
 GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
 GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #GENLOGO=$(CONVERT) $^ -gravity center             \
@@ -55,10 +55,10 @@ all: logos
 #test: logo-stego-animated.$(LOGOEXT)
 test:
 	# extract frames
-	convert -coalesce cthulhu-logo-stego-animated.$(ANIMEXT) cthulhu-logo-stego-rot-%02d.$(LOGOEXT)
+	convert -coalesce lucy-logo-stego-animated.$(ANIMEXT) lucy-logo-stego-rot-%02d.$(LOGOEXT)
 	# de-stego
 	for k in `seq -w 0 1 $$(($(NROT) - 1))` ; do \
-	  stegosuite -x -f archive.tlrzpq.gpg.part$(D) cthulhu-logo-stego-rot-%02d.$(LOGOEXT) || exit 2 ; \
+	  stegosuite -x -f archive.tlrzpq.gpg.part$(D) lucy-logo-stego-rot-%02d.$(LOGOEXT) || exit 2 ; \
 	done
 	# unsplit
 	cat `ls -v archive.tlrzpq.gpg.part*` > archive.tlrzpq.gpg
@@ -97,44 +97,44 @@ favicon-%.ico: $(LOGO_MIDVISIBLE)
 logos: $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE)
 # $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
 
-#$(LOGO): kali.$(LOGOEXT) cthulhu-resize.$(LOGOEXT)
-$(LOGO): cthulhu-resize.$(LOGOEXT) kali-resize.$(LOGOEXT)
+#$(LOGO): kali.$(LOGOEXT) lucy-resize.$(LOGOEXT)
+$(LOGO): lucy-resize.$(LOGOEXT) kali-resize.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
-#$(LOGO_VISIBLE): kali.$(LOGOEXT) cthulhu-resize.$(LOGOEXT)
-$(LOGO_VISIBLE): cthulhu-resize.$(LOGOEXT) kali-resize.$(LOGOEXT)
+#$(LOGO_VISIBLE): kali.$(LOGOEXT) lucy-resize.$(LOGOEXT)
+$(LOGO_VISIBLE): lucy-resize.$(LOGOEXT) kali-resize.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
-$(LOGO_MIDVISIBLE): cthulhu-resize.$(LOGOEXT) kali-resize.$(LOGOEXT)
+$(LOGO_MIDVISIBLE): lucy-resize.$(LOGOEXT) kali-resize.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
-cthulhu-logo.txt: cthulhu-logo-visible.$(LOGOEXT)
+lucy-logo.txt: lucy-logo-visible.$(LOGOEXT)
 	img2txt $^ > $@
 
-kali-resize.$(LOGOEXT): kali.$(LOGOEXT) cthulhu.dim
-	$(RESIZE) -resize `cat cthulhu.dim`^ -extent `cat cthulhu.dim` $< $@
+kali-resize.$(LOGOEXT): kali.$(LOGOEXT) lucy.dim
+	$(RESIZE) -resize `cat lucy.dim`^ -extent `cat lucy.dim` $< $@
 
-cthulhu.dim:
+lucy.dim:
 	echo 2000x2000 > $@
 
-#cthulhu-resize.$(LOGOEXT): cthulhu-2.$(LOGOEXT) cthulhu.dim
-cthulhu-resize.$(LOGOEXT): cthulhu-transparent.$(LOGOEXT) cthulhu.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat cthulhu.dim`^ -extent `cat cthulhu.dim` $< $@
+#lucy-resize.$(LOGOEXT): lucy-transparent.$(LOGOEXT) lucy.dim
+lucy-resize.$(LOGOEXT): lucy-2.$(LOGOEXT) lucy.dim
+	$(RESIZE) -resize `cat lucy.dim`^ -extent `cat lucy.dim` $< $@
 
-cthulhu-transparent.$(LOGOEXT): cthulhu-2.$(LOGOEXT)
+lucy-transparent.$(LOGOEXT): lucy.$(LOGOEXT)
 	$(CONVERT) $^ $(TRANSPARENT) $@
-cthulhu-2.$(LOGOEXT): cthulhu.$(LOGOEXT)
+lucy-2.$(LOGOEXT): lucy.$(LOGOEXT)
 	$(CONVERT) $< -colorspace gray -colors 2 -type bilevel $@
 
 %.$(LOGOEXT): %.jpg
 	$(CONVERT) $^ $@
 kali.jpg: kali.url
 	$(WGET)
-cthulhu.jpg: cthulhu.url
+lucy.jpg: lucy.url
 	$(WGET)
 
 
 
 distclean: cleaner
-	$(RM) cthulhu.jpg kali.jpg
+	$(RM) lucy.jpg kali.jpg
 	$(MAKE) -f stego.mk distclean
 cleaner: clean
 	$(RM) $(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) \
@@ -146,16 +146,16 @@ cleaner: clean
 	      twitter-banner.$(LOGOEXT)                  \
 	      linkedin-banner.$(LOGOEXT)                 \
 	      soundcloud-banner.$(LOGOEXT)               \
-	      doxygen-cthulhu-logo.$(LOGOEXT)                    \
-              gpg-cthulhu-logo.jpg avatar.$(LOGOEXT)             \
-	      sphinx-cthulhu-logo.$(LOGOEXT)                     \
-	      stackoverflow-cthulhu-logo.$(LOGOEXT)              \
+	      doxygen-lucy-logo.$(LOGOEXT)                    \
+              gpg-lucy-logo.jpg avatar.$(LOGOEXT)             \
+	      sphinx-lucy-logo.$(LOGOEXT)                     \
+	      stackoverflow-lucy-logo.$(LOGOEXT)              \
 	      small-thumbnail.$(LOGOEXT)                 \
 	      large-thumbnail.$(LOGOEXT)                 \
 	      wallpaper*.$(LOGOEXT) stripe.jpg           \
-	      stripe-icon.$(LOGOEXT) cthulhu-logo.txt            \
-	      google-cover-cthulhu-logo.$(LOGOEXT)               \
-	      youtube-watermark-cthulhu-logo.$(LOGOEXT)          \
+	      stripe-icon.$(LOGOEXT) lucy-logo.txt            \
+	      google-cover-lucy-logo.$(LOGOEXT)               \
+	      youtube-watermark-lucy-logo.$(LOGOEXT)          \
 	      dtube-banner.$(LOGOEXT)                    \
 	      tumblr-banner.$(LOGOEXT)                   \
 	      gab-banner.$(LOGOEXT) gab.$(LOGOEXT)       \
@@ -168,8 +168,8 @@ cleaner: clean
 	      facebook-banner.$(LOGOEXT)
 	$(MAKE) -f stego.mk cleaner
 clean:
-	$(RM) *.dim kali*.$(LOGOEXT) cthulhu*.$(LOGOEXT)         \
-	      cthulhu-logo-rot-*.$(LOGOEXT) cthulhu-logo-animated-*.$(LOGOEXT) \
+	$(RM) *.dim kali*.$(LOGOEXT) lucy*.$(LOGOEXT)         \
+	      lucy-logo-rot-*.$(LOGOEXT) lucy-logo-animated-*.$(LOGOEXT) \
 	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)   \
               tmp*.$(LOGOEXT)
 	$(MAKE) -f stego.mk clean
