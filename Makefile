@@ -40,7 +40,8 @@ RM=rm -fv
 IDENTIFY=identify -ping -format
 
 CONVERT=convert $(QUAL)
-TRANSPARENT=-fuzz 90% -transparent white -background 'rgba(0,0,0,0)'
+#TRANSPARENT=-fuzz 90% -transparent white -background 'rgba(0,0,0,0)'
+TRANSPARENT=-fuzz 0% -transparent white -background 'rgba(0,0,0,0)'
 RESIZE=$(CONVERT) -gravity center
 GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
 GENLOGO=composite $(QUAL) $(GENLOGOARGS)
@@ -495,6 +496,7 @@ $(LOGO_MIDVISIBLE): shiva-resize.$(LOGOEXT) kali-2.$(LOGOEXT)
 # not a black-and-white image
 sauron-transparent.$(LOGOEXT): sauron.$(LOGOEXT)
 	$(CONVERT) $^ $(TRANSPARENT) $@
+	#$(CONVERT) $^ -fuzz 0% -transparent red -background 'rgba(0,0,0,0)'
 %-2.$(LOGOEXT):                         %.$(LOGOEXT)
 	$(CONVERT) $< -colorspace gray -colors 2 -type bilevel $@
 
