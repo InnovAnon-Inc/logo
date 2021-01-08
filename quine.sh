@@ -34,6 +34,7 @@ rm -vf      "$TARCHIVE"
   --exclude=.circleci     \
   --exclude=.travis.yml   \
   --exclude=.travis       \
+  --exclude=nohup.out     \
   --exclude="$OUT"        \
   --exclude="$DLD"        \
   --exclude="$BLD"        \
