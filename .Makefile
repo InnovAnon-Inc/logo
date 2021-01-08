@@ -110,7 +110,7 @@ test-parts: $(STG)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	convert -coalesce $< $(TST)/logo-stego-rot-%02d.$(LOGOEXT)
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
 	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) ]
-	stegosuite -k$(PW) -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
+	stegosuite -k "$(PW)" -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
 	find . \( -name '.git' -type d -prune \) -o -print
 	[ -f $@ ]
 $(TST)/archive.tlrzpq.gpg: $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(TST)/archive.tlrzpq.gpg.part$(d))
@@ -487,7 +487,7 @@ $(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(B
 $(BLD)/logo-stego-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT) parts
 	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) ]
 	cp -v $< $@
-	stegosuite -k$(PW) -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $@ || { rm -fv $@ ; exit 2 ; }
+	stegosuite -k "$(PW)" -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $@ || { rm -fv $@ ; exit 2 ; }
 	[ -f $@ ]
 # generate logo frames
 $(BLD)/logo-rot-%.$(LOGOEXT): $(BLD)/shiva-rot-%.$(LOGOEXT) $(BLD)/kali-%.$(LOGOEXT)
