@@ -8,9 +8,10 @@
 *.gif
 *.xpm*
 *.dim
-logo.txt
-nohup.out
+*.txt
+*.out
 */.sentinel
+*/
 
 # Miserable desktop garbage
 
