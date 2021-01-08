@@ -81,7 +81,9 @@ all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpap
 #	$(MAKE) stego
 dist: distclean
 	[ ! -d .git ]
+	find .
 	$(MAKE)
+	find .
 	$(MAKE) clean
 	$(RM) Makefile .Makefile make support* nohup.out *.url *.jpg hermes.png *.mk archive.* .gitignore \
 	      aperture.png umbrella.png quine.sh dist.sh sauron.png maltese.png
@@ -638,6 +640,8 @@ fingerprint: # unique every time
 %.$(LOGOEXT): %.jpg
 	$(CONVERT) $^ $@
 %.jpg: %.url
+	$(WGET)
+e-corp.$(LOGOEXT):   e-corp.url
 	$(WGET)
 aperture.$(LOGOEXT): aperture.url
 	$(WGET)

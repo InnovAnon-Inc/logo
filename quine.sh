@@ -7,16 +7,24 @@ set -euxo pipefail
 
 MAKE="${MAKE:-make -j$(nproc)}"
 
-rm -rf   /tmp/archive
-trap 'rm -rf /tmp/archive' 0
-rm -vf      ./archive.tar
+ARCHIVE="$(mktemp -d)"
+#TARCHIVE="$(mktemp XXXXXXXX.tar)"
+TARCHIVE=archive.tar
+
+#rm -rf   $ARCHIVE
+# shellcheck disable=SC2064
+trap "rm -rf $ARCHIVE" 0
+rm -vf      "$TARCHIVE"
+  #--exclude-vcs-ignores   \
 tar cf -                  \
-  --exclude=archive.tar   \
+  --exclude="$TARCHIVE"   \
   --exclude=.circleci     \
   --exclude=LICENSE       \
   --exclude=README.md     \
+  --exclude='*.png'       \
+  --exclude='*.jpg'       \
+  --exclude='*.dim'       \
   --exclude-vcs           \
-  --exclude-vcs-ignores   \
   --absolute-names        \
   --group=nogroup         \
   --mtime=0               \
@@ -25,17 +33,17 @@ tar cf -                  \
   --owner=nobody          \
   --sort=name             \
   --sparse              . |
-( mkdir -v /tmp/archive &&
-  cd       /tmp/archive &&
+( #mkdir -v "$ARCHIVE" &&
+  cd       "$ARCHIVE" &&
   tar xf   - )
 # shellcheck disable=SC2086
-makeself --nocomp /tmp/archive archive.tar quine \
+makeself --nocomp "$ARCHIVE" "$TARCHIVE" quine \
 env "LOL=$LOL" $MAKE dist
 #env "LOL=$LOL" $MAKE release
 #env LOL=0 $MAKE release
 #env RECP=InnovAnon-Inc@protonmail.com make -j$(nproc) release
 #make -j$(nproc)
-rm -rf   /tmp/archive
+rm -rf   "$ARCHIVE"
 #mkdir -v /tmp/archive
 #cd       /tmp/archive
 #"$SELF/archive.tar"
