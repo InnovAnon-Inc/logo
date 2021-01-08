@@ -19,7 +19,7 @@ endif
 
 #ifdef PW
 #PW := -k$(PW)
-PW ?=
+PW ?= InnovAnon
 #endif
 
 #VISIBLE=0.9
