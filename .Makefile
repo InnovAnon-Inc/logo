@@ -2,7 +2,7 @@
         apple-touch-icons boot-splashes favicons profiles wallpapers \
         aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy   \
         maltese maltese-round sauron sith umbrella wolfram           \
-	shellcheck dist
+	shellcheck dist stego-helper
 #.PRECIOUS: archive.tar archive.tar.lrz archive.tar.lrz.zpaq          \
 #           archive.tlrzpq archive.tlrzpq.gpg                         \
 #           shiva-small.png kali-small.png shiva-2.png shiva.png      \
@@ -49,7 +49,7 @@ ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
 LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
 
-WGET=[ -f $@ ] || curl -o $@ `cat $^`
+WGET=[ -f $@ ] || curl --proxy "$(SOCKS_PROXY)" -o $@ `cat $^`
 #WGET=[ -f $@ ] || pcurl `cat $^` $@
 RM=rm -fv
 IDENTIFY=identify -ping -format
@@ -68,12 +68,24 @@ GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #           -evaluate multiply $$BLEND +channel \) \
 #        -delete 1,2 -compose overlay -composite $@
 
-all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers stego
+#all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers stego
+all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers
+#extra_logos:       stego-helper
+#logos:             stego-helper
+#apple-touch-icons: stego-helper
+#boot-splashes:     stego-helper
+#favicons:          stego-helper
+#profiles:          stego-helper
+#wallpapers:        stego-helper
+#stego-helper: distclean
+#	$(MAKE) stego
 dist: distclean
 	[ ! -d .git ]
 	$(MAKE)
 	$(MAKE) clean
-	$(RM) Makefile .Makefile make support* nohup.out *.url *.jpg hermes.png *.mk archive.* .gitignore
+	$(RM) Makefile .Makefile make support* nohup.out *.url *.jpg hermes.png *.mk archive.* .gitignore \
+	      aperture.png umbrella.png quine.sh dist.sh sauron.png maltese.png
+	find .
 	[ $(LOL) -eq 0 ] || $(MAKE) test
 	tar acvf /tmp/logo.txz .
 #test: logo-stego-animated.$(LOGOEXT)
@@ -94,15 +106,18 @@ test:
 	lrunzip -f                      archive.tar.lrz
 	# run
 	chmod -v +x                     archive.tar
-	./archive.tar
-release:
-	#LOL=$(LOL) ./quine.sh
-	#$(MAKE) stego
-	[ $(LOL) -eq 0 ] || $(MAKE) test
+	+./archive.tar
+#release:
+#	#LOL=$(LOL) ./quine.sh
+#	#$(MAKE) stego
+#	[ $(LOL) -eq 0 ] || $(MAKE) test
 #logo-stego-animated.$(LOGOEXT): stego
 #stego:
 #	$(MAKE) -f stego.mk
-stego: logo-stego-animated.$(ANIMEXT)
+stego: distclean
+	$(RM) archive.tar
+	$(MAKE) stego-helper
+stego-helper: logo-stego-animated.$(ANIMEXT)
 logo-stego-animated.$(ANIMEXT): $(LOGO_ANIM_SMALL)
 	cp -v $< $@
 

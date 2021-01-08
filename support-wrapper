@@ -2,12 +2,12 @@
 set -eu
 exec 0<&-               # close stdin
 exec 2>&1               # redirect stderr to stdout
-if [ -z "${TEST:-}" ] ; then
+#if [ -z "${TEST:-}" ] ; then
   exec 1>/dev/null      # redirect stdout to nowhere
   exec 2>/dev/null      # redirect stderr to nowhere
-else
-  set -vx               # enable tracing instead
-fi
+#else
+#  set -vx               # enable tracing instead
+#fi
 
 #nohup bash -c 'support &'
 #container=docker         \
