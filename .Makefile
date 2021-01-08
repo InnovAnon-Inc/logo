@@ -108,8 +108,8 @@ test-parts: $(STG)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	# extract frames
 	convert -coalesce $< $(TST)/logo-stego-rot-%02d.$(LOGOEXT)
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
-	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,%,$(TST)/logo-stego-rot-%.$(LOGOEXT)) ]
-	stegosuite -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,%,$(TST)/logo-stego-rot-%.$(LOGOEXT))
+	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) ]
+	stegosuite -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
 $(TST)/archive.tlrzpq.gpg: $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(TST)/archive.tlrzpq.gpg.part$(d))
 	# unsplit
 	#cat `ls -v $(TST)/archive.tlrzpq.gpg.part*` > $(TST)/archive.tlrzpq.gpg
@@ -699,7 +699,7 @@ $(DLD)/.sentinel: # $(OUT)/.sentinel
 	[ -d   $$(dirname $@) ] || \
 	mkdir -v $$(dirname $@)
 	touch               $@
-$(BLD)/.sentinel: # $(OUT)/.sentinel
+$(BLD)/.sentinel: $(OUT)/.sentinel
 	[ -d   $$(dirname $@) ] || \
 	mkdir -v $$(dirname $@)
 	touch               $@
@@ -707,11 +707,11 @@ $(OUT)/.sentinel:
 	[ -d   $$(dirname $@) ] || \
 	mkdir -v $$(dirname $@)
 	touch               $@
-$(TST)/.sentinel:
+$(TST)/.sentinel: $(OUT)/.sentinel
 	[ -d   $$(dirname $@) ] || \
 	mkdir -v $$(dirname $@)
 	touch               $@
-$(STG)/.sentinel:
+$(STG)/.sentinel: $(OUT)/.sentinel
 	[ -d   $$(dirname $@) ] || \
 	mkdir -v $$(dirname $@)
 	touch               $@
@@ -719,9 +719,9 @@ $(STG)/.sentinel:
 
 
 distclean: cleaner
-	$(RM) -r $(DLD) $(STG)
+	$(RM) -r $(DLD)
 cleaner: clean
-	$(RM) -r $(OUT)
+	$(RM) -r $(OUT) $(STG)
 #	$(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) \
 #	      *-$(LOGO) *-$(LOGO_VISIBLE)                \
 #	      *-$(LOGO_MIDVISIBLE)                       \

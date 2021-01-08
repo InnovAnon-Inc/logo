@@ -7,7 +7,7 @@ set -euxo pipefail
 
 MAKE="${MAKE:-make -j$(nproc)}"
 OUT="${OUT:-out}"
-DLD="${OUT:-dld}"
+DLD="${DLD:-dld}"
 BLD="${BLD:-bld}"
 STG="${STG:-stg}"
 TST="${TST:-tst}"
