@@ -35,6 +35,9 @@ rm -vf      "$TARCHIVE"
   --exclude=.travis.yml   \
   --exclude=.travis       \
   --exclude=nohup.out     \
+  --exclude=Dockerfile    \
+  --exclude='*.swp'       \
+  --exclude='*.out'       \
   --exclude="$OUT"        \
   --exclude="$DLD"        \
   --exclude="$BLD"        \
