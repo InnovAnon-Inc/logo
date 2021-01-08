@@ -1,8 +1,10 @@
-.PHONY: all distclean cleaner clean parts release test stego check check-sh check-misc dist stego-helper
+.PHONY: all distclean cleaner clean parts release test stego check check-sh check-misc dist stego-helper test-run
 
 all:
 	MAKE="$(MAKE)" ./make $@
 test:
+	MAKE="$(MAKE)" ./make $@
+test-run:
 	MAKE="$(MAKE)" ./make $@
 #release:
 #	MAKE="$(MAKE)" ./make $@
