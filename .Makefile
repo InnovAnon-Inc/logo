@@ -110,9 +110,10 @@ test-parts: $(STG)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	convert -coalesce $< $(TST)/logo-stego-rot-%02d.$(LOGOEXT)
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
 	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) ]
-	stegosuite -k "$(PW)" -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
-	find . \( -name '.git' -type d -prune \) -o -print
+	outguess -k "$(PW)" -r $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
 	[ -f $@ ]
+	#steghide extract -p "$(PW)" -xf $@ -sf $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
+	#stegosuite -k "$(PW)" -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
 $(TST)/archive.tlrzpq.gpg: $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(TST)/archive.tlrzpq.gpg.part$(d))
 	# unsplit
 	#cat `ls -v $(TST)/archive.tlrzpq.gpg.part*` > $(TST)/archive.tlrzpq.gpg
@@ -486,9 +487,11 @@ $(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(B
 # embed data in logo frames
 $(BLD)/logo-stego-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT) parts
 	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) ]
-	cp -v $< $@
-	stegosuite -k "$(PW)" -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $@ || { rm -fv $@ ; exit 2 ; }
+	outguess -k "$(PW)" -d $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $< $@
 	[ -f $@ ]
+	#steghide embed -p "$(PW)" -ef $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) -cf $< -sf $@ -e none -Z -N
+	#cp -v $< $@
+	#stegosuite -k "$(PW)" -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $@ || { rm -fv $@ ; exit 2 ; }
 # generate logo frames
 $(BLD)/logo-rot-%.$(LOGOEXT): $(BLD)/shiva-rot-%.$(LOGOEXT) $(BLD)/kali-%.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
