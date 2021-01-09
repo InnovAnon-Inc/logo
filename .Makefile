@@ -17,6 +17,9 @@ ifdef RECP
 RECP := --encrypt -r $(RECP)
 endif
 
+STEGEXT ?= ppm
+#STEGEXT ?= bmp
+
 #ifdef PW
 #PW := -k$(PW)
 PW ?= InnovAnon
@@ -29,12 +32,20 @@ VISIBLE=60
 MIDVISIBLE=30
 INVISIBLE=10
 
-TRANCE=7.83
+TRANCE=8
+#TRANCE=4
 SCALE=2
-FPS=20
-DEG=$(shell  echo 'scale=$(SCALE); 360 * $(TRANCE) / $(FPS)' | bc)
+ITER=$(TRANCE)
+#ITER=4
+FPS=32
+#FPS=31.32
+#DEG=$(shell  echo 'scale=$(SCALE); 360 * $(TRANCE) / $(FPS)' | bc)
 #NROT=$(shell echo 'scale=$(SCALE); 360 * $(TRANCE) / $(DEG)' | bc)
-NROT=$(shell echo 'scale=0; 360 * $(TRANCE) / $(DEG)' | bc)
+#NROT=$(shell echo 'scale=0; 360 * $(TRANCE) / $(DEG)' | bc)
+
+# 360 degrees / 30 frames / 4 cycles = 7.5
+DEG=$(shell  echo 'scale=$(SCALE); 360 / $(TRANCE) / $(FPS)' | bc)
+NROT=$(shell echo 'scale=0; $(FPS) * $(ITER)' | bc)
 
 QUALITY?=100
 QUAL=-quality $(QUALITY)
@@ -99,7 +110,7 @@ dist: distclean
 	echo TEST D ; find .
 	[ $(LOL) -eq 0 ] || $(MAKE) test
 	echo TEST E
-	tar acvf /tmp/logo.txz .
+	tar acvf /tmp/logo.txz $(OUT) $(STG)
 #test: logo-stego-animated.$(LOGOEXT)
 #test: stego
 #stegosuite -x -f $(TST)/archive.tlrzpq.gpg.part$(D) $(TST)/logo-stego-rot-%02d.$(LOGOEXT) || exit 2 ;
@@ -107,13 +118,22 @@ test: cleaner
 	$(MAKE) test-run
 test-parts: $(STG)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	# extract frames
-	convert -coalesce $< $(TST)/logo-stego-rot-%02d.$(LOGOEXT)
+	convert -coalesce $< $(TST)/logo-stego-rot-%03d.$(LOGOEXT)
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
 	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) ]
-	outguess -k "$(PW)" -r $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
+	case $(STEGEXT) in \
+	  ppm)             \
+	    outguess -k "$(PW)" -r $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)              \
+	    ;;             \
+	  bmp)             \
+	    steghide extract -p "$(PW)" -xf $@ -sf $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) \
+	    ;;             \
+	  *)               \
+	    exit 1         \
+	    stegosuite -k "$(PW)" -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)      \
+	    ;;             \
+	esac
 	[ -f $@ ]
-	#steghide extract -p "$(PW)" -xf $@ -sf $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
-	#stegosuite -k "$(PW)" -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)
 $(TST)/archive.tlrzpq.gpg: $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(TST)/archive.tlrzpq.gpg.part$(d))
 	# unsplit
 	#cat `ls -v $(TST)/archive.tlrzpq.gpg.part*` > $(TST)/archive.tlrzpq.gpg
@@ -477,21 +497,39 @@ $(BLD)/kali-gpg-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 
 #$(LOGO_ANIM_SMALL): $(LOGO_ANIM)
 #	$(LOWQUALITY) -resize 256x256^ -gravity center -extent 256x256 -layers optimize $^ $@
-$(OUT)/$(LOGO_ANIM): $(BLD)/logo-rot-0.$(LOGOEXT) $(foreach d,$(shell seq $(NROT)),$(BLD)/logo-rot-$(shell echo 'scale=$(SCALE); $(d) * -$(DEG)' | bc).$(LOGOEXT))
-	$(CONVERT) $^ -loop 0 -delay $(FPS) $@
+#$(OUT)/$(LOGO_ANIM): $(BLD)/logo-rot-0.$(LOGOEXT) $(foreach d,$(shell seq $(NROT)),$(BLD)/logo-rot-$(shell echo 'scale=$(SCALE); $(d) * -$(DEG)' | bc).$(LOGOEXT))
+#	$(CONVERT) $^ -loop 0 -delay $(FPS) $@
 	
 	
 	
-$(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-stego-rot-$(d).$(LOGOEXT))
+$(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-stego-rot-$(d).$(STEGEXT))
 	$(CONVERT) $^ -loop 0 -delay $(FPS) -layers optimize $@
+
 # embed data in logo frames
-$(BLD)/logo-stego-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT) parts
-	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) ]
-	outguess -k "$(PW)" -d $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $< $@
+$(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) parts
+	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) ]
+	case $(STEGEXT) in           \
+	  ppm)                       \
+	    outguess -k "$(PW)" -d $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $< $@                              \
+	    ;;                       \
+	  bmp)                       \
+	    steghide embed -p "$(PW)" -ef $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) -cf $< -sf $@ -e none -Z -N \
+	    ;;                       \
+	  *)                         \
+	    exit 1                   \
+	    stegosuite -k "$(PW)" -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $@                      || \
+	    { rm -fv $@ ; exit 2 ; } \
+	    ;;                       \
+	esac
 	[ -f $@ ]
-	#steghide embed -p "$(PW)" -ef $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) -cf $< -sf $@ -e none -Z -N
-	#cp -v $< $@
-	#stegosuite -k "$(PW)" -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $@ || { rm -fv $@ ; exit 2 ; }
+
+#$(BLD)/logo-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
+$(BLD)/%.$(STEGEXT): $(BLD)/%.$(LOGOEXT)
+	$(CONVERT) $< $@
+	
+
+
+
 # generate logo frames
 $(BLD)/logo-rot-%.$(LOGOEXT): $(BLD)/shiva-rot-%.$(LOGOEXT) $(BLD)/kali-%.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
