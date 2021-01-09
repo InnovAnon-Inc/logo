@@ -94,8 +94,8 @@ jobs:
             done
 
             cd ${CIRCLE_PROJECT_REPONAME}
-            rm -rf *
-            mv -v /tmp/logo/* .
+            #rm -rf *
+            #mv -v /tmp/logo/* .
 
 
             PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
@@ -107,9 +107,10 @@ jobs:
             cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
             VERSION="$cleanversion.$revisioncount"
 
-            mkdir -v   ../tmp
-            mv    -v * ../tmp
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} ../tmp
+            #mkdir -v   ../tmp
+            #mv    -v * ../tmp
+            #ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} ../tmp
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo
 
             #git remote set-url origin https://github.com:${GITHUB_TOKEN}@github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
             #git tag v$VERSION
