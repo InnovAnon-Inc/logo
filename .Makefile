@@ -121,7 +121,7 @@ test-parts: $(STG)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	convert -coalesce $< $(TST)/logo-stego-rot-%03d.$(LOGOEXT)
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
 	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) ]
-	case $(STEGEXT) in \
+	@case $(STEGEXT) in \
 	  ppm)             \
 	    outguess -k "$(PW)" -r $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@) $@             \
 	    ;;             \
@@ -508,7 +508,7 @@ $(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(B
 # embed data in logo frames
 $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) parts
 	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) ]
-	case $(STEGEXT) in           \
+	@case $(STEGEXT) in           \
 	  ppm)                       \
 	    outguess -k "$(PW)" -d $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $< $@                              \
 	    ;;                       \
