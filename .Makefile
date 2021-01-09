@@ -32,8 +32,8 @@ VISIBLE=60
 MIDVISIBLE=30
 INVISIBLE=10
 
-#TRANCE=8
-TRANCE=4
+TRANCE=8
+#TRANCE=4
 SCALE=2
 #ITER=$(TRANCE)
 ITER=2
@@ -45,7 +45,7 @@ FPS=32
 
 # 360 degrees / 30 frames / 4 cycles = 7.5
 DEG=$(shell  echo 'scale=$(SCALE); 360 / $(TRANCE) / $(FPS)' | bc)
-NROT=$(shell echo 'scale=0; $(FPS) * $(ITER)' | bc)
+NROT=$(shell echo 'scale=0; $(TRANCE) * $(FPS) * $(ITER)' | bc)
 
 QUALITY?=100
 QUAL=-quality $(QUALITY)
