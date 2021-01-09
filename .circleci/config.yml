@@ -17,8 +17,8 @@ jobs:
           command: |
             set -exu
             #apt-fast install bc imagemagick caca-utils stegosuite zpaq lrzip makeself tor torsocks shellcheck makeself
-            apt update
-            apt install bc imagemagick caca-utils zpaq lrzip makeself shellcheck makeself
+            $SHELL -l apt update
+            $SHELL -l apt install bc imagemagick caca-utils zpaq lrzip makeself shellcheck makeself
             # steghide stegosuite outguess
       - run:
           name: Increase Resource Limits
@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Checkout Project
           command: |
-            git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
+            $SHELL -l git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
 #      - run:
 #          name: Test Project
 #          command: |
@@ -71,6 +71,7 @@ jobs:
             cd ${CIRCLE_PROJECT_REPONAME}
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
             #./dist.sh
+            #$SHELL -l
             make -j$(nproc)
             #make -j$(nproc)
             #make -j$(nproc) clean
@@ -114,7 +115,7 @@ jobs:
             #mkdir -v   ../tmp
             #mv    -v * ../tmp
             #ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} ../tmp
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo
+            $SHELL -l ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo
 
             #git remote set-url origin https://github.com:${GITHUB_TOKEN}@github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
             #git tag v$VERSION
@@ -132,7 +133,7 @@ jobs:
           name: Update Home Page
           command: |
             # push to upstream
-            git clone --depth=1 --recursive https://github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git
+            $SHELL -l git clone --depth=1 --recursive https://github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git
             cd                                                               InnovAnon-Inc.github.io
             cp -v ../tmp/favicon.ico             assets/images/favicon.ico
             cp -v ../tmp/logo-visible.png        assets/images/logo.png
@@ -144,7 +145,7 @@ jobs:
             git config --global user.name  "Innovations Anonymous"
             git add .
             git commit -m '[CircleCI] updated corporate logo'
-            git push "https://${GITHUB_TOKEN}@github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git"
+            $SHELL -l git push "https://${GITHUB_TOKEN}@github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git"
 
 workflows:
   version: 2.1
