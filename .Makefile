@@ -118,9 +118,9 @@ test: cleaner
 	$(MAKE) test-run
 test-parts: $(STG)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	# extract frames
-	convert -coalesce $< $(TST)/logo-stego-rot-%03d.$(LOGOEXT)
+	convert -coalesce $< $(TST)/logo-stego-rot-%03d.$(STEGEXT)
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
-	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) ]
+	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@) ]
 	@case $(STEGEXT) in \
 	  ppm)             \
 	    outguess -k "$(PW)" -r $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@) $@             \
