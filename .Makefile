@@ -123,14 +123,14 @@ $(TST)/archive.tlrzpq.gpg.part%: test-parts
 	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) ]
 	case $(STEGEXT) in \
 	  ppm)             \
-	    outguess -k "$(PW)" -r $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) $@             \
+	    outguess -k "$(PW)" -r $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@) $@             \
 	    ;;             \
 	  bmp)             \
-	    steghide extract -p "$(PW)" -xf $@ -sf $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@) \
+	    steghide extract -p "$(PW)" -xf $@ -sf $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@) \
 	    ;;             \
 	  *)               \
 	    exit 1         \
-	    stegosuite -k "$(PW)" -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(LOGOEXT),$@)      \
+	    stegosuite -k "$(PW)" -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)      \
 	    ;;             \
 	esac
 	[ -f $@ ]
