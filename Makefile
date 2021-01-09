@@ -22,7 +22,7 @@ distclean:
 #	MAKE="$(MAKE)" ./make $@
 #dist: stego
 dist:
-	[ ! -d .git ]
+	#[ ! -d .git ]
 	MAKE="$(MAKE)" ./make $@
 
 check: check-sh check-misc

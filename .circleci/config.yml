@@ -26,47 +26,48 @@ jobs:
           name: Checkout Project
           command: |
             git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git
-      - run:
-          name: Test Project
-          command: |
-            cd ${CIRCLE_PROJECT_REPONAME}
-            #PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
-            #
-            #[ ! -z "`git tag`" ] || git tag v1.0
-            #git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' || git tag v1.0
-            ##revisioncount=$(expr `git log --oneline | wc -l` + 1)
-            #revisioncount=`git log --oneline | wc -l`
-            #cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
-            #VERSION="$cleanversion.$revisioncount"
-            
-            rm -v LICENSE README.md
-            #tar cf archive.tar --exclude archive.tar .
-            #tar cf -                  \
-            #  --exclude archive.tar   \
-            #  --exclude .circleci     \
-            #  --exclude-vcs           \
-            #  --exclude-vcs-ignores   \
-            #  --absolute-names        \
-            #  --group=nogroup         \
-            #  --mtime=0               \
-            #  --no-acls               \
-            #  --numeric-owner         \
-            #  --owner=nobody          \
-            #  --sort=name             \
-            #  --sparse              . |
-            #( mkdir -v /tmp/archive &&
-            #  cd       /tmp/archive &&
-            #  tar xf   - )
-            #makeself --nocomp /tmp/archive archive.tar quine \
-            #make -j$(nproc)
-            ##env RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
-            make release # test
+#      - run:
+#          name: Test Project
+#          command: |
+#            cd ${CIRCLE_PROJECT_REPONAME}
+#            #PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
+#            #
+#            #[ ! -z "`git tag`" ] || git tag v1.0
+#            #git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' || git tag v1.0
+#            ##revisioncount=$(expr `git log --oneline | wc -l` + 1)
+#            #revisioncount=`git log --oneline | wc -l`
+#            #cleanversion="`git describe --tags --long | grep -o '^v[^.]*\.[^.-]*' | sed s/^v//`"
+#            #VERSION="$cleanversion.$revisioncount"
+#            
+#            rm -v LICENSE README.md
+#            #tar cf archive.tar --exclude archive.tar .
+#            #tar cf -                  \
+#            #  --exclude archive.tar   \
+#            #  --exclude .circleci     \
+#            #  --exclude-vcs           \
+#            #  --exclude-vcs-ignores   \
+#            #  --absolute-names        \
+#            #  --group=nogroup         \
+#            #  --mtime=0               \
+#            #  --no-acls               \
+#            #  --numeric-owner         \
+#            #  --owner=nobody          \
+#            #  --sort=name             \
+#            #  --sparse              . |
+#            #( mkdir -v /tmp/archive &&
+#            #  cd       /tmp/archive &&
+#            #  tar xf   - )
+#            #makeself --nocomp /tmp/archive archive.tar quine \
+#            #make -j$(nproc)
+#            ##env RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
+#            make release # test
       - run:
           name: Build Project (Shiva)
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
-            ./dist.sh
+            #./dist.sh
+            make -j$(nproc) dist
             #make -j$(nproc)
             #make -j$(nproc) clean
             #mkdir -v   /tmp/shiva

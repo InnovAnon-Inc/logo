@@ -97,19 +97,15 @@ all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpap
 #wallpapers:        stego-helper
 #stego-helper: distclean
 #	$(MAKE) stego
-dist: distclean
-	[ ! -d .git ]
-	echo TEST A ; find .
-	$(MAKE) stego
-	echo TEST B ; find .
-	$(MAKE)
-	echo TEST C ; find .
-	$(MAKE) clean
+#dist: distclean
+dist: all stego
+	#[ ! -d .git ]
+	#$(MAKE) stego
+	#$(MAKE)
+	#$(MAKE) clean
 	#$(RM) Makefile .Makefile make support* nohup.out *.url *.jpg hermes.png *.mk archive.* .gitignore \
 	#      aperture.png umbrella.png quine.sh dist.sh sauron.png maltese.png
-	echo TEST D ; find .
 	[ $(LOL) -eq 0 ] || $(MAKE) test
-	echo TEST E
 	tar acvf /tmp/logo.txz $(OUT) $(STG)
 #test: logo-stego-animated.$(LOGOEXT)
 #test: stego
@@ -159,9 +155,10 @@ test-run: $(TST)/archive.tar
 #logo-stego-animated.$(LOGOEXT): stego
 #stego:
 #	$(MAKE) -f stego.mk
-stego: cleaner
+#stego: cleaner
+stego: stego-helper
 	#$(RM) $(BLD)/archive.tar
-	$(MAKE) stego-helper
+	#$(MAKE) stego-helper
 	find $(OUT)
 stego-helper: $(STG)/logo-stego-animated.$(ANIMEXT)
 $(STG)/logo-stego-animated.$(ANIMEXT): $(OUT)/$(LOGO_ANIM_SMALL) $(STG)/.sentinel
