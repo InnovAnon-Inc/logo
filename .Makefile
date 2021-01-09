@@ -315,7 +315,7 @@ $(BLD)/shiva-small-thumbnail.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
 $(BLD)/kali-small-thumbnail.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize $(THUMBNAIL_SMALLSZ)^ $(THUMBNAIL_SMALLARGS) $^ $@
 
-$(OUT)/large-thumbnail.$(LOGOEXT): shiva-large-thumbnail.$(LOGOEXT) kali-large-thumbnail.$(LOGOEXT)
+$(OUT)/large-thumbnail.$(LOGOEXT): $(BLD)/shiva-large-thumbnail.$(LOGOEXT) $(BLD)/kali-large-thumbnail.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 THUMBNAIL_LARGESZ=320x240
 THUMBNAIL_LARGEARGS=-gravity center -extent $(THUMBNAIL_LARGESZ)
@@ -425,7 +425,7 @@ $(BLD)/kali-wallpaper4.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 
 
 
-logos: shiva $(OUT)/doxygen-logo.$(LOGOEXT) $(OUT)/gpg-logo.jpg $(OUT)/logo.txt $(OUT)/sphinx-logo.$(LOGOEXT) $(OUT)/stackoverflow-logo.$(LOGOEXT) $(OUT)/google-cover-logo.$(LOGOEXT) $(OUT)/slack
+logos: shiva $(OUT)/doxygen-logo.$(LOGOEXT) $(OUT)/gpg-logo.jpg $(OUT)/logo.txt $(OUT)/sphinx-logo.$(LOGOEXT) $(OUT)/stackoverflow-logo.$(LOGOEXT) $(OUT)/google-cover-logo.$(LOGOEXT) slack
 # $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
 
 $(OUT)/sphinx-logo.$(LOGOEXT): $(BLD)/shiva-sphinx-logo.$(LOGOEXT) $(BLD)/kali-sphinx-logo.$(LOGOEXT)
