@@ -425,7 +425,7 @@ $(BLD)/kali-wallpaper4.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 
 
 
-logos: $(OUT)/shiva $(OUT)/doxygen-logo.$(LOGOEXT) $(OUT)/gpg-logo.jpg $(OUT)/logo.txt $(OUT)/sphinx-logo.$(LOGOEXT) $(OUT)/stackoverflow-logo.$(LOGOEXT) $(OUT)/google-cover-logo.$(LOGOEXT) $(OUT)/slack
+logos: shiva $(OUT)/doxygen-logo.$(LOGOEXT) $(OUT)/gpg-logo.jpg $(OUT)/logo.txt $(OUT)/sphinx-logo.$(LOGOEXT) $(OUT)/stackoverflow-logo.$(LOGOEXT) $(OUT)/google-cover-logo.$(LOGOEXT) $(OUT)/slack
 # $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
 
 $(OUT)/sphinx-logo.$(LOGOEXT): $(BLD)/shiva-sphinx-logo.$(LOGOEXT) $(BLD)/kali-sphinx-logo.$(LOGOEXT)
