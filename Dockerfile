@@ -8,7 +8,8 @@ RUN apt-fast install bc imagemagick caca-utils stegosuite zpaq lrzip makeself
 RUN echo -e "$GPG_KEY" | gpg --import
 RUN sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#'  /etc/ImageMagick-6/policy.xml
 RUN sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
-RUN ./dist.sh
+#RUN ./dist.sh
+RUN make dist
 
 FROM innovanon/poobuntu-ci as signer
 WORKDIR /logo/

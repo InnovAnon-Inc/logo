@@ -12,6 +12,8 @@
 *.out
 */.sentinel
 */
+!dld/e-corp.jpg
+!dld/sith.jpg
 
 # Miserable desktop garbage
 
