@@ -87,7 +87,7 @@ TST ?= tst
 DLD ?= dld
 
 #all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers stego
-all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers
+all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers $(OUT)/archive.tar
 #extra_logos:       stego-helper
 #logos:             stego-helper
 #apple-touch-icons: stego-helper
@@ -159,7 +159,7 @@ test-run: $(TST)/archive.tar
 stego: stego-helper
 	#$(RM) $(BLD)/archive.tar
 	#$(MAKE) stego-helper
-	find $(OUT)
+	#find $(OUT)
 stego-helper: $(STG)/logo-stego-animated.$(ANIMEXT)
 $(STG)/logo-stego-animated.$(ANIMEXT): $(OUT)/$(LOGO_ANIM_SMALL) $(STG)/.sentinel
 	cp -v $< $@
@@ -579,7 +579,7 @@ $(BLD)/%.lrz: $(BLD)/%
 #	  --exclude=README.md   \
 #	  $^	
 #archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(BLD)/small.dim $(BLD)/slack.dim
-$(BLD)/archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url
+$(OUT)/archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(shell find "$(DLD)" -maxdepth 1)
 	LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
 quine.sh:        shellcheck
 	$< -ax     $@

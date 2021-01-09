@@ -67,7 +67,7 @@ jobs:
             cd ${CIRCLE_PROJECT_REPONAME}
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
             #./dist.sh
-            make -j$(nproc) dist
+            make -j$(nproc)
             #make -j$(nproc)
             #make -j$(nproc) clean
             #mkdir -v   /tmp/shiva
@@ -85,9 +85,9 @@ jobs:
             #rm -v   /tmp/logo.txz
             #rm -rf .git .circleci
             
-            mkdir -v          /tmp/logo
-            cp -v out/* stg/* /tmp/logo/
-            cd                /tmp/logo
+            mkdir -v    /tmp/logo
+            cp -v out/* /tmp/logo/
+            cd          /tmp/logo
 
             for k in * ; do
               gpg --local-user 53F31F9711F06089\! --sign $k

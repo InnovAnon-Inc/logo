@@ -16,7 +16,8 @@ RECP="${RECP:-}"
 
 ARCHIVE="$(mktemp -d)"
 #TARCHIVE="$(mktemp XXXXXXXX.tar)"
-TARCHIVE="$BLD/archive.tar"
+#TARCHIVE="$BLD/archive.tar"
+TARCHIVE="$OUT/archive.tar"
 
 #rm -rf   $ARCHIVE
 # shellcheck disable=SC2064
@@ -27,6 +28,7 @@ rm -vf      "$TARCHIVE"
 #ls -ltra
 
   #--exclude-vcs-ignores   \
+  #--exclude="$DLD"        \
 ( tar cf -                \
   --exclude-vcs           \
   --exclude=README.md     \
@@ -39,7 +41,6 @@ rm -vf      "$TARCHIVE"
   --exclude='*.swp'       \
   --exclude='*.out'       \
   --exclude="$OUT"        \
-  --exclude="$DLD"        \
   --exclude="$BLD"        \
   --exclude="$STG"        \
   --exclude="$TST"        \
@@ -54,8 +55,10 @@ rm -vf      "$TARCHIVE"
 ( #mkdir -v "$ARCHIVE" &&
   cd       "$ARCHIVE" &&
   tar xf   - )
+# for stego:
+#makeself --nocomp "$ARCHIVE" "$TARCHIVE" quine  \
 # shellcheck disable=SC2086
-makeself --nocomp "$ARCHIVE" "$TARCHIVE" quine  \
+makeself --xz --complevel 9e "$ARCHIVE" "$TARCHIVE" quine  \
 env "LOL=$LOL" "PW=$PW" "RECP=$RECP" "DLD=$DLD" \
     "OUT=$OUT" "BLD=$BLD" "STG=$STG" "TST=$TST" \
 $MAKE dist
