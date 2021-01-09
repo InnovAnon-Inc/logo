@@ -691,9 +691,11 @@ $(OUT)/$(LOGO_MIDVISIBLE): $(BLD)/shiva-resize.$(LOGOEXT) $(BLD)/kali-2.$(LOGOEX
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
 $(BLD)/%-resize.$(LOGOEXT): $(BLD)/%-transparent.$(LOGOEXT) $(BLD)/kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
+	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`\< -extent `cat $(BLD)/kali.dim` $< $@
+	#$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
 $(BLD)/hermes-resize.$(LOGOEXT): $(BLD)/hermes.$(LOGOEXT) $(BLD)/kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
+	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`\< -extent `cat $(BLD)/kali.dim` $< $@
+	#$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
 $(BLD)/%-transparent.$(LOGOEXT):         $(BLD)/%-2.$(LOGOEXT)
 	$(CONVERT) $^ $(TRANSPARENT) $@
 # not a black-and-white image

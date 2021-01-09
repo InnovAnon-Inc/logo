@@ -78,16 +78,25 @@ jobs:
             cd ${CIRCLE_PROJECT_REPONAME}
             #make -j$(nproc) clean
             #rm -v Makefile *.url LICENSE README.md
-            rm -rf *
+            #rm -rf *
             #mv -v /tmp/shiva/*  .
             #rm -v Makefile .Makefile make support* nohup.out *.url *.jpg *.mk archive.* .gitignore
-            tar xvf /tmp/logo.txz
-            rm -v   /tmp/logo.txz
+            #tar xvf /tmp/logo.txz
+            #rm -v   /tmp/logo.txz
             #rm -rf .git .circleci
+            
+            mkdir -v          /tmp/logo
+            cp -v out/* stg/* /tmp/logo/
+            cd                /tmp/logo
 
             for k in * ; do
               gpg --local-user 53F31F9711F06089\! --sign $k
             done
+
+            cd ${CIRCLE_PROJECT_REPONAME}
+            rm -rf *
+            mv -v /tmp/logo/* .
+
 
             PACKAGE=${CIRCLE_PROJECT_REPONAME,,}
 
