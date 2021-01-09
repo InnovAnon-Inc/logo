@@ -17,6 +17,7 @@ jobs:
           command: |
             set -exu
             #apt-fast install bc imagemagick caca-utils stegosuite zpaq lrzip makeself tor torsocks shellcheck makeself
+            apt update
             apt install bc imagemagick caca-utils zpaq lrzip makeself shellcheck makeself
             # steghide stegosuite outguess
       - run:
