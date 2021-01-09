@@ -546,7 +546,7 @@ $(BLD)/shiva-small-2.$(LOGOEXT): $(BLD)/shiva-transparent.$(LOGOEXT) $(BLD)/smal
 	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/small.dim`\> -extent `cat $(BLD)/small.dim` $< $@
 $(BLD)/kali-small.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT) $(BLD)/small.dim
 	$(RESIZE) -resize `cat $(BLD)/small.dim`^ -extent `cat $(BLD)/small.dim` $< $@	
-$(BLD)/small.dim:
+$(BLD)/small.dim: $(BLD)/.sentinel
 	echo 256x256 > $@
 	
 # data to hide
@@ -674,7 +674,7 @@ $(OUT)/slack-hermes-$(LOGO_VISIBLE): $(OUT)/hermes-$(LOGO_VISIBLE) $(BLD)/slack.
 	$(CONVERT) -resize `cat $(BLD)/slack.dim`^ -gravity center -extent `cat $(BLD)/slack.dim` $< $@
 $(OUT)/slack-e-corp-$(LOGO_VISIBLE): $(OUT)/e-corp-$(LOGO_VISIBLE) $(BLD)/slack.dim
 	$(CONVERT) -resize `cat $(BLD)/slack.dim`^ -gravity center -extent `cat $(BLD)/slack.dim` $< $@
-$(BLD)/slack.dim:
+$(BLD)/slack.dim: $(BLD)/.sentinel
 	echo 1000x1000 > $@
 
 $(OUT)/%-$(LOGO):              $(BLD)/%-resize.$(LOGOEXT) $(BLD)/kali-2.$(LOGOEXT)
