@@ -2,7 +2,8 @@
         apple-touch-icons boot-splashes favicons profiles wallpapers \
         aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy   \
         maltese maltese-round sauron sith umbrella wolfram           \
-	shellcheck dist stego-helper test-parts test-run
+	shellcheck dist stego-helper test-parts test-run             \
+	icons android-chrome-icons mstile-icons
 #.PRECIOUS: archive.tar archive.tar.lrz archive.tar.lrz.zpaq          \
 #           archive.tlrzpq archive.tlrzpq.gpg                         \
 #           shiva-small.png kali-small.png shiva-2.png shiva.png      \
@@ -91,7 +92,7 @@ TST ?= tst
 DLD ?= dld
 
 #all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers stego
-all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers $(OUT)/archive.tar
+all: extra_logos logos icons boot-splashes profiles wallpapers $(OUT)/archive.tar
 #all: sign
 #sign: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers $(OUT)/archive.tar
 #$(OUT)/%.gpg: $(OUT)/%
@@ -178,12 +179,72 @@ $(STG)/logo-stego-animated.$(ANIMEXT): $(OUT)/$(LOGO_ANIM_SMALL) $(STG)/.sentine
 
 
 
-apple-touch-icons: $(OUT)/apple-touch-icon-152x152.png \
+
+
+
+
+icons: apple-touch-icons android-chrome-icons mstile-icons favicons $(OUT)/safari-pinned-tab.svg
+
+#apple-touch-icon-114x114-precomposed.png
+#apple-touch-icon-120x120-precomposed.png
+#apple-touch-icon-144x144-precomposed.png
+#apple-touch-icon-152x152-precomposed.png
+#apple-touch-icon-180x180-precomposed.png
+#apple-touch-icon-57x57-precomposed.png
+#apple-touch-icon-60x60-precomposed.png
+#apple-touch-icon-72x72-precomposed.png
+#apple-touch-icon-76x76-precomposed.png
+#apple-touch-icon-precomposed.png
+# TODO apple-touch-icon.png
+apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
+                   $(OUT)/apple-touch-icon-144x144.png \
                    $(OUT)/apple-touch-icon-120x120.png \
+                   $(OUT)/apple-touch-icon-152x152.png \
+                   $(OUT)/apple-touch-icon-114x114.png \
                    $(OUT)/apple-touch-icon-76x76.png   \
-                   $(OUT)/apple-touch-icon-60x60.png
+                   $(OUT)/apple-touch-icon-72x72.png   \
+                   $(OUT)/apple-touch-icon-60x60.png   \
+                   $(OUT)/apple-touch-icon-57x57.png
 $(OUT)/apple-touch-icon-%.png: $(OUT)/$(LOGO)
 	$(CONVERT) -resize $(patsubst $(OUT)/apple-touch-icon-%.png,%,$@) $^ $@
+
+# TODO
+android-chrome-icons: $(OUT)/android-chrome-384x384.png \
+                      $(OUT)/android-chrome-256x256.png \
+                      $(OUT)/android-chrome-192x192.png \
+                      $(OUT)/android-chrome-191x191.png \
+                      $(OUT)/android-chrome-144x144.png \
+                      $(OUT)/android-chrome-96x96.png   \
+                      $(OUT)/android-chrome-72x72.png   \
+                      $(OUT)/android-chrome-48x48.png   \
+                      $(OUT)/android-chrome-36x36.png
+$(OUT)/android-chrome-%.png: $(OUT)/$(LOGO)
+	$(CONVERT) -resize $(patsubst $(OUT)/android-chrome-%.png,%,$@) $^ $@
+
+# TODO
+mstile-icons: $(OUT)/mstile-310x310.png         \
+              $(OUT)/mstile-310x150.png         \
+              $(OUT)/mstile-150x150.png         \
+              $(OUT)/mstile-144x144.png         \
+              $(OUT)/mstile-70x70.png
+$(OUT)/mstile-%.png: $(OUT)/$(LOGO)
+	$(CONVERT) -resize $(patsubst $(OUT)/mstile-%.png,%,$@) $^ $@
+
+$(OUT)/safari-pinned-tab.svg: $(BLD)/shiva-transparent.$(LOGOEXT)
+	$(CONVERT) -resize 563x563 $^ $(TRANSPARENT) $@
+
+favicons: $(OUT)/favicon.ico
+$(OUT)/favicon.ico: $(OUT)/favicon-194x194.png \
+                    $(OUT)/favicon-64x64.ico   \
+                    $(OUT)/favicon-32x32.ico   \
+                    $(OUT)/favicon-16x16.ico   \
+                    $(OUT)/favicon-8x8.ico
+	$(CONVERT) $^ $@
+$(OUT)/favicon-%.ico: $(OUT)/$(LOGO_MIDVISIBLE)
+	DIM=$(patsubst $(OUT)/favicon-%.ico,%,$@) $(SHELL) -c \
+	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
+#$(BLD)/$(LOGO_MIDVISIBLE): $(OUT)/$(LOGO_MIDVISIBLE)
+#	cp -v $< $@
 
 
 
@@ -211,17 +272,6 @@ $(BLD)/kali-boot.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 
 
 
-favicons: $(OUT)/favicon.ico
-$(OUT)/favicon.ico: $(BLD)/favicon-8x8.ico   \
-             $(BLD)/favicon-16x16.ico \
-             $(BLD)/favicon-32x32.ico \
-             $(BLD)/favicon-64x64.ico
-	$(CONVERT) $^ $@
-$(BLD)/favicon-%.ico: $(BLD)/$(LOGO_MIDVISIBLE)
-	DIM=$(patsubst $(BLD)/favicon-%.ico,%,$@) $(SHELL) -c \
-	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
-$(BLD)/$(LOGO_MIDVISIBLE): $(OUT)/$(LOGO_MIDVISIBLE)
-	cp -v $< $@
 
 
 
