@@ -1,27 +1,25 @@
-FROM innovanon/poobuntu-ci as builder
+FROM innovanon/builder as builder
 WORKDIR /src/
 COPY ./ ./
 ARG GPG_KEY
 
-RUN apt-fast update
-RUN apt-fast install bc imagemagick caca-utils stegosuite zpaq lrzip makeself
+RUN apt update
+RUN apt install bc imagemagick caca-utils  zpaq lrzip makeself shellcheck
 RUN echo -e "$GPG_KEY" | gpg --import
 RUN sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#'  /etc/ImageMagick-6/policy.xml
 RUN sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml
 #RUN ./dist.sh
-RUN make dist
+RUN make -j$(nproc)
 
-FROM innovanon/poobuntu-ci as signer
-WORKDIR /logo/
-COPY --from=builder /tmp/logo.txz /tmp/
+FROM innovanon/builder as signer
+WORKDIR /tmp/logo
+COPY --from=builder /src/out/* /tmp/logo/
 ARG GPG_KEY
 RUN echo -e "$GPG_KEY" | gpg --import
-RUN tar xvf /tmp/logo.txz
-RUN rm -f   /tmp/logo.txz
 RUN for k in * ; do \
       gpg --local-user 53F31F9711F06089\! --sign $k || exit 2 ; \
     done
-RUN cd / && tar acf /tmp/logo.txz logo
+RUN cd /tmp && tar acf /tmp/logo.txz logo
 
 FROM scratch
 COPY --from=signer /tmp/logo.txz /tmp/

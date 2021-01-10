@@ -29,7 +29,7 @@ jobs:
       - run:
           name: Checkout Project
           command: |
-            $SHELL -l -c 'git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git'
+            $SHELL -l -c "git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git"
 #      - run:
 #          name: Test Project
 #          command: |
