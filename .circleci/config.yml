@@ -20,7 +20,7 @@ jobs:
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
             #$SHELL -l -c "make -j1"
             #$SHELL -l -c "make -j$(nproc)"
-            $SHELL -l -c "make -j4"
+            $SHELL -l -c "make -j2"
       - run:
           name: Import GPG Key
           command: |
