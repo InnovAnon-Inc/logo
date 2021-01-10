@@ -3,7 +3,7 @@
         aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy   \
         maltese maltese-round sauron sith umbrella wolfram           \
 	shellcheck dist stego-helper test-parts test-run             \
-	icons android-chrome-icons mstile-icons anim
+	icons android-chrome-icons mstile-icons anim stego-parts
 #.PRECIOUS: archive.tar archive.tar.lrz archive.tar.lrz.zpaq          \
 #           archive.tlrzpq archive.tlrzpq.gpg                         \
 #           shiva-small.png kali-small.png shiva-2.png shiva.png      \
@@ -572,7 +572,7 @@ $(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(B
 	$(CONVERT) $^ -loop 0 -delay $(FPS) -layers optimize $@
 
 # embed data in logo frames
-$(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) parts
+$(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
 	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) ]
 	@case $(STEGEXT) in           \
 	  ppm)                       \
@@ -626,7 +626,10 @@ $(BLD)/small.dim: $(BLD)/.sentinel
 	
 # data to hide
 $(BLD)/archive.tlrzpq.gpg.part%: parts
+$(BLD)/stego.tlrzpq.gpg.part%: stego-parts
 parts: $(BLD)/archive.tlrzpq.gpg
+	split -d -n $(NROT) $< $<.part
+stego-parts: $(BLD)/stego.tlrzpq.gpg
 	split -d -n $(NROT) $< $<.part
 $(BLD)/%.gpg: $(BLD)/%
 	rm -vf $@
