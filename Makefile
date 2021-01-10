@@ -195,7 +195,10 @@ apple-touch-icons-precomposed: $(OUT)/apple-touch-icon-114x114-precomposed.png \
                                $(OUT)/apple-touch-icon-60x60-precomposed.png   \
                                $(OUT)/apple-touch-icon-72x72-precomposed.png   \
                                $(OUT)/apple-touch-icon-76x76-precomposed.png
-$(OUT)/apple-touch-icon-%-precomposed.png: $(OUT)/apple-touch-icon-%.png
+$(OUT)/apple-touch-icon-%-precomposed.png: $(OUT)/apple-touch-icon-%.png \
+	                                   $(BLD)/rc-ne-%.png            \
+					   $(BLD)/rc-sw-%.png            \
+					   $(BLD)/rc-se-%.png
 	convert -quality 100 $<                                                 \
 	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<) $^ $@ \
 	    -gravity northwest -composite                                       \

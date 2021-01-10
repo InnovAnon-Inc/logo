@@ -12,7 +12,7 @@ jobs:
           name: Check Scripts
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
-            shellcheck -ax {check,quine,sign}.sh
+            shellcheck -ax {check,quine,sign,test}.sh
       - run:
           name: Import GPG Key
           command: |
