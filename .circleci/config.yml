@@ -75,7 +75,8 @@ jobs:
             #        apple-touch-icon-precomposed.png         \
             #        bio-photo.jpg                            \
             #        apple-touch-icon.png                     \
-            cd ${CIRCLE_PROJECT_REPONAME}/out
+            DIR="$(readlink -f "$(pwd)")/InnovAnon-Inc.github.io"
+            cd /tmp/logo
             mv -v android-chrome-144x144.png               \
                   android-chrome-192x192.png               \
                   android-chrome-256x256.png               \
@@ -103,14 +104,14 @@ jobs:
                   mstile-310x310.png                       \
                   mstile-70x70.png                         \
                   safari-pinned-tab.svg                    \
-                  ../../InnovAnon-Inc.github.io/assets/images/
+                  "$DIR/assets/images"
             mv -v logo-small-animated.gif                  \
-                  ../../InnovAnon-Inc.github.io/assets/images/logo.gif
-            cd    ../../InnovAnon-Inc.github.io/assets/images
+                  "$DIR/assets/images/logo.gif"
+            cd    "$DIR/assets/images"
             # manually managed math on black
             #ln -sv logo-visible.png 3600x3600.png
             ln -sv logo-visible.png logo.png
-            cd    ../../InnovAnon-Inc.github.io
+            cd    "$DIR"
 
             git config --global user.email "InnovAnon-Inc@protonmail.com"
             git config --global user.name  "Innovations Anonymous"
