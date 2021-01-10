@@ -15,6 +15,7 @@ ARCHIVE="$(mktemp -d)"
 
 # shellcheck disable=SC2064
 trap "rm -rf $ARCHIVE" 0
+# shellcheck disable=SC2153
 rm -vf      "$TARCHIVE"
 
 ( tar cf -                \
@@ -33,6 +34,7 @@ rm -vf      "$TARCHIVE"
   "$DLD/"               ) |
 ( cd       "$ARCHIVE" &&
   tar xf   - )
+# shellcheck disable=SC2153
 case "$TARCHIVE" in
   archive.tar)
     # shellcheck disable=SC2086
