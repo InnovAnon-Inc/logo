@@ -1,3 +1,4 @@
+command -v support
 support &
 P="$!"
 support_exit () {

@@ -78,7 +78,7 @@ jobs:
             #mkdir -v   /tmp/shiva
             #mv    -v * /tmp/shiva/
       - run:
-          name: Release Project
+          name: Sign Project
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
             #make -j$(nproc) clean
@@ -97,7 +97,9 @@ jobs:
             for k in * ; do
               gpg --local-user 53F31F9711F06089\! --sign $k
             done
-
+      - run:
+          name: Release Project
+          command: |
             cd ${CIRCLE_PROJECT_REPONAME}
             #rm -rf *
             #mv -v /tmp/logo/* .
