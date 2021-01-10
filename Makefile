@@ -573,17 +573,17 @@ $(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(B
 
 # embed data in logo frames
 $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
-	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) ]
+	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) ]
 	@case $(STEGEXT) in           \
 	  ppm)                       \
-	    outguess -k "$(PW)" -d $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $< $@                              \
+	    outguess -k "$(PW)" -d $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) $< $@                              \
 	    ;;                       \
 	  bmp)                       \
-	    steghide embed -p "$(PW)" -ef $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) -cf $< -sf $@ -e none -Z -N \
+	    steghide embed -p "$(PW)" -ef $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) -cf $< -sf $@ -e none -Z -N \
 	    ;;                       \
 	  *)                         \
 	    exit 1                   \
-	    stegosuite -k "$(PW)" -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/archive.tlrzpq.gpg.part%,$@) $@                      || \
+	    stegosuite -k "$(PW)" -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) $@                      || \
 	    { rm -fv $@ ; exit 2 ; } \
 	    ;;                       \
 	esac
@@ -660,8 +660,8 @@ $(BLD)/stego.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
 #$(OUT)/archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(shell find "$(DLD)" -maxdepth 1)
 $(OUT)/archive.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
 	TARCHIVE="$@" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
-quine.sh:        shellcheck
-	$< -ax     $@
+#quine.sh:        shellcheck
+#	$< -ax     $@
 #make:            shellcheck
 #	$< -ax     $@
 #support-wrapper: shellcheck
@@ -671,7 +671,7 @@ quine.sh:        shellcheck
 #support:
 #	file $@ | \
 #	grep 'support: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, no section header'
-shellcheck:
+#shellcheck:
 	
 	
 	
