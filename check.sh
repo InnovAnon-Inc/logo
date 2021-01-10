@@ -32,3 +32,16 @@ cd out
 [ -f mstile-70x70.png ]
 [ -f safari-pinned-tab.svg ]
 
+[ -f apple-touch-icon-114x114-precomposed.png ]
+[ -f apple-touch-icon-120x120-precomposed.png ]
+[ -f apple-touch-icon-144x144-precomposed.png ]
+[ -f apple-touch-icon-152x152-precomposed.png ]
+[ -f apple-touch-icon-180x180-precomposed.png ]
+[ -f apple-touch-icon-57x57-precomposed.png ]
+[ -f apple-touch-icon-60x60-precomposed.png ]
+[ -f apple-touch-icon-72x72-precomposed.png ]
+[ -f apple-touch-icon-76x76-precomposed.png ]
+#[ -f apple-touch-icon-precomposed.png ]
+#[ -f bio-photo.jpg ]
+#[ -f apple-touch-icon.png ]
+

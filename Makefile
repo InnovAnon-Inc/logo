@@ -183,18 +183,43 @@ $(STG)/logo-stego-animated.$(ANIMEXT): $(OUT)/$(LOGO_ANIM_SMALL) $(STG)/.sentine
 
 
 
-icons: apple-touch-icons android-chrome-icons mstile-icons favicons $(OUT)/safari-pinned-tab.svg
+icons: apple-touch-icons-precomposed android-chrome-icons mstile-icons favicons $(OUT)/safari-pinned-tab.svg
 
-#apple-touch-icon-114x114-precomposed.png
-#apple-touch-icon-120x120-precomposed.png
-#apple-touch-icon-144x144-precomposed.png
-#apple-touch-icon-152x152-precomposed.png
-#apple-touch-icon-180x180-precomposed.png
-#apple-touch-icon-57x57-precomposed.png
-#apple-touch-icon-60x60-precomposed.png
-#apple-touch-icon-72x72-precomposed.png
-#apple-touch-icon-76x76-precomposed.png
-#apple-touch-icon-precomposed.png
+# TODO $(OUT)/apple-touch-icon-precomposed.png
+apple-touch-icons-precomposed: $(OUT)/apple-touch-icon-114x114-precomposed.png \
+                               $(OUT)/apple-touch-icon-120x120-precomposed.png \
+                               $(OUT)/apple-touch-icon-144x144-precomposed.png \
+                               $(OUT)/apple-touch-icon-152x152-precomposed.png \
+                               $(OUT)/apple-touch-icon-180x180-precomposed.png \
+                               $(OUT)/apple-touch-icon-57x57-precomposed.png   \
+                               $(OUT)/apple-touch-icon-60x60-precomposed.png   \
+                               $(OUT)/apple-touch-icon-72x72-precomposed.png   \
+                               $(OUT)/apple-touch-icon-76x76-precomposed.png
+$(OUT)/apple-touch-icon-%-precomposed.png: $(OUT)/apple-touch-icon-%.png
+	convert -quality 100 $<                                                 \
+	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<) $^ $@ \
+	    -gravity northwest -composite                                       \
+	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<) $^ $@ \
+	    -gravity northeast -composite                                       \
+	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-sw-%.png,$<) $^ $@ \
+	    -gravity southwest -composite                                       \
+	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-se-%.png,$<) $^ $@ \
+	    -gravity southeast -composite                                       \
+	  $@
+$(BLD)/rc-nw-%.png: $(BLD)/.sentinel
+	set -e                                                              ; \
+	K=$(patsubst $(BLD)/rc-nw-%.png,%,$@)                               ; \
+	k=$$((K-1))                                                         ; \
+	convert -size $Kx$K xc:none                                           \
+	  -draw "fill white rectangle 0,0 $k,$k fill black circle $k,$k $k,0" \
+	  -background white -alpha shape $@
+$(BLD)/rc-ne-%.png: $(BLD)/rc-nw-%.png
+	convert $< -flop $@
+$(BLD)/rc-sw-%.png: $(BLD)/rc-nw-%.png
+	convert $< -flip $@
+$(BLD)/rc-se-%.png: $(BLD)/rc-ne-%.png
+	convert $< -flip $@
+
 # TODO apple-touch-icon.png
 apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
                    $(OUT)/apple-touch-icon-144x144.png \
