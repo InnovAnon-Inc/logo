@@ -233,8 +233,13 @@ $(OUT)/mstile-%.png: $(OUT)/$(LOGO)
 $(OUT)/safari-pinned-tab.svg: $(BLD)/shiva-transparent.$(LOGOEXT)
 	$(CONVERT) -resize 563x563 $^ $(TRANSPARENT) $@
 
-favicons: $(OUT)/favicon.ico
-$(OUT)/favicon.ico: $(OUT)/favicon-194x194.png \
+favicons: $(OUT)/favicon.ico         \
+	  $(OUT)/favicon-194x194.png \
+          $(OUT)/favicon-64x64.png   \
+          $(OUT)/favicon-32x32.png   \
+          $(OUT)/favicon-16x16.png   \
+          $(OUT)/favicon-8x8.png
+$(OUT)/favicon.ico: $(OUT)/favicon-194x194.ico \
                     $(OUT)/favicon-64x64.ico   \
                     $(OUT)/favicon-32x32.ico   \
                     $(OUT)/favicon-16x16.ico   \
@@ -245,6 +250,8 @@ $(OUT)/favicon-%.ico: $(OUT)/$(LOGO_MIDVISIBLE)
 	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
 #$(BLD)/$(LOGO_MIDVISIBLE): $(OUT)/$(LOGO_MIDVISIBLE)
 #	cp -v $< $@
+$(OUT)/favicon-%.png: $(OUT)/$(LOGO_MIDVISIBLE)
+	$(CONVERT) -resize $(patsubst $(OUT)/favicon-%.png,%,$@) $^ $@
 
 
 
