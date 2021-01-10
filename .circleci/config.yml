@@ -31,7 +31,7 @@ jobs:
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
            
-            cp -v sign.sh /usr/local/bin
+            mv -v sign.sh /usr/local/bin
             
             mkdir -v    /tmp/logo
             mv -v out/* /tmp/logo/
@@ -76,7 +76,7 @@ jobs:
             #        bio-photo.jpg                            \
             #        apple-touch-icon.png                     \
             cd ${CIRCLE_PROJECT_REPONAME}/out
-            cp -v android-chrome-144x144.png               \
+            mv -v android-chrome-144x144.png               \
                   android-chrome-192x192.png               \
                   android-chrome-256x256.png               \
                   android-chrome-36x36.png                 \
@@ -104,7 +104,7 @@ jobs:
                   mstile-70x70.png                         \
                   safari-pinned-tab.svg                    \
                   ../../InnovAnon-Inc.github.io/assets/images/
-            cp -v logo-small-animated.gif                  \
+            mv -v logo-small-animated.gif                  \
                   ../../InnovAnon-Inc.github.io/assets/images/logo.gif
             cd    ../../InnovAnon-Inc.github.io/assets/images
             # manually managed math on black
