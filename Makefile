@@ -636,6 +636,8 @@ $(BLD)/%.zpaq: $(BLD)/%
 	zpaq a $@ $^ -m511.7
 $(BLD)/%.lrz: $(BLD)/%
 	lrzip -fUno $@ $^
+$(BLD)/archive.tar: $(OUT)/archive.tar $(BLD)/.sentinel
+	cp -v $< $@
 #$(BLD)/%.tar: $(BLD)/%
 #	tar vcf $@              \
 #	  --absolute-names      \
