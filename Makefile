@@ -779,7 +779,7 @@ $(BLD)/kali-2.$(LOGOEXT): $(BLD)/random.$(LOGOEXT) $(BLD)/kali.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random.$(LOGOEXT): $(BLD)/random.out
 	convert -depth 8 -size `cat $(BLD)/kali.dim` RGB:- $@ < $<
-$(BLD)/random.$(LOGOEXT): $(BLD)/kali.dim fingerprint
+$(BLD)/random.out: $(BLD)/kali.dim fingerprint
 	head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
 fingerprint: # unique every time
 
