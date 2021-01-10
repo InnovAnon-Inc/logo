@@ -614,7 +614,7 @@ $(BLD)/random-%.out: $(BLD)/random-2.sz fingerprint
 	#head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
 $(BLD)/random-2.sz: $(BLD)/small.dim
 	sed 's/x/*/' $<
-	expr 3 \* `sed 's/x/*/' $<` | tee $@
+	echo $$((3*$$(sed 's/x/*/' $<))) | tee $@
 
 # animated logo is 256x256
 $(BLD)/shiva-small-2.$(LOGOEXT): $(BLD)/shiva-transparent.$(LOGOEXT) $(BLD)/small.dim
@@ -638,8 +638,8 @@ $(BLD)/%.zpaq: $(BLD)/%
 	zpaq a $@ $^ -m511.7
 $(BLD)/%.lrz: $(BLD)/%
 	lrzip -fUno $@ $^
-$(BLD)/archive.tar: $(OUT)/archive.tar $(BLD)/.sentinel
-	cp -v $< $@
+$(BLD)/stego.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
+	TARCHIVE="$$(basename $@)" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
 #$(BLD)/%.tar: $(BLD)/%
 #	tar vcf $@              \
 #	  --absolute-names      \
@@ -658,7 +658,7 @@ $(BLD)/archive.tar: $(OUT)/archive.tar $(BLD)/.sentinel
 #archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(BLD)/small.dim $(BLD)/slack.dim
 #$(OUT)/archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(shell find "$(DLD)" -maxdepth 1)
 $(OUT)/archive.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
-	LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
+	TARCHIVE="$$(basename $@)" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
 quine.sh:        shellcheck
 	$< -ax     $@
 #make:            shellcheck
@@ -792,7 +792,7 @@ $(BLD)/random.out: $(BLD)/random.sz fingerprint
 	head -c "`cat $<`" /dev/urandom > $@
 $(BLD)/random.sz: $(BLD)/kali.dim
 	sed 's/x/*/' $<
-	expr 3 \* `sed 's/x/*/' $<` | tee $@
+	echo $$((3*$$(sed 's/x/*/' $<))) | tee $@
 fingerprint: # unique every time
 
 $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
