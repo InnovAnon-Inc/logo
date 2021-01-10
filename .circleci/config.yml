@@ -159,18 +159,18 @@ jobs:
             ln -sv logo-visible.png logo.png
             cd ../..
 
-#                  apple-touch-icon-114x114-precomposed.png \
-#                  apple-touch-icon-120x120-precomposed.png \
-#                  apple-touch-icon-144x144-precomposed.png \
-#                  apple-touch-icon-152x152-precomposed.png \
-#                  apple-touch-icon-180x180-precomposed.png \
-#                  apple-touch-icon-57x57-precomposed.png   \
-#                  apple-touch-icon-60x60-precomposed.png   \
-#                  apple-touch-icon-72x72-precomposed.png   \
-#                  apple-touch-icon-76x76-precomposed.png   \
-#                  apple-touch-icon-precomposed.png         \
-#                  bio-photo.jpg                            \
-#                  apple-touch-icon.png                     \
+            #        apple-touch-icon-114x114-precomposed.png \
+            #        apple-touch-icon-120x120-precomposed.png \
+            #        apple-touch-icon-144x144-precomposed.png \
+            #        apple-touch-icon-152x152-precomposed.png \
+            #        apple-touch-icon-180x180-precomposed.png \
+            #        apple-touch-icon-57x57-precomposed.png   \
+            #        apple-touch-icon-60x60-precomposed.png   \
+            #        apple-touch-icon-72x72-precomposed.png   \
+            #        apple-touch-icon-76x76-precomposed.png   \
+            #        apple-touch-icon-precomposed.png         \
+            #        bio-photo.jpg                            \
+            #        apple-touch-icon.png                     \
             cp -v android-chrome-144x144.png               \
                   android-chrome-192x192.png               \
                   android-chrome-256x256.png               \
