@@ -642,7 +642,7 @@ $(BLD)/%.zpaq: $(BLD)/%
 $(BLD)/%.lrz: $(BLD)/%
 	lrzip -fUno $@ $^
 $(BLD)/stego.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
-	TARCHIVE="$$(basename $@)" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
+	TARCHIVE="$@" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
 #$(BLD)/%.tar: $(BLD)/%
 #	tar vcf $@              \
 #	  --absolute-names      \
@@ -661,7 +661,7 @@ $(BLD)/stego.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
 #archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(BLD)/small.dim $(BLD)/slack.dim
 #$(OUT)/archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(shell find "$(DLD)" -maxdepth 1)
 $(OUT)/archive.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
-	TARCHIVE="$$(basename $@)" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
+	TARCHIVE="$@" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
 quine.sh:        shellcheck
 	$< -ax     $@
 #make:            shellcheck
