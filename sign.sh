@@ -4,7 +4,8 @@ set -euvxo pipefail
 #(( UID ))
 find . -print0 \
   \! -type d   |
-xargs -I% -t   \
+xargs -0       \
+  -I% -t       \
   "-P$(nproc)" \
 gpg --sign %
 
