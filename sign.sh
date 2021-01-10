@@ -2,9 +2,9 @@
 set -euvxo pipefail
 (( ! $# ))
 #(( UID ))
-find .       \
-  \! -type d |
-xargs -I% -t \
-  -P$(nproc) \
+find . -0      \
+  \! -type d   |
+xargs -I% -t   \
+  "-P$(nproc)" \
 gpg --sign %
 
