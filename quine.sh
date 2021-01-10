@@ -36,20 +36,14 @@ rm -vf      "$TARCHIVE"
   tar xf   - )
 # shellcheck disable=SC2153
 case "$TARCHIVE" in
-  $OUT/*.tar)
-    # shellcheck disable=SC2086
-    makeself --xz --complevel 9e "$ARCHIVE" "$TARCHIVE" quine  \
-    env "LOL=$LOL"  "PW=$PW" "RECP=$RECP" "DLD=$DLD"           \
-        "OUT=$OUT" "BLD=$BLD" "STG=$STG"  "TST=$TST"           \
-    $MAKE dist
-    ;;
-  $BLD/*.tar)
-    # shellcheck disable=SC2086
-    makeself --nocomp "$ARCHIVE" "$TARCHIVE" quine   \
-    env "LOL=$LOL"  "PW=$PW" "RECP=$RECP" "DLD=$DLD" \
-        "OUT=$OUT" "BLD=$BLD" "STG=$STG"  "TST=$TST" \
-    $MAKE dist
-    ;;
+  $OUT/*.tar) MAKESELF_ARGS=(--xz --complevel 9e "$ARCHIVE" "$TARCHIVE" quine) ;;
+  $BLD/*.tar) MAKESELF_ARGS=(--nocomp            "$ARCHIVE" "$TARCHIVE" quine) ;;
   *) exit 1 ;;
 esac
+
+# shellcheck disable=SC2086
+makeself "${MAKESELF_ARGS[@]}"                   \
+env "LOL=$LOL"  "PW=$PW" "RECP=$RECP" "DLD=$DLD" \
+    "OUT=$OUT" "BLD=$BLD" "STG=$STG"  "TST=$TST" \
+$MAKE dist
 

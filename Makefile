@@ -606,14 +606,12 @@ $(BLD)/shiva-rot-%.$(LOGOEXT): $(BLD)/shiva-small-2.$(LOGOEXT)
 # kali yantra background with randomized fingerprint
 $(BLD)/kali-%.$(LOGOEXT): $(BLD)/random-%.$(LOGOEXT) $(BLD)/kali-small.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
-$(BLD)/random-%.$(LOGOEXT): $(BLD)/random-%.out
-	convert -depth 8 -size `cat $<` RGB:- $@ < $<
+$(BLD)/random-%.$(LOGOEXT): $(BLD)/random-%.out $(BLD)/small.dim
+	convert -depth 8 -size `cat $(BLD)/small.dim` RGB:- $@ < $<
 $(BLD)/random-%.out: $(BLD)/random-2.sz fingerprint
-	cat $<
 	head -c "`cat $<`" /dev/urandom > $@
 	#head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
 $(BLD)/random-2.sz: $(BLD)/small.dim
-	sed 's/x/*/' $<
 	echo $$((3*$$(sed 's/x/*/' $<))) | tee $@
 
 # animated logo is 256x256
@@ -788,13 +786,11 @@ $(BLD)/%-2.$(LOGOEXT):                         $(BLD)/%.$(LOGOEXT)
 
 $(BLD)/kali-2.$(LOGOEXT): $(BLD)/random.$(LOGOEXT) $(BLD)/kali.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
-$(BLD)/random.$(LOGOEXT): $(BLD)/random.out
+$(BLD)/random.$(LOGOEXT): $(BLD)/random.out $(BLD)/kali.dim
 	convert -depth 8 -size `cat $(BLD)/kali.dim` RGB:- $@ < $<
 $(BLD)/random.out: $(BLD)/random.sz fingerprint
-	cat $<
 	head -c "`cat $<`" /dev/urandom > $@
 $(BLD)/random.sz: $(BLD)/kali.dim
-	sed 's/x/*/' $<
 	echo $$((3*$$(sed 's/x/*/' $<))) | tee $@
 fingerprint: # unique every time
 
