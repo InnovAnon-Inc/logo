@@ -2,7 +2,7 @@
 set -euvxo pipefail
 (( ! $# ))
 #(( UID ))
-find . -0      \
+find . -print0 \
   \! -type d   |
 xargs -I% -t   \
   "-P$(nproc)" \

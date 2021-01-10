@@ -18,8 +18,8 @@ jobs:
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
-            # TODO
-            $SHELL -l -c "make -j1"
+            #$SHELL -l -c "make -j1"
+            $SHELL -l -c "make -j$(nproc)"
       - run:
           name: Import GPG Key
           command: |
