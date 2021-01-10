@@ -1,9 +1,6 @@
-stg/
-out/
-bld/
-tst/
-.circleci/
-.travis.yml
-.travis/
-Makefile.old
+*/
+!dld/
+dld/.sentinel
+.*/
+*.out
 

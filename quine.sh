@@ -29,25 +29,25 @@ rm -vf      "$TARCHIVE"
 
   #--exclude-vcs-ignores   \
   #--exclude="$DLD"        \
+#  --exclude-vcs           \
+#  --exclude=README.md     \
+#  --exclude=LICENSE       \
+#  --exclude=.circleci     \
+#  --exclude=.travis.yml   \
+#  --exclude=.travis       \
+#  --exclude=nohup.out     \
+#  --exclude=Dockerfile    \
+#  --exclude=Makefile.old  \
+#  --exclude='*.swp'       \
+#  --exclude='*.out'       \
+#  --exclude="$OUT"        \
+#  --exclude="$BLD"        \
+#  --exclude="$STG"        \
+#  --exclude="$TST"        \
+#  --exclude=.dockerignore \
+#  --exclude=.gitignore    \
+#  --sparse . ) |
 ( tar cf -                \
-  --exclude-vcs           \
-  --exclude=README.md     \
-  --exclude=LICENSE       \
-  --exclude=.circleci     \
-  --exclude=.travis.yml   \
-  --exclude=.travis       \
-  --exclude=nohup.out     \
-  --exclude=Dockerfile    \
-  --exclude=Makefile.old  \
-  --exclude='*.swp'       \
-  --exclude='*.out'       \
-  --exclude="$OUT"        \
-  --exclude="$BLD"        \
-  --exclude="$STG"        \
-  --exclude="$TST"        \
-  --exclude="$DLD/.sentinel" \
-  --exclude=.dockerignore \
-  --exclude=.gitignore    \
   --absolute-names        \
   --group=nogroup         \
   --mtime=0               \
@@ -55,7 +55,10 @@ rm -vf      "$TARCHIVE"
   --numeric-owner         \
   --owner=nobody          \
   --sort=name             \
-  --sparse            . ) |
+  --exclude="$DLD/.sentinel" \
+  Makefile                \
+  ./*.url                 \
+  "$DLD/"               ) |
 ( #mkdir -v "$ARCHIVE" &&
   cd       "$ARCHIVE" &&
   tar xf   - )
@@ -63,8 +66,8 @@ rm -vf      "$TARCHIVE"
 #makeself --nocomp "$ARCHIVE" "$TARCHIVE" quine  \
 # shellcheck disable=SC2086
 makeself --xz --complevel 9e "$ARCHIVE" "$TARCHIVE" quine  \
-env "LOL=$LOL" "PW=$PW" "RECP=$RECP" "DLD=$DLD" \
-    "OUT=$OUT" "BLD=$BLD" "STG=$STG" "TST=$TST" \
+env "LOL=$LOL"  "PW=$PW" "RECP=$RECP" "DLD=$DLD" \
+    "OUT=$OUT" "BLD=$BLD" "STG=$STG"  "TST=$TST" \
 $MAKE dist
 #env "LOL=$LOL" $MAKE release
 #env LOL=0 $MAKE release

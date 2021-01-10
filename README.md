@@ -46,5 +46,10 @@ increase resource limits in /etc/ImageMagick-6/policy.xml:
 
 [![License Summary](https://img.shields.io/github/license/InnovAnon-Inc/logo?color=%23FF1100&label=Free%20Code%20for%20a%20Free%20World%21&logo=InnovAnon%2C%20Inc.&logoColor=%23FF1133&style=plastic)](https://tldrlegal.com/license/unlicense#summary)
 
+## Credits
+  ```bash
+  cat *.url
+  ```
+
 ![Corporate Logo](https://innovanon-inc.github.io/assets/images/logo.gif)
 

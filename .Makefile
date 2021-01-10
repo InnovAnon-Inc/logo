@@ -106,6 +106,9 @@ all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpap
 #stego-helper: distclean
 #	$(MAKE) stego
 #dist: distclean
+#dist: cleaner
+#	. /etc/profile
+#	$(MAKE) all stego
 dist: all stego
 	#[ ! -d .git ]
 	#$(MAKE) stego
@@ -587,19 +590,20 @@ $(BLD)/%.lrz: $(BLD)/%
 #	  --exclude=README.md   \
 #	  $^	
 #archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(BLD)/small.dim $(BLD)/slack.dim
-$(OUT)/archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(shell find "$(DLD)" -maxdepth 1)
+#$(OUT)/archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(shell find "$(DLD)" -maxdepth 1)
+$(OUT)/archive.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
 	LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
 quine.sh:        shellcheck
 	$< -ax     $@
-make:            shellcheck
-	$< -ax     $@
-support-wrapper: shellcheck
-	$< -ax     $@
-support.sh:      shellcheck
-	$< -axs sh $@
-support:
-	file $@ | \
-	grep 'support: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, no section header'
+#make:            shellcheck
+#	$< -ax     $@
+#support-wrapper: shellcheck
+#	$< -ax     $@
+#support.sh:      shellcheck
+#	$< -axs sh $@
+#support:
+#	file $@ | \
+#	grep 'support: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, no section header'
 shellcheck:
 	
 	
