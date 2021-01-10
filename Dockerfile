@@ -1,18 +1,17 @@
 FROM innovanon/logo-builder as builder
 WORKDIR /src/
 COPY ./ ./
-#ARG GPG_KEY
- #&& echo -e "$GPG_KEY" | gpg --import \
-RUN sleep 31 \
- && make "-j$(nproc)"
-
-RUN find /src/out
+ARG GPG_KEY
+RUN sleep 31                \
+ && echo -e "$GPG_KEY"      \
+  | gpg --import            \
+ && make "-j$(nproc)"       \
+ &&     ./check.sh          \
+ && rm -v check.sh
 
 FROM innovanon/builder as signer
 WORKDIR        /tmp/logo
 COPY --from=builder /src/out/* ./
-
-RUN find .
 
 COPY ./sign.sh /tmp/
 ARG GPG_KEY
@@ -34,3 +33,4 @@ RUN sleep 31 \
  && /tmp/archive.tar
 
 FROM final
+
