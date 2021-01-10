@@ -12,7 +12,13 @@ jobs:
           name: Check Scripts
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
-            shellcheck -ax sign.sh
+            shellcheck -ax {check,quine,sign}.sh
+      - run:
+          name: Import GPG Key
+          command: |
+            set -u
+            echo -e "$GPG_KEY" | \
+            gpg --import
       - run:
           name: Build Project
           command: |
@@ -22,11 +28,10 @@ jobs:
             #$SHELL -l -c "make -j$(nproc)"
             $SHELL -l -c "make -j4"
       - run:
-          name: Import GPG Key
+          name: Check Project
           command: |
-            set -u
-            echo -e "$GPG_KEY" | \
-            gpg --import
+            cd ${CIRCLE_PROJECT_REPONAME}
+            ./check.sh
       - run:
           name: Sign Project
           command: |
