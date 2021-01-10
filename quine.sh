@@ -38,6 +38,7 @@ rm -vf      "$TARCHIVE"
   --exclude=.travis       \
   --exclude=nohup.out     \
   --exclude=Dockerfile    \
+  --exclude=Makefile.old  \
   --exclude='*.swp'       \
   --exclude='*.out'       \
   --exclude="$OUT"        \
