@@ -36,14 +36,14 @@ rm -vf      "$TARCHIVE"
   tar xf   - )
 # shellcheck disable=SC2153
 case "$TARCHIVE" in
-  archive.tar)
+  $OUT/*.tar)
     # shellcheck disable=SC2086
     makeself --xz --complevel 9e "$ARCHIVE" "$TARCHIVE" quine  \
     env "LOL=$LOL"  "PW=$PW" "RECP=$RECP" "DLD=$DLD"           \
         "OUT=$OUT" "BLD=$BLD" "STG=$STG"  "TST=$TST"           \
     $MAKE dist
     ;;
-  stego.tar)
+  $STG/*.tar)
     # shellcheck disable=SC2086
     makeself --nocomp "$ARCHIVE" "$TARCHIVE" quine   \
     env "LOL=$LOL"  "PW=$PW" "RECP=$RECP" "DLD=$DLD" \
