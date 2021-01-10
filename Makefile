@@ -787,27 +787,17 @@ $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
 	$(CONVERT) $< $@
 $(DLD)/%.jpg: %.url $(DLD)/.sentinel
 	$(WGET)
-#$(BLD)/e-corp.$(LOGOEXT):   e-corp.url $(BLD)/.sentinel
-#	$(WGET)
 $(BLD)/aperture.$(LOGOEXT): $(DLD)/aperture.$(LOGOEXT) $(BLD)/.sentinel
 	cp -v $< $@
-$(DLD)/aperture.$(LOGOEXT): aperture.url $(DLD)/.sentinel
-	$(WGET)
 $(BLD)/hermes.$(LOGOEXT): $(DLD)/hermes.$(LOGOEXT) $(BLD)/.sentinel
 	cp -v $< $@
-$(DLD)/hermes.$(LOGOEXT):   hermes.url $(DLD)/.sentinel
-	$(WGET)
 $(BLD)/maltese.$(LOGOEXT): $(DLD)/maltese.$(LOGOEXT) $(BLD)/.sentinel
 	cp -v $< $@
-$(DLD)/maltese.$(LOGOEXT):  maltese.url $(DLD)/.sentinel
-	$(WGET)
 $(BLD)/sauron.$(LOGOEXT): $(DLD)/sauron.$(LOGOEXT) $(BLD)/.sentinel
 	cp -v $< $@
-$(DLD)/sauron.$(LOGOEXT):   sauron.url $(DLD)/.sentinel
-	$(WGET)
 $(BLD)/umbrella.$(LOGOEXT): $(DLD)/umbrella.$(LOGOEXT) $(BLD)/.sentinel
 	cp -v $< $@
-$(DLD)/umbrella.$(LOGOEXT): umbrella.url $(DLD)/.sentinel
+$(DLD)/%.png: %.url $(DLD)/.sentinel
 	$(WGET)
 
 $(DLD)/.sentinel: # $(OUT)/.sentinel
@@ -837,66 +827,6 @@ distclean: cleaner
 	$(RM) -r $(DLD)
 cleaner: clean
 	$(RM) -r $(OUT) $(STG)
-#	$(LOGO) $(LOGO_VISIBLE) $(LOGO_MIDVISIBLE) \
-#	      *-$(LOGO) *-$(LOGO_VISIBLE)                \
-#	      *-$(LOGO_MIDVISIBLE)                       \
-#	      $(LOGO_ANIM) $(LOGO_ANIM_SMALL)            \
-#	      logo-stego-animated.$(ANIMEXT)             \
-#	      apple-touch-icon-*.png                     \
-#	      syslinux-splash.bmp grub-splash.xpm.gz     \
-#	      favicon*.ico github.$(LOGOEXT)             \
-#	      youtube-banner.$(LOGOEXT)                  \
-#	      twitter-banner.$(LOGOEXT)                  \
-#	      linkedin-banner.$(LOGOEXT)                 \
-#	      soundcloud-banner.$(LOGOEXT)               \
-#	      doxygen-logo.$(LOGOEXT)                    \
-#              gpg-logo.jpg avatar.$(LOGOEXT)             \
-#	      sphinx-logo.$(LOGOEXT)                     \
-#	      stackoverflow-logo.$(LOGOEXT)              \
-#	      small-thumbnail.$(LOGOEXT)                 \
-#	      large-thumbnail.$(LOGOEXT)                 \
-#	      wallpaper*.$(LOGOEXT) stripe.jpg           \
-#	      stripe-icon.$(LOGOEXT) logo.txt *-logo.txt \
-#	      google-cover-logo.$(LOGOEXT)               \
-#	      youtube-watermark-logo.$(LOGOEXT)          \
-#	      dtube-banner.$(LOGOEXT)                    \
-#	      tumblr-banner.$(LOGOEXT)                   \
-#	      gab-banner.$(LOGOEXT) gab.$(LOGOEXT)       \
-#	      opencollective-banner.$(LOGOEXT)           \
-#	      bitbucket.$(LOGOEXT)                       \
-#	      bitbucket-banner.$(LOGOEXT)                \
-#	      hashvault-banner.$(LOGOEXT)                \
-#	      patreon.$(LOGOEXT)                         \
-#	      patreon-banner.$(LOGOEXT)                  \
-#	      facebook-banner.$(LOGOEXT)                 \
-#	      aperture.$(LOGOEXT)                        \
-#	      baphomet.$(LOGOEXT)                        \
-#	      cthulhu.$(LOGOEXT)                         \
-#	      e-corp.$(LOGOEXT)                          \
-#	      fawkes.$(LOGOEXT)                          \
-#	      kabuto.$(LOGOEXT)                          \
-#	      lucy.$(LOGOEXT)                            \
-#	      maltese.$(LOGOEXT)                         \
-#	      maltese-round.$(LOGOEXT)                   \
-#	      sauron.$(LOGOEXT)                          \
-#	      sith.$(LOGOEXT)                            \
-#	      umbrella.$(LOGOEXT)                        \
-#	      wolfram.$(LOGOEXT)                         \
-#	      archive.tlrzpq.gpg                         \
-#	      logo-stego-animated.$(ANIMEXT)
 clean:
 	$(RM) -r $(BLD) $(TST)
-#	*.dim kali*.$(LOGOEXT) shiva*.$(LOGOEXT)         \
-#	      logo-rot-*.$(LOGOEXT) logo-animated-*.$(LOGOEXT) \
-#	      favicon-*.ico grub-splash.xpm *boot.$(LOGOEXT)   \
-#	      tmp*.$(LOGOEXT) random.$(LOGOEXT)                \
-#	      random-*.$(LOGOEXT)                              \
-#	      *-resize.$(LOGOEXT) *-transparent.$(LOGOEXT)     \
-#	      *-2.$(LOGOEXT)                                   \
-#	      kali*.$(LOGOEXT) shiva*.$(LOGOEXT)               \
-#	      logo-rot-*.$(LOGOEXT)                            \
-#	      logo-stego-rot-*.$(LOGOEXT)                      \
-#	      logo-animated-*.$(LOGOEXT)                       \
-#	      archive.tar.* archive.tlrzpq                     \
-#	      archive.tlrzpq.gpg.* nohup.out
 
