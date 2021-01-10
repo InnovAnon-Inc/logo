@@ -1,6 +1,10 @@
-#! /bin/sh
-set -eux
-find . \! -type d    |
-xargs -P$(nproc) -n1 \
-gpg --sign %         \
+#! /bin/bash
+set -euvxo pipefail
+(( ! $# ))
+#(( UID ))
+find .       \
+  \! -type d |
+xargs -I% -t \
+  -P$(nproc) \
+gpg --sign %
 
