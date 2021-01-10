@@ -3,7 +3,7 @@
         aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy   \
         maltese maltese-round sauron sith umbrella wolfram           \
 	shellcheck dist stego-helper test-parts test-run             \
-	icons android-chrome-icons mstile-icons
+	icons android-chrome-icons mstile-icons anim
 #.PRECIOUS: archive.tar archive.tar.lrz archive.tar.lrz.zpaq          \
 #           archive.tlrzpq archive.tlrzpq.gpg                         \
 #           shiva-small.png kali-small.png shiva-2.png shiva.png      \
@@ -92,7 +92,7 @@ TST ?= tst
 DLD ?= dld
 
 #all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers stego
-all: extra_logos logos icons boot-splashes profiles wallpapers $(OUT)/archive.tar
+all: extra_logos logos icons boot-splashes profiles wallpapers $(OUT)/archive.tar anim
 #all: sign
 #sign: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers $(OUT)/archive.tar
 #$(OUT)/%.gpg: $(OUT)/%
@@ -492,6 +492,7 @@ $(BLD)/kali-wallpaper4.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize $(WALLPAPER4SZ)^ $(WALLPAPER4ARGS) $^ $@
 
 
+anim: $(LOGO_ANIM_SMALL) # $(LOGO_ANIM)
 
 logos: shiva $(OUT)/doxygen-logo.$(LOGOEXT) $(OUT)/gpg-logo.jpg $(OUT)/logo.txt $(OUT)/sphinx-logo.$(LOGOEXT) $(OUT)/stackoverflow-logo.$(LOGOEXT) $(OUT)/google-cover-logo.$(LOGOEXT) slack
 # $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
