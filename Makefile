@@ -607,8 +607,11 @@ $(BLD)/kali-%.$(LOGOEXT): $(BLD)/random-%.$(LOGOEXT) $(BLD)/kali-small.$(LOGOEXT
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random-%.$(LOGOEXT): $(BLD)/random-%.out
 	convert -depth 8 -size `cat $<` RGB:- $@ < $<
-$(BLD)/random-%.out: $(BLD)/small.dim fingerprint
-	head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
+$(BLD)/random-%.out: $(BLD)/random-2.sz fingerprint
+	head -c "$$(cat $<)" /dev/urandom > $@
+	#head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
+$(BLD)/random-2.sz: $(BLD)/small.dim
+	echo "$((3*$$(sed 's/x/*/' $<)))" > $@
 
 # animated logo is 256x256
 $(BLD)/shiva-small-2.$(LOGOEXT): $(BLD)/shiva-transparent.$(LOGOEXT) $(BLD)/small.dim
@@ -779,8 +782,10 @@ $(BLD)/kali-2.$(LOGOEXT): $(BLD)/random.$(LOGOEXT) $(BLD)/kali.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random.$(LOGOEXT): $(BLD)/random.out
 	convert -depth 8 -size `cat $(BLD)/kali.dim` RGB:- $@ < $<
-$(BLD)/random.out: $(BLD)/kali.dim fingerprint
-	head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
+$(BLD)/random.out: $(BLD)/random.sz fingerprint
+	head -c "$$(cat $<)" /dev/urandom > $@
+$(BLD)/random.sz: $(BLD)/kali.dim
+	echo "$$((3*$$(sed 's/x/*/' $<)))" > $@
 fingerprint: # unique every time
 
 $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
@@ -788,7 +793,8 @@ $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
 $(DLD)/%.jpg: %.url $(DLD)/.sentinel
 	$(WGET)
 $(BLD)/aperture.$(LOGOEXT): $(DLD)/aperture.$(LOGOEXT) $(BLD)/.sentinel
-	cp -v $< $@
+	$(CONVERT) $< $@
+	#cp -v $< $@
 $(BLD)/hermes.$(LOGOEXT): $(DLD)/hermes.$(LOGOEXT) $(BLD)/.sentinel
 	cp -v $< $@
 $(BLD)/maltese.$(LOGOEXT): $(DLD)/maltese.$(LOGOEXT) $(BLD)/.sentinel
