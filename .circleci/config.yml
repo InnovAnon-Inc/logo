@@ -107,7 +107,8 @@ jobs:
             cp -v logo-small-animated.gif                  \
                   ../../InnovAnon-Inc.github.io/assets/images/logo.gif
             cd    ../../InnovAnon-Inc.github.io/assets/images
-            ln -sv logo-visible.png 3600x3600.png
+            # manually managed math on black
+            #ln -sv logo-visible.png 3600x3600.png
             ln -sv logo-visible.png logo.png
             cd    ../../InnovAnon-Inc.github.io
 
