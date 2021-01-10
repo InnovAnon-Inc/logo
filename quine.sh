@@ -58,6 +58,7 @@ rm -vf      "$TARCHIVE"
   --exclude="$DLD/.sentinel" \
   Makefile                \
   ./*.url                 \
+  "$0"                    \
   "$DLD/"               ) |
 ( #mkdir -v "$ARCHIVE" &&
   cd       "$ARCHIVE" &&
