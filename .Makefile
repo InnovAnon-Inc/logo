@@ -64,7 +64,8 @@ ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
 LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
 
-WGET=[ -f $@ ] || curl --proxy "$(SOCKS_PROXY)" -o $@ `cat $<`
+#WGET=[ -f $@ ] || curl --proxy "$(SOCKS_PROXY)" -o $@ `cat $<`
+WGET=touch $@
 #WGET=[ -f $@ ] || pcurl `cat $^` $@
 RM=rm -fv
 IDENTIFY=identify -ping -format
