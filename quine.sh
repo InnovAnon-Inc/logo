@@ -44,6 +44,7 @@ rm -vf      "$TARCHIVE"
   --exclude="$BLD"        \
   --exclude="$STG"        \
   --exclude="$TST"        \
+  --exclude="$DLD/.sentinel" \
   --absolute-names        \
   --group=nogroup         \
   --mtime=0               \

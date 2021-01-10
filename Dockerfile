@@ -4,7 +4,8 @@ COPY ./ ./
 ARG GPG_KEY
 
 RUN apt update \
- && apt install bc imagemagick caca-utils  zpaq lrzip makeself shellcheck git \
+ && apt full-upgrade \
+ && apt install bc imagemagick caca-utils  zpaq lrzip makeself shellcheck git ca-certificates \
  && echo -e "$GPG_KEY" | gpg --import \
  && sed -i 's#^\( *<policy domain="resource" name="disk" value="\).*\("/>\)$#\110GiB\1#'  /etc/ImageMagick-6/policy.xml \
  && sed -i 's#^\( *<policy domain="resource" name="memory" value="\).*\("/>\)$#\11GiB\1#' /etc/ImageMagick-6/policy.xml \
