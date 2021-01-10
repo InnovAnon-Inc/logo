@@ -612,7 +612,7 @@ $(BLD)/random-%.out: $(BLD)/random-2.sz fingerprint
 	head -c "$$(cat $<)" /dev/urandom > $@
 	#head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
 $(BLD)/random-2.sz: $(BLD)/small.dim
-	echo "$((3*$$(sed 's/x/*/' $<)))" > $@
+	expr 3 \* $$(sed 's/x/*/' $<) > $@
 
 # animated logo is 256x256
 $(BLD)/shiva-small-2.$(LOGOEXT): $(BLD)/shiva-transparent.$(LOGOEXT) $(BLD)/small.dim
@@ -788,7 +788,7 @@ $(BLD)/random.$(LOGOEXT): $(BLD)/random.out
 $(BLD)/random.out: $(BLD)/random.sz fingerprint
 	head -c "$$(cat $<)" /dev/urandom > $@
 $(BLD)/random.sz: $(BLD)/kali.dim
-	echo "$$((3*$$(sed 's/x/*/' $<)))" > $@
+	expr 3 \* $$(sed 's/x/*/' $<) > $@
 fingerprint: # unique every time
 
 $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
