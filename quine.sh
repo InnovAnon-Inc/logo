@@ -43,7 +43,7 @@ case "$TARCHIVE" in
         "OUT=$OUT" "BLD=$BLD" "STG=$STG"  "TST=$TST"           \
     $MAKE dist
     ;;
-  $STG/*.tar)
+  $BLD/*.tar)
     # shellcheck disable=SC2086
     makeself --nocomp "$ARCHIVE" "$TARCHIVE" quine   \
     env "LOL=$LOL"  "PW=$PW" "RECP=$RECP" "DLD=$DLD" \
