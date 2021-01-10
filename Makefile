@@ -613,7 +613,7 @@ $(BLD)/random-%.out: $(BLD)/random-2.sz fingerprint
 	head -c "`cat $<`" /dev/urandom > $@
 	#head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
 $(BLD)/random-2.sz: $(BLD)/small.dim
-	sed 's/x/*' $<
+	sed 's/x/*/' $<
 	expr 3 \* `sed 's/x/*/' $<` | tee $@
 
 # animated logo is 256x256
