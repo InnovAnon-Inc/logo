@@ -91,6 +91,10 @@ DLD ?= dld
 
 #all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers stego
 all: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers $(OUT)/archive.tar
+#all: sign
+#sign: extra_logos logos apple-touch-icons boot-splashes favicons profiles wallpapers $(OUT)/archive.tar
+#$(OUT)/%.gpg: $(OUT)/%
+#	gpg --local-user 53F31F9711F06089\! --sign $<
 #extra_logos:       stego-helper
 #logos:             stego-helper
 #apple-touch-icons: stego-helper

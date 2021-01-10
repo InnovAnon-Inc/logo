@@ -72,8 +72,9 @@ jobs:
             cd ${CIRCLE_PROJECT_REPONAME}
             #RECP=InnovAnon-Inc@protonmail.com make -j$(nproc)
             #./dist.sh
-            #$SHELL -l -c
-            make -j$(nproc)
+            #$SHELL -l -c "make -j$(nproc)"
+            # TODO
+            $SHELL -l -c "make -j1"
             #make -j$(nproc)
             #make -j$(nproc) clean
             #mkdir -v   /tmp/shiva

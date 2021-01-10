@@ -45,6 +45,8 @@ rm -vf      "$TARCHIVE"
   --exclude="$STG"        \
   --exclude="$TST"        \
   --exclude="$DLD/.sentinel" \
+  --exclude=.dockerignore \
+  --exclude=.gitignore    \
   --absolute-names        \
   --group=nogroup         \
   --mtime=0               \
