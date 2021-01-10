@@ -492,7 +492,7 @@ $(BLD)/kali-wallpaper4.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize $(WALLPAPER4SZ)^ $(WALLPAPER4ARGS) $^ $@
 
 
-anim: $(LOGO_ANIM_SMALL) # $(LOGO_ANIM)
+anim: $(OUT)/$(LOGO_ANIM_SMALL) # $(OUT)/$(LOGO_ANIM)
 
 logos: shiva $(OUT)/doxygen-logo.$(LOGOEXT) $(OUT)/gpg-logo.jpg $(OUT)/logo.txt $(OUT)/sphinx-logo.$(LOGOEXT) $(OUT)/stackoverflow-logo.$(LOGOEXT) $(OUT)/google-cover-logo.$(LOGOEXT) slack
 # $(LOGO_ANIM) $(LOGO_ANIM_SMALL)

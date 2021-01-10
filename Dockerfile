@@ -6,9 +6,14 @@ COPY ./ ./
 RUN sleep 31 \
  && make "-j$(nproc)"
 
+RUN find /src/out
+
 FROM innovanon/builder as signer
 WORKDIR        /tmp/logo
 COPY --from=builder /src/out/* ./
+
+RUN find .
+
 COPY ./sign.sh /tmp/
 ARG GPG_KEY
 RUN sleep 31                \

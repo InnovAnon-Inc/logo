@@ -2,9 +2,9 @@
 Download artwork and use it to generate InnovAnon, Inc. (Ministries) branding
 
 ## Specifications
-  - background: Kali Yantra,    for credits see  kali.url
-  - foreground: Shiva Tandavam, for credits see shiva.url
-  - steganographic executable
+  - background: Kali Yantra
+  - foreground: Shiva Tandavam
+  - steganographically-embedded quine (TODO extracted data is invalid)
 
 ## Usage
   - normal usage: build all variants
@@ -27,8 +27,8 @@ Download artwork and use it to generate InnovAnon, Inc. (Ministries) branding
 
 ## Issues
 increase resource limits in /etc/ImageMagick-6/policy.xml:
-  ```html
-  <policy domain="resource" name="memory" value="4GiB"/>
+  ```xml
+  <policy domain="resource" name="memory" value="4GiB" />
   <policy domain="resource" name="disk"   value="10GiB"/>
   ```
 
