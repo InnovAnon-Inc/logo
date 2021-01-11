@@ -10,14 +10,14 @@ jobs:
             tor --verify-config
             command -v outguess
             command -v steghide
-            command -v ghr
+            #command -v ghr
       - run:
           name: Insanity Check
           command: |
-            #export GOPATH="${HOME}/go"
-            #export   PATH="${PATH}:${GOPATH}/bin"
-            #$SHELL -l -c 'command -v ghr'
-            $SHELL -l -c 'GOPATH=${HOME}/go PATH=${PATH}:${HOME}/go/bin command -v ghr'
+            export GOPATH="${HOME}/go"
+            export   PATH="${PATH}:${GOPATH}/bin"
+            $SHELL -l -c 'command -v ghr'
+            #$SHELL -l -c 'GOPATH=${HOME}/go PATH=${PATH}:${HOME}/go/bin command -v ghr'
       - run:
           name: Checkout Project
           command: |
@@ -95,10 +95,10 @@ jobs:
             VERSION="$cleanversion.$revisioncount"
 
             ##ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} ../tmp
-            $SHELL -l -c "sleep 31 && env GOPATH=${HOME}/go PATH=${PATH}:${HOME}/go/bin command -v ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
-            #export GOPATH="${HOME}/go"
-            #export   PATH="${PATH}:${GOPATH}/bin"
-            #$SHELL -l -c "sleep 31 && ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
+            #$SHELL -l -c "sleep 31 && env GOPATH=${HOME}/go PATH=${PATH}:${HOME}/go/bin command -v ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
+            export GOPATH="${HOME}/go"
+            export   PATH="${PATH}:${GOPATH}/bin"
+            $SHELL -l -c "sleep 31 && ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
             ##$SHELL -l -c "sleep 31 && env GOPATH=${HOME}/go PATH=${PATH}:${HOME}/go/bin ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
       - run:
           name: Update Home Page
