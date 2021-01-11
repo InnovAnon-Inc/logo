@@ -10,6 +10,7 @@ jobs:
             tor --verify-config
             command -v outguess
             command -v steghide
+            command -v ghr
       - run:
           name: Checkout Project
           command: |
