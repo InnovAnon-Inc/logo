@@ -11,13 +11,15 @@ mapfile -t files < <( "$LIST" )
 err=()
 set +x
 for k in "${files[@]}" ; do
+  [[ -n "$k" ]] || continue # trailing newline ?
   [[ -f "$k" ]] ||
   err=("${err[@]}" "$k")
   #err=$((err + 1))
 done
-printf %s\\n "${err[@]}"
 set -x
-echo "${#files[@]}"
+echo total files: "${#files[@]}"
+echo error files:
+printf %s\\n "${err[@]}"
 (( ! ${#err[@]} ))
 #(( ! err ))
 
