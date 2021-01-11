@@ -67,6 +67,7 @@ LOGO_ANIM=logo-animated.$(ANIMEXT)
 LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
 LOGO_ANIM_STEGO=logo-stego-animated.$(ANIMEXT)
 
+# TODO
 #WGET=[ -f $@ ] || curl --proxy "$(SOCKS_PROXY)" -o $@ `cat $<`
 WGET=touch $@
 #WGET=[ -f $@ ] || pcurl `cat $^` $@
@@ -130,36 +131,36 @@ test-parts: $(OUT)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	# extract frames
 	convert -coalesce $< $(TST)/logo-stego-rot-%03d.$(STEGEXT)
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
-	[ -f $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@) ]
+	[ -f "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)" ]
 	@case $(STEGEXT) in \
 	  ppm)             \
-	    outguess -k "$(PW)" -r $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@) $@             \
+	    outguess -k "$(PW)" -r "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)" $@             \
 	    ;;             \
 	  bmp)             \
-	    steghide extract -p "$(PW)" -xf $@ -sf $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@) \
+	    steghide extract -p "$(PW)" -xf $@ -sf "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)" \
 	    ;;             \
 	  *)               \
 	    exit 1         \
-	    stegosuite -k "$(PW)" -d -x -f $@ $(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)      \
+	    stegosuite -k "$(PW)" -d -x -f $@ "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)"      \
 	    ;;             \
 	esac
 	[ -f $@ ]
+# unsplit
 $(TST)/archive.tlrzpq.gpg: $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(TST)/archive.tlrzpq.gpg.part$(d))
-	# unsplit
-	#cat `ls -v $(TST)/archive.tlrzpq.gpg.part*` > $(TST)/archive.tlrzpq.gpg
 	cat $^ > $@
+	#cat `ls -v $(TST)/archive.tlrzpq.gpg.part*` > $(TST)/archive.tlrzpq.gpg
+# decrypt/verify
 $(TST)/archive.tlrzpq: $(TST)/archive.tlrzpq.gpg
-	# decrypt/verify
 	gpg --decrypt -o $(TST)/archive.tlrzpq --yes  $(TST)/archive.tlrzpq.gpg
+# extract
 $(TST)/archive.tar.lrz.zpaq: $(TST)/archive.tlrzpq
-	# extract
 	mv -v            $(TST)/archive.tlrzpq $(TST)/archive.tar.lrz.zpaq
 $(TST)/archive.tar.lrz: $(TST)/archive.tar.lrz.zpaq
 	zpaq x                          $(TST)/archive.tar.lrz.zpaq -f
 $(TST)/archive.tar: $(TST)/archive.tar.lrz
 	lrunzip -f                      $(TST)/archive.tar.lrz
-	# run
 	chmod -v +x                     $(TST)/archive.tar
+# run
 test-run: $(TST)/archive.tar
 	+$<
 #release:
@@ -202,7 +203,7 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	                                   $(BLD)/rc-ne-%.png            \
 					   $(BLD)/rc-sw-%.png            \
 					   $(BLD)/rc-se-%.png
-	convert -quality 100 $<                                           \
+	$(CONVERT) $<                                           \
 	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<) \
 	    -gravity northwest -composite                                 \
 	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<) \
@@ -223,15 +224,15 @@ $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
 	t="$$((t-1))"                                                            ; \
 	echo $$t                                                                 ; \
 	[ "$$k" -eq "$$t" ]                                                      ; \
-	convert -quality 100 -size $$Kx$$K xc:none                                 \
+	$(CONVERT) -size $$Kx$$K xc:none                       \
 	  -draw "fill white rectangle 0,0 $$k,$$k fill black circle $$k,$$k $$k,0" \
 	  -background white -alpha shape $@
 $(BLD)/rc-ne-%.png: $(BLD)/rc-nw-%.png
-	convert -quality 100 $< -flop $@
+	$(CONVERT) $< -flop $@
 $(BLD)/rc-sw-%.png: $(BLD)/rc-nw-%.png
-	convert -quality 100 $< -flip $@
+	$(CONVERT) $< -flip $@
 $(BLD)/rc-se-%.png: $(BLD)/rc-ne-%.png
-	convert -quality 100 $< -flip $@
+	$(CONVERT) $< -flip $@
 
 # TODO apple-touch-icon.png
 apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
@@ -244,7 +245,7 @@ apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
                    $(OUT)/apple-touch-icon-60x60.png   \
                    $(OUT)/apple-touch-icon-57x57.png
 $(OUT)/apple-touch-icon-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize $(patsubst $(OUT)/apple-touch-icon-%.png,%,$@) $^ $@
+	$(CONVERT) -resize "$(patsubst $(OUT)/apple-touch-icon-%.png,%,$@)" $^ $@
 
 # TODO
 android-chrome-icons: $(OUT)/android-chrome-384x384.png \
@@ -257,7 +258,7 @@ android-chrome-icons: $(OUT)/android-chrome-384x384.png \
                       $(OUT)/android-chrome-48x48.png   \
                       $(OUT)/android-chrome-36x36.png
 $(OUT)/android-chrome-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize $(patsubst $(OUT)/android-chrome-%.png,%,$@) $^ $@
+	$(CONVERT) -resize "$(patsubst $(OUT)/android-chrome-%.png,%,$@)" $^ $@
 
 # TODO
 mstile-icons: $(OUT)/mstile-310x310.png         \
@@ -266,10 +267,10 @@ mstile-icons: $(OUT)/mstile-310x310.png         \
               $(OUT)/mstile-144x144.png         \
               $(OUT)/mstile-70x70.png
 $(OUT)/mstile-%.png: $(OUT)/$(LOGO)
-	$(CONVERT) -resize $(patsubst $(OUT)/mstile-%.png,%,$@) $^ $@
+	$(CONVERT) -resize "$(patsubst $(OUT)/mstile-%.png,%,$@)" $^ $@
 
 $(OUT)/safari-pinned-tab.svg: $(BLD)/shiva-transparent.$(LOGOEXT)
-	$(CONVERT) -resize 563x563 $^ $(TRANSPARENT) $@
+	$(CONVERT) $(TRANSPARENT) -resize 563x563 $^ $@
 
 favicons: $(OUT)/favicon.ico         \
 	  $(OUT)/favicon-194x194.png \
@@ -284,12 +285,12 @@ $(OUT)/favicon.ico: $(OUT)/favicon-194x194.ico \
                     $(OUT)/favicon-8x8.ico
 	$(CONVERT) $^ $@
 $(OUT)/favicon-%.ico: $(OUT)/$(LOGO_VISIBLE)
-	DIM=$(patsubst $(OUT)/favicon-%.ico,%,$@) $(SHELL) -c \
+	DIM="$(patsubst $(OUT)/favicon-%.ico,%,$@)" $(SHELL) -c \
 	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
 #$(BLD)/$(LOGO_MIDVISIBLE): $(OUT)/$(LOGO_MIDVISIBLE)
 #	cp -v $< $@
 $(OUT)/favicon-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize $(patsubst $(OUT)/favicon-%.png,%,$@) $^ $@
+	$(CONVERT) -resize "$(patsubst $(OUT)/favicon-%.png,%,$@)" $^ $@
 
 
 
@@ -618,14 +619,17 @@ $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
 	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) ]
 	@case $(STEGEXT) in           \
 	  ppm)                       \
-	    outguess -k "$(PW)" -d $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) $< $@                              \
+	    set +x                    \
+	    outguess -k "$(PW)" -d "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" $< $@                              \
 	    ;;                       \
 	  bmp)                       \
-	    steghide embed -p "$(PW)" -ef $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) -cf $< -sf $@ -e none -Z -N \
+	    set +x                    \
+	    steghide embed -p "$(PW)" -ef "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" -cf $< -sf $@ -e none -Z -N \
 	    ;;                       \
 	  *)                         \
+	    set +x                    \
 	    exit 1                   \
-	    stegosuite -k "$(PW)" -d -e -f $(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) $@                      || \
+	    stegosuite -k "$(PW)" -d -e -f "$(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" $@                      || \
 	    { rm -fv $@ ; exit 2 ; } \
 	    ;;                       \
 	esac
@@ -643,24 +647,24 @@ $(BLD)/logo-rot-%.$(LOGOEXT): $(BLD)/shiva-rot-%.$(LOGOEXT) $(BLD)/kali-%.$(LOGO
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
 # dancing shiva
 $(BLD)/shiva-rot-%.$(LOGOEXT): $(BLD)/shiva-small-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -rotate $(shell echo 'scale=$(SCALE); $(patsubst $(BLD)/shiva-rot-%.$(LOGOEXT),%,$@) * -$(DEG)' | bc) $^ $@
+	$(CONVERT) $(TRANSPARENT) -rotate "$(shell echo 'scale=$(SCALE); $(patsubst $(BLD)/shiva-rot-%.$(LOGOEXT),%,$@) * -$(DEG)' | bc)" $^ $@
 
 # kali yantra background with randomized fingerprint
 $(BLD)/kali-%.$(LOGOEXT): $(BLD)/random-%.$(LOGOEXT) $(BLD)/kali-small.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random-%.$(LOGOEXT): $(BLD)/random-%.out $(BLD)/small.dim
-	convert -depth 8 -size `cat $(BLD)/small.dim` RGB:- $@ < $<
+	convert -depth 8 -size "$$(cat "$(BLD)/small.dim")" RGB:- $@ < $<
 $(BLD)/random-%.out: $(BLD)/random-2.sz fingerprint
-	head -c "`cat $<`" /dev/urandom > $@
+	head -c "$$(cat "$<")" /dev/urandom > $@
 	#head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
 $(BLD)/random-2.sz: $(BLD)/small.dim
-	echo $$((3*$$(sed 's/x/*/' $<))) | tee $@
+	echo $$((3*$$(sed 's/x/*/' "$<"))) | tee $@
 
 # animated logo is 256x256
 $(BLD)/shiva-small-2.$(LOGOEXT): $(BLD)/shiva-transparent.$(LOGOEXT) $(BLD)/small.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/small.dim`\> -extent `cat $(BLD)/small.dim` $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$(cat $(BLD)/small.dim)"\> -extent "$(cat $(BLD)/small.dim)" $< $@
 $(BLD)/kali-small.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT) $(BLD)/small.dim
-	$(RESIZE) -resize `cat $(BLD)/small.dim`^ -extent `cat $(BLD)/small.dim` $< $@	
+	$(RESIZE) -resize "$$(cat $(BLD)/small.dim)"^ -extent "$$(cat $(BLD)/small.dim)" $< $@	
 $(BLD)/small.dim: $(BLD)/.sentinel
 	echo 256x256 > $@
 	
@@ -725,21 +729,21 @@ $(OUT)/archive.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
 $(BLD)/logo-rot-%.$(LOGOEXT): $(BLD)/shiva-rot-%.$(LOGOEXT) $(BLD)/kali.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/shiva-rot-%.$(LOGOEXT): $(BLD)/shiva-small.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -rotate $(patsubst $(BLD)/shiva-rot-%.$(LOGOEXT),%,$@) $^ $@
+	$(CONVERT) $(TRANSPARENT) -rotate "$(patsubst $(BLD)/shiva-rot-%.$(LOGOEXT),%,$@)" $^ $@
 $(BLD)/shiva-small.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT) $(BLD)/kali-small.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali-small.dim`\< -extent `cat $(BLD)/kali-small.dim` $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali-small.dim)"\< -extent "$$(cat $(BLD)/kali-small.dim)" $< $@
 
 #logo.txt: logo-visible.$(LOGOEXT)
 #	img2txt $^ > $@
 
 $(BLD)/kali-small.dim: $(BLD)/kali-d.dim
-	D=`cat $<` \
+	D="$$(cat $<)" \
 	$(SHELL) -c 'echo $${D}x$${D}' > $@
 $(BLD)/kali-d.dim: $(BLD)/kali.dim
-	W=`awk 'BEGIN{FS="x"}{print $$1}' $<` \
-	H=`awk 'BEGIN{FS="x"}{print $$2}' $<` \
+	W="$$(awk 'BEGIN{FS="x"}{print $$1}' $<)" \
+	H="$$(awk 'BEGIN{FS="x"}{print $$2}' $<)" \
 	D=$$((W < H ? W : H))                 \
-	$(SHELL) -c 'echo "scale=0; sqrt($$D * $$D / 2)" | bc' > $@
+	$(SHELL) -c 'echo "scale=0; sqrt($$D * $$D / 2)" | bc' | tee $@
 #
 ##shiva-resize.$(LOGOEXT): shiva-2.$(LOGOEXT) $(BLD)/kali.dim
 #shiva-resize.$(LOGOEXT): shiva-transparent.$(LOGOEXT) $(BLD)/kali.dim
@@ -750,7 +754,7 @@ $(BLD)/kali-d.dim: $(BLD)/kali.dim
 #kali.dim: kali.$(LOGOEXT)
 #	$(IDENTIFY) '%wx%h' $< > $@
 $(BLD)/%.dim: $(BLD)/%.$(LOGOEXT)
-	$(IDENTIFY) '%wx%h' $< > $@
+	$(IDENTIFY) '%wx%h' $< | tee $@
 
 #shiva-transparent.$(LOGOEXT): shiva-2.$(LOGOEXT)
 #	$(CONVERT) $^ $(TRANSPARENT) $@
@@ -786,15 +790,15 @@ wolfram:             $(OUT)/wolfram-$(LOGO)       $(OUT)/wolfram-$(LOGO_VISIBLE)
 shiva:                       $(OUT)/$(LOGO)               $(OUT)/$(LOGO_VISIBLE)               $(OUT)/$(LOGO_MIDVISIBLE)
 
 $(OUT)/%-logo.txt: $(OUT)/%-$(LOGO_VISIBLE)
-	img2txt $^ > $@
+	img2txt $^ | tee $@
 $(OUT)/logo.txt:     $(OUT)/$(LOGO_VISIBLE)
-	img2txt $^ > $@
+	img2txt $^ | tee $@
 
 slack: $(OUT)/slack-hermes-$(LOGO_VISIBLE) $(OUT)/slack-e-corp-$(LOGO_VISIBLE)
 $(OUT)/slack-hermes-$(LOGO_VISIBLE): $(OUT)/hermes-$(LOGO_VISIBLE) $(BLD)/slack.dim
-	$(CONVERT) -resize `cat $(BLD)/slack.dim`^ -gravity center -extent `cat $(BLD)/slack.dim` $< $@
+	$(CONVERT) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" $< $@
 $(OUT)/slack-e-corp-$(LOGO_VISIBLE): $(OUT)/e-corp-$(LOGO_VISIBLE) $(BLD)/slack.dim
-	$(CONVERT) -resize `cat $(BLD)/slack.dim`^ -gravity center -extent `cat $(BLD)/slack.dim` $< $@
+	$(CONVERT) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" $< $@
 $(BLD)/slack.dim: $(BLD)/.sentinel
 	echo 1000x1000 > $@
 
@@ -812,15 +816,15 @@ $(OUT)/$(LOGO_MIDVISIBLE): $(BLD)/shiva-resize.$(LOGOEXT) $(BLD)/kali-2.$(LOGOEX
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
 $(BLD)/%-resize.$(LOGOEXT): $(BLD)/%-transparent.$(LOGOEXT) $(BLD)/kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`\< -extent `cat $(BLD)/kali.dim` $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" $< $@
 	#$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
 # already transparent
 $(BLD)/hermes-resize.$(LOGOEXT): $(BLD)/hermes.$(LOGOEXT) $(BLD)/kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`\< -extent `cat $(BLD)/kali.dim` $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" $< $@
 	#$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
 # already transparent
 $(BLD)/maltese-resize.$(LOGOEXT): $(BLD)/maltese.$(LOGOEXT) $(BLD)/kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`\< -extent `cat $(BLD)/kali.dim` $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" $< $@
 $(BLD)/%-transparent.$(LOGOEXT):         $(BLD)/%-2.$(LOGOEXT)
 	$(CONVERT) $^ $(TRANSPARENT) $@
 # not a black-and-white image
@@ -833,11 +837,11 @@ $(BLD)/%-2.$(LOGOEXT):                         $(BLD)/%.$(LOGOEXT)
 $(BLD)/kali-2.$(LOGOEXT): $(BLD)/random.$(LOGOEXT) $(BLD)/kali.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random.$(LOGOEXT): $(BLD)/random.out $(BLD)/kali.dim
-	convert -depth 8 -size `cat $(BLD)/kali.dim` RGB:- $@ < $<
+	convert -depth 8 -size "$$(cat $(BLD)/kali.dim)" RGB:- $@ < $<
 $(BLD)/random.out: $(BLD)/random.sz fingerprint
-	head -c "`cat $<`" /dev/urandom > $@
+	head -c "$$(cat $<)" /dev/urandom > $@
 $(BLD)/random.sz: $(BLD)/kali.dim
-	echo $$((3*$$(sed 's/x/*/' $<))) | tee $@
+	echo $$((3*"$$(sed 's/x/*/' $<)")) | tee $@
 fingerprint: # unique every time
 
 $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
@@ -865,24 +869,24 @@ $(DLD)/%.png: %.url $(DLD)/.sentinel
 	$(WGET)
 
 $(DLD)/.sentinel: # $(OUT)/.sentinel
-	[ -d   $$(dirname $@) ] || \
-	mkdir -v $$(dirname $@)
+	[ -d   "$$(dirname $@)" ] || \
+	mkdir -v "$$(dirname $@)"
 	touch               $@
 $(BLD)/.sentinel: $(OUT)/.sentinel
-	[ -d   $$(dirname $@) ] || \
-	mkdir -v $$(dirname $@)
+	[ -d   "$$(dirname $@)" ] || \
+	mkdir -v "$$(dirname $@)"
 	touch               $@
 $(OUT)/.sentinel:
-	[ -d   $$(dirname $@) ] || \
-	mkdir -v $$(dirname $@)
+	[ -d   "$$(dirname $@)" ] || \
+	mkdir -v "$$(dirname $@)"
 	touch               $@
 $(TST)/.sentinel: $(OUT)/.sentinel
-	[ -d   $$(dirname $@) ] || \
-	mkdir -v $$(dirname $@)
+	[ -d   "$$(dirname $@)" ] || \
+	mkdir -v "$$(dirname $@)"
 	touch               $@
 $(STG)/.sentinel: $(OUT)/.sentinel
-	[ -d   $$(dirname $@) ] || \
-	mkdir -v $$(dirname $@)
+	[ -d   "$$(dirname $@)" ] || \
+	mkdir -v "$$(dirname $@)"
 	touch               $@
 
 
