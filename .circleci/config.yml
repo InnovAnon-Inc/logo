@@ -89,8 +89,10 @@ jobs:
             VERSION="$cleanversion.$revisioncount"
 
             #ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} ../tmp
+            export GOPATH="${HOME}/go"
+            export   PATH="${PATH}:${GOPATH}/bin"
             $SHELL -l -c "sleep 31 && ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
-            #$SHELL -l -c "env GOPATH=${HOME}/go PATH=${PATH}:${HOME}/go/bin ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
+            #$SHELL -l -c "sleep 31 && env GOPATH=${HOME}/go PATH=${PATH}:${HOME}/go/bin ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
       - run:
           name: Update Home Page
           command: |
