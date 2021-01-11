@@ -27,7 +27,9 @@ STEGEXT ?= ppm
 PW ?= InnovAnon
 #endif
 
-CAPTION ?= -caption "Free Code for a Free World!"
+SLOGAN  ?= Free Code for a Free World!
+CAPTION ?= -caption "$(SLOGAN)"
+COMMENT ?= -caption "$(SLOGAN)"
 
 #VISIBLE=0.9
 #INVISIBLE=0.6
@@ -81,7 +83,7 @@ CONVERT=convert $(QUAL) +compress
 TRANSPARENT=-fuzz 0% -transparent white -background 'rgba(0,0,0,0)'
 RESIZE=$(CONVERT) -gravity center
 GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
-GENLOGO=composite $(QUAL) $(GENLOGOARGS) $(CAPTION) 
+GENLOGO=composite $(QUAL) $(GENLOGOARGS) $(COMMENT) 
 #GENLOGO=$(CONVERT) $^ -gravity center             \
 #        \( -clone 0 -alpha extract \)             \
 #        \( -clone 1 -clone 2 -alpha off           \
