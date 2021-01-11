@@ -217,7 +217,7 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-se-%.png,$<)" \
 	    -gravity southeast -composite                                 \
 	  "$@"
-$(BLD)/rc-nw-%.png: $(BLD)/.sentinel
+$(BLD)/rc-nw-%.png: $(BLD)/rc-nw-16.png $(BLD)/.sentinel
 	$(CONVERT) -resize "$(patsubst $(BLD)/rc-nw-%.png,%,$@)" "$<" "$@"
 #	set -e                                                                   ; \
 #	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                                  ; \
