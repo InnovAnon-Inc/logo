@@ -29,7 +29,7 @@ PW ?= InnovAnon
 
 SLOGAN  ?= Free Code for a Free World!
 CAPTION ?= -caption "$(SLOGAN)"
-COMMENT ?= -caption "$(SLOGAN)"
+COMMENT ?= -comment "$(SLOGAN)"
 
 #VISIBLE=0.9
 #INVISIBLE=0.6
