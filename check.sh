@@ -15,7 +15,7 @@ for k in "${files[@]}" ; do
   err=("${err[@]}" "$k")
   #err=$((err + 1))
 done
-printf %s\\n "${files[@]}"
+printf %s\\n "${err[@]}"
 set -x
 echo "${#files[@]}"
 (( ! ${#err[@]} ))

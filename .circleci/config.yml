@@ -35,7 +35,7 @@ jobs:
             #$SHELL -l -c "make -j$(nproc)"
             $SHELL -l -c "make -j4"
       - run:
-          name: Build Project
+          name: Rename Hack
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}/out
             mv -v precomposed-apple-touch-icon-114x114.png \
