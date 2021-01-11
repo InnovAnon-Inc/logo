@@ -8,11 +8,16 @@ cd out
 [[ -x "$LIST" ]]
 mapfile -t files < <( "$LIST" )
 (( ${#files[@]} ))
-err=0
+err=()
+set +x
 for k in "${files[@]}" ; do
   [[ -f "$k" ]] ||
-  err=$((err + 1))
+  err=("${err[@]}" "$k")
+  #err=$((err + 1))
 done
+printf "%s\n" "${files[@]}"
+set -x
 echo "${#files[@]}"
-(( ! err ))
+(( ! ${#err[@]} ))
+#(( ! err ))
 
