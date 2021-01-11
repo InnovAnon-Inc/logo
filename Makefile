@@ -3,7 +3,8 @@
         aperture baphomet cthulhu e-corp fawkes hermes kabuto lucy   \
         maltese maltese-round sauron sith umbrella wolfram           \
 	shellcheck dist stego-helper test-parts test-run             \
-	icons android-chrome-icons mstile-icons anim stego-parts
+	icons android-chrome-icons mstile-icons anim stego-parts     \
+	apple-touch-icons-precomposed
 #.PRECIOUS: archive.tar archive.tar.lrz archive.tar.lrz.zpaq          \
 #           archive.tlrzpq archive.tlrzpq.gpg                         \
 #           shiva-small.png kali-small.png shiva-2.png shiva.png      \
@@ -72,7 +73,7 @@ WGET=touch $@
 RM=rm -fv
 IDENTIFY=identify -ping -format
 
-CONVERT=convert $(QUAL)
+CONVERT=convert $(QUAL) +compress
 #TRANSPARENT=-fuzz 90% -transparent white -background 'rgba(0,0,0,0)'
 TRANSPARENT=-fuzz 0% -transparent white -background 'rgba(0,0,0,0)'
 RESIZE=$(CONVERT) -gravity center
