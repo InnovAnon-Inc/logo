@@ -11,6 +11,7 @@ jobs:
             command -v outguess
             command -v steghide
             command -v ghr
+            $SHELL -l -c 'command -v ghr'
       - run:
           name: Checkout Project
           command: |
