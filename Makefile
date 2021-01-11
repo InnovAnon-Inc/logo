@@ -842,7 +842,7 @@ fingerprint: # unique every time
 
 $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
 	$(CONVERT) -strip $< $@
-$(BLD)/kali.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
+$(BLD)/kali.$(LOGOEXT): $(DLD)/kali.jpg $(BLD)/.sentinel
 	$(CONVERT) -strip -normalize $< $@
 $(DLD)/%.jpg: %.url $(DLD)/.sentinel
 	$(WGET)
@@ -856,7 +856,7 @@ $(BLD)/maltese.$(LOGOEXT): $(DLD)/maltese.$(LOGOEXT) $(BLD)/.sentinel
 	$(CONVERT) -strip $< $@
 	#cp -v $< $@
 $(BLD)/sauron.$(LOGOEXT): $(DLD)/sauron.$(LOGOEXT) $(BLD)/.sentinel
-	$(CONVERT) -strip $< $@
+	$(CONVERT) -strip -normalize $< $@
 	#cp -v $< $@
 $(BLD)/umbrella.$(LOGOEXT): $(DLD)/umbrella.$(LOGOEXT) $(BLD)/.sentinel
 	$(CONVERT) -strip $< $@
