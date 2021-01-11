@@ -65,7 +65,7 @@ LOGO_MIDVISIBLE=logo-midvisible.$(LOGOEXT)
 ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
 LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
-LOGO_ANIM_STEGO=$(OUT)/logo-stego-animated.$(ANIMEXT)
+LOGO_ANIM_STEGO=logo-stego-animated.$(ANIMEXT)
 
 #WGET=[ -f $@ ] || curl --proxy "$(SOCKS_PROXY)" -o $@ `cat $<`
 WGET=touch $@
