@@ -632,8 +632,8 @@ $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
 	      -ef "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" \
 	      -cf "$<" -sf "$@"        \
 	      -e none -Z -N
-	[ "$(STEGEXT)" == ppm ] || \
-	[ "$(STEGEXT)" == bmp ] ||  \
+	[ "$(STEGEXT)" = ppm ] || \
+	[ "$(STEGEXT)" = bmp ] ||  \
 	    stegosuite              \
 	      -k "$(PW)"             \
 	      -d -e                 \

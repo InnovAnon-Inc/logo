@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 set -euvxo pipefail
+cd
 rm -rf .gnupg
 mkdir -m 0700 .gnupg
 touch .gnupg/gpg.conf
@@ -33,22 +34,20 @@ EOF
 
 gpg --verbose --batch --gen-key keydetails
 
-gpg --quiet --list-keys 
-gpg --quiet --list-keys   |
-grep -A1 'pub[[:space:]]' |
-awk '!(NR%2)'
-SIGGY="$(gpg --quiet --list-keys   |
-         grep -A1 'pub[[:space:]]' |
-         awk '!(NR%2)')"
+#SIGGY="$(gpg --quiet --list-keys   |
+#         grep -A1 'pub[[:space:]]' |
+#         awk '!(NR%2)')"
 
 # Set trust to 5 for the key so we can encrypt without prompt.
-echo -e "5\ny\n" |  gpg --command-fd 0 --expert --edit-key "$SIGGY" trust;
+#echo -e "5\ny\n" |  gpg --command-fd 0 --expert --edit-key "$SIGGY" trust;
+echo -e "5\ny\n" |  gpg --command-fd 0 --expert --batch --edit-key user@1.com trust;
 
 # Test that the key was created and the permission the trust was set.
 gpg --list-keys
 
 # Test the key can encrypt and decrypt.
-gpg -e -a -r "$SIGGY" keydetails
+#gpg -e -a -r "$SIGGY" keydetails
+gpg -e -a -r user@1.com keydetails
 #gpg -e -a keydetails
 
 # Delete the options and decrypt the original to stdout.
