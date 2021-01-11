@@ -841,7 +841,7 @@ $(BLD)/random.$(LOGOEXT): $(BLD)/random.out $(BLD)/kali.dim
 $(BLD)/random.out: $(BLD)/random.sz fingerprint
 	head -c "$$(cat $<)" /dev/urandom > $@
 $(BLD)/random.sz: $(BLD)/kali.dim
-	echo $$((3*"$$(sed 's/x/*/' $<)")) | tee $@
+	echo $$((3*$$(sed 's/x/*/' $<))) | tee $@
 fingerprint: # unique every time
 
 $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
