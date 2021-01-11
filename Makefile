@@ -211,15 +211,18 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	    -gravity southeast -composite                                 \
 	  $@
 $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
-	set -e                                                              ; \
-	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                             ; \
-	k="$$(echo $$K | sed 's/x.*//')"                                    ; \
-	k="$$((k-1))"                                                       ; \
-	t="$$(echo $$K | sed 's/.*x//')"                                    ; \
-	t="$$((t-1))"                                                       ; \
-	[ "$$k" -eq "$$t" ]                                                 ; \
-	convert -quality 100 -size $Kx$K xc:none                              \
-	  -draw "fill white rectangle 0,0 $k,$k fill black circle $k,$k $k,0" \
+	set -e                                                                   ; \
+	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                                  ; \
+	echo $$K                                                                 ; \
+	k="$$(echo $$K | sed 's/x.*//')"                                         ; \
+	k="$$((k-1))"                                                            ; \
+	echo $$k                                                                 ; \
+	t="$$(echo $$K | sed 's/[^x]*x//')"                                      ; \
+	t="$$((t-1))"                                                            ; \
+	echo $$t                                                                 ; \
+	[ "$$k" -eq "$$t" ]                                                      ; \
+	convert -quality 100 -size $$Kx$$K xc:none                                 \
+	  -draw "fill white rectangle 0,0 $$k,$$k fill black circle $$k,$$k $$k,0" \
 	  -background white -alpha shape $@
 $(BLD)/rc-ne-%.png: $(BLD)/rc-nw-%.png
 	convert -quality 100 $< -flop $@
