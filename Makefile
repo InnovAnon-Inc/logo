@@ -606,13 +606,13 @@ $(BLD)/kali-gpg-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	
 	
 	
-$(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-small-rot-$(d).$(STEGEXT))
+$(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-rot-$(d).$(STEGEXT))
 	$(CONVERT) -dispose Background -layers OptimizePlus $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
 # TODO 00000000000000000000000000
 $(OUT)/$(LOGO_ANIM_STEGO): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-stego-rot-$(d).$(STEGEXT))
 	$(CONVERT) -dispose Background -layers RemoveZero   $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
 
-$(BLD)/logo-small-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
+#$(BLD)/logo-small-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
 # embed data in logo frames
 $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
 	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) ]
