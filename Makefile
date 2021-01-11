@@ -213,9 +213,9 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
 	set -e                                                              ; \
 	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                             ; \
-	k="$$(echo $$K | sed 's/x.*/*/')"                                   ; \
+	k="$$(echo $$K | sed 's/x.*//')"                                    ; \
 	k="$$((k-1))"                                                       ; \
-	t="$$(echo $$K | sed 's/.*x/*/')"                                   ; \
+	t="$$(echo $$K | sed 's/.*x//')"                                    ; \
 	t="$$((t-1))"                                                       ; \
 	[ "$$k" -eq "$$t" ]                                                 ; \
 	convert -quality 100 -size $Kx$K xc:none                              \
