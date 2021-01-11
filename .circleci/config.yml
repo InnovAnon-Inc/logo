@@ -11,6 +11,9 @@ jobs:
             command -v outguess
             command -v steghide
             command -v ghr
+      - run:
+          name: Insanity Check
+          command: |
             export GOPATH="${HOME}/go"
             export   PATH="${PATH}:${GOPATH}/bin"
             $SHELL -l -c 'command -v ghr'
