@@ -606,10 +606,10 @@ $(BLD)/kali-gpg-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	
 	
 $(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-small-rot-$(d).$(STEGEXT))
-	$(CONVERT) -layers optimize $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
+	$(CONVERT) -dispose Background -layers OptimizePlus $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
 # TODO 00000000000000000000000000
 $(OUT)/$(LOGO_ANIM_STEGO): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-stego-rot-$(d).$(STEGEXT))
-	$(CONVERT) -layers dispose  $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
+	$(CONVERT) -dispose Background -layers RemoveZero   $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
 
 $(BLD)/logo-small-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
 # embed data in logo frames
@@ -840,20 +840,26 @@ $(BLD)/random.sz: $(BLD)/kali.dim
 fingerprint: # unique every time
 
 $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
-	$(CONVERT) $< $@
+	$(CONVERT) -strip $< $@
+$(BLD)/kali.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
+	$(CONVERT) -strip -normalize $< $@
 $(DLD)/%.jpg: %.url $(DLD)/.sentinel
 	$(WGET)
 $(BLD)/aperture.$(LOGOEXT): $(DLD)/aperture.$(LOGOEXT) $(BLD)/.sentinel
-	$(CONVERT) $< $@
+	$(CONVERT) -strip $< $@
 	#cp -v $< $@
 $(BLD)/hermes.$(LOGOEXT): $(DLD)/hermes.$(LOGOEXT) $(BLD)/.sentinel
-	cp -v $< $@
+	$(CONVERT) -strip $< $@
+	#cp -v $< $@
 $(BLD)/maltese.$(LOGOEXT): $(DLD)/maltese.$(LOGOEXT) $(BLD)/.sentinel
-	cp -v $< $@
+	$(CONVERT) -strip $< $@
+	#cp -v $< $@
 $(BLD)/sauron.$(LOGOEXT): $(DLD)/sauron.$(LOGOEXT) $(BLD)/.sentinel
-	cp -v $< $@
+	$(CONVERT) -strip $< $@
+	#cp -v $< $@
 $(BLD)/umbrella.$(LOGOEXT): $(DLD)/umbrella.$(LOGOEXT) $(BLD)/.sentinel
-	cp -v $< $@
+	$(CONVERT) -strip $< $@
+	#cp -v $< $@
 $(DLD)/%.png: %.url $(DLD)/.sentinel
 	$(WGET)
 

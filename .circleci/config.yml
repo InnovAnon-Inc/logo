@@ -131,7 +131,7 @@ jobs:
             cd    "$DIR/assets/images"
             # manually managed math on black
             #ln -sv logo-visible.png 3600x3600.png
-            ln -sv logo-visible.png logo.png
+            ln -fsv logo-visible.png logo.png
             cd    "$DIR"
 
             git config --global user.email "InnovAnon-Inc@protonmail.com"
