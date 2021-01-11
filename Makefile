@@ -82,8 +82,8 @@ CONVERT=convert $(QUAL) +compress
 #TRANSPARENT=-fuzz 90% -transparent white -background 'rgba(0,0,0,0)'
 TRANSPARENT=-fuzz 0% -transparent white -background 'rgba(0,0,0,0)'
 RESIZE=$(CONVERT) -gravity center
-GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
-GENLOGO=composite $(QUAL) $(GENLOGOARGS) $(COMMENT) 
+GENLOGOARGS=$(COMMENT) -blend $$BLEND -gravity center $^ $@
+GENLOGO=composite $(QUAL) $(GENLOGOARGS)
 #GENLOGO=$(CONVERT) $^ -gravity center             \
 #        \( -clone 0 -alpha extract \)             \
 #        \( -clone 1 -clone 2 -alpha off           \
@@ -207,7 +207,7 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	                                   $(BLD)/rc-ne-%.png            \
 					   $(BLD)/rc-sw-%.png            \
 					   $(BLD)/rc-se-%.png
-	$(CONVERT) $(CAPTION) "$<"                                           \
+	$(CONVERT) $(COMMENT) "$<"                                           \
 	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<)" \
 	    -gravity northwest -composite                                 \
 	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<)" \

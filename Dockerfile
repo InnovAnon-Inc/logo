@@ -3,8 +3,10 @@ WORKDIR /src/
 COPY ./ ./
 ARG GPG_KEY
 RUN sleep 31                \
- && echo -e "$GPG_KEY"      \
-  | gpg --import            \
+    if [[ -n "$GPG_KEY" ]] ; then \
+      echo -e "$GPG_KEY"      \
+      | gpg --import || exit $? ; \
+    else ./genkey.sh || exit $? ; fi \
  && make "-j$(nproc)"       \
  && rm -vrf "$HOME/.gnupg"  \
  &&     ./check.sh          \
@@ -17,8 +19,10 @@ COPY --from=builder /src/out/* ./
 COPY ./sign.sh /tmp/
 ARG GPG_KEY
 RUN sleep 31                \
- && echo -e "$GPG_KEY"      \
-  | gpg --import            \
+    if [[ -n "$GPG_KEY" ]] ; then \
+      echo -e "$GPG_KEY"      \
+      | gpg --import || exit $? ; \
+    else ./genkey.sh || exit $? ; fi \
  &&            /tmp/sign.sh \
  && rm -vrf "$HOME/.gnupg"  \
  && rm -v      /tmp/sign.sh \
