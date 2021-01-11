@@ -34,6 +34,28 @@ jobs:
             #$SHELL -l -c "make -j$(nproc)"
             #$SHELL -l -c "make -j4"
       - run:
+          name: Build Project
+          command: |
+            cd ${CIRCLE_PROJECT_REPONAME}/out
+            mv -v precomposed-apple-touch-icon-114x114.png \
+                              apple-touch-icon-114x114-precomposed.png
+            mv -v precomposed-apple-touch-icon-120x120.png \
+                              apple-touch-icon-120x120-precomposed.png
+            mv -v precomposed-apple-touch-icon-144x144.png \
+                              apple-touch-icon-144x144-precomposed.png
+            mv -v precomposed-apple-touch-icon-152x152.png \
+                              apple-touch-icon-152x152-precomposed.png
+            mv -v precomposed-apple-touch-icon-180x180.png \
+                              apple-touch-icon-180x180-precomposed.png
+            mv -v precomposed-apple-touch-icon-57x57.png   \
+                              apple-touch-icon-57x57-precomposed.png  
+            mv -v precomposed-apple-touch-icon-60x60.png   \
+                              apple-touch-icon-60x60-precomposed.png  
+            mv -v precomposed-apple-touch-icon-72x72.png   \
+                              apple-touch-icon-72x72-precomposed.png  
+            mv -v precomposed-apple-touch-icon-76x76.png   \
+                              apple-touch-icon-76x76-precomposed.png  
+      - run:
           name: Check Project
           command: |
             cd ${CIRCLE_PROJECT_REPONAME}
@@ -107,25 +129,16 @@ jobs:
                   mstile-310x310.png                       \
                   mstile-70x70.png                         \
                   safari-pinned-tab.svg                    \
+                              apple-touch-icon-114x114-precomposed.png \
+                              apple-touch-icon-120x120-precomposed.png \
+                              apple-touch-icon-144x144-precomposed.png \
+                              apple-touch-icon-152x152-precomposed.png \
+                              apple-touch-icon-180x180-precomposed.png \
+                              apple-touch-icon-57x57-precomposed.png   \
+                              apple-touch-icon-60x60-precomposed.png   \
+                              apple-touch-icon-72x72-precomposed.png   \
+                              apple-touch-icon-76x76-precomposed.png   \
                   "$DIR/assets/images"
-            mv -v precomposed-apple-touch-icon-114x114.png \
-                              apple-touch-icon-114x114-precomposed.png
-            mv -v precomposed-apple-touch-icon-120x120.png \
-                              apple-touch-icon-120x120-precomposed.png
-            mv -v precomposed-apple-touch-icon-144x144.png \
-                              apple-touch-icon-144x144-precomposed.png
-            mv -v precomposed-apple-touch-icon-152x152.png \
-                              apple-touch-icon-152x152-precomposed.png
-            mv -v precomposed-apple-touch-icon-180x180.png \
-                              apple-touch-icon-180x180-precomposed.png
-            mv -v precomposed-apple-touch-icon-57x57.png   \
-                              apple-touch-icon-57x57-precomposed.png  
-            mv -v precomposed-apple-touch-icon-60x60.png   \
-                              apple-touch-icon-60x60-precomposed.png  
-            mv -v precomposed-apple-touch-icon-72x72.png   \
-                              apple-touch-icon-72x72-precomposed.png  
-            mv -v precomposed-apple-touch-icon-76x76.png   \
-                              apple-touch-icon-76x76-precomposed.png  
             mv -v logo-small-animated.gif                  \
                   "$DIR/assets/images/logo.gif"
             cd    "$DIR/assets/images"
