@@ -120,7 +120,7 @@ dist: all # stego
 	#$(MAKE) clean
 	#$(RM) Makefile .Makefile make support* nohup.out *.url *.jpg hermes.png *.mk archive.* .gitignore \
 	#      aperture.png umbrella.png quine.sh dist.sh sauron.png maltese.png
-	[ $(LOL) -eq 0 ] || $(MAKE) test
+	[ "$(LOL)" -eq 0 ] || $(MAKE) test
 	#tar acvf /tmp/logo.txz $(OUT) $(STG)
 #test: logo-stego-animated.$(LOGOEXT)
 #test: stego
@@ -129,32 +129,32 @@ test: cleaner
 	$(MAKE) test-run
 test-parts: $(OUT)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	# extract frames
-	convert -coalesce $< $(TST)/logo-stego-rot-%03d.$(STEGEXT)
+	convert -coalesce "$<" "$(TST)/logo-stego-rot-%03d.$(STEGEXT)"
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
 	[ -f "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)" ]
-	@case $(STEGEXT) in \
+	@case "$(STEGEXT)" in \
 	  ppm)             \
-	    outguess -k "$(PW)" -r "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)" $@             \
+	    outguess -k "$(PW)" -r "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)" "$@"             \
 	    ;;             \
 	  bmp)             \
-	    steghide extract -p "$(PW)" -xf $@ -sf "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)" \
+	    steghide extract -p "$(PW)" -xf "$@" -sf "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)" \
 	    ;;             \
 	  *)               \
 	    exit 1         \
-	    stegosuite -k "$(PW)" -d -x -f $@ "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)"      \
+	    stegosuite -k "$(PW)" -d -x -f "$@" "$(patsubst $(TST)/archive.tlrzpq.gpg.part%,$(TST)/logo-stego-rot-%.$(STEGEXT),$@)"      \
 	    ;;             \
 	esac
-	[ -f $@ ]
+	[ -f "$@" ]
 # unsplit
 $(TST)/archive.tlrzpq.gpg: $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(TST)/archive.tlrzpq.gpg.part$(d))
-	cat $^ > $@
+	cat $^ > "$@"
 	#cat `ls -v $(TST)/archive.tlrzpq.gpg.part*` > $(TST)/archive.tlrzpq.gpg
 # decrypt/verify
 $(TST)/archive.tlrzpq: $(TST)/archive.tlrzpq.gpg
-	gpg --decrypt -o $(TST)/archive.tlrzpq --yes  $(TST)/archive.tlrzpq.gpg
+	gpg --decrypt -o "$(TST)/archive.tlrzpq" --yes "$(TST)/archive.tlrzpq.gpg"
 # extract
 $(TST)/archive.tar.lrz.zpaq: $(TST)/archive.tlrzpq
-	mv -v            $(TST)/archive.tlrzpq $(TST)/archive.tar.lrz.zpaq
+	mv -v            "$(TST)/archive.tlrzpq" "$(TST)/archive.tar.lrz.zpaq"
 $(TST)/archive.tar.lrz: $(TST)/archive.tar.lrz.zpaq
 	zpaq x                          $(TST)/archive.tar.lrz.zpaq -f
 $(TST)/archive.tar: $(TST)/archive.tar.lrz
@@ -619,15 +619,15 @@ $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
 	[ -f "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" ]
 	@case $(STEGEXT) in           \
 	  ppm)                       \
-	    set +x                    \
+	    set -vx                   \
 	    outguess -k "$(PW)" -d "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" $< $@                              \
 	    ;;                       \
 	  bmp)                       \
-	    set +x                    \
+	    set -vx                   \
 	    steghide embed -p "$(PW)" -ef "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" -cf $< -sf $@ -e none -Z -N \
 	    ;;                       \
 	  *)                         \
-	    set +x                    \
+	    set -vx                   \
 	    exit 1                   \
 	    stegosuite -k "$(PW)" -d -e -f "$(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" $@                      || \
 	    { rm -fv $@ ; exit 2 ; } \
