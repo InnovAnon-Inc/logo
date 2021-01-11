@@ -218,25 +218,30 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	    -gravity southeast -composite                                 \
 	  "$@"
 $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
-	set -e                                                                   ; \
-	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                                  ; \
-	echo $$K                                                                 ; \
-	k="$$(echo $$K | sed 's/x.*//')"                                         ; \
-	k="$$(expr $$k - 1)"                                                            ; \
-	echo $$k                                                                 ; \
-	t="$$(echo $$K | sed 's/[^x]*x//')"                                      ; \
-	t="$$(expr $$t - 1)"                                                            ; \
-	echo $$t                                                                 ; \
-	[ "$$k" -eq "$$t" ]                                                      ; \
-	$(CONVERT) -size "$$Kx$$K" xc:none                       \
-	  -draw "fill white rectangle 0,0 $$k,$$k fill black circle $$k,$$k $$k,0" \
-	  -background white -alpha shape "$@"
+	$(CONVERT) -resize "$(patsubst $(BLD)/rc-nw-%.png,%,$@)" "$<" "$@"
+#	set -e                                                                   ; \
+#	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                                  ; \
+#	echo $$K                                                                 ; \
+#	k="$$(echo $$K | sed 's/x.*//')"                                         ; \
+#	k="$$(expr $$k - 1)"                                                            ; \
+#	echo $$k                                                                 ; \
+#	t="$$(echo $$K | sed 's/[^x]*x//')"                                      ; \
+#	t="$$(expr $$t - 1)"                                                            ; \
+#	echo $$t                                                                 ; \
+#	[ "$$k" -eq "$$t" ]                                                      ; \
+#	$(CONVERT) -size "$$Kx$$K" xc:none                       \
+#	  -draw "fill white rectangle 0,0 $$k,$$k fill black circle $$k,$$k $$k,0" \
+#	  -background white -alpha shape "$@"
 $(BLD)/rc-ne-%.png: $(BLD)/rc-nw-%.png
 	$(CONVERT) "$<" -flop "$@"
 $(BLD)/rc-sw-%.png: $(BLD)/rc-nw-%.png
 	$(CONVERT) "$<" -flip "$@"
 $(BLD)/rc-se-%.png: $(BLD)/rc-ne-%.png
 	$(CONVERT) "$<" -flip "$@"
+$(BLD)/rc-nw-16x16.png: $(BLD)/.sentinel
+	$(CONVERT) -size 16x16 xc:none                       \
+	  -draw "fill white rectangle 0,0 15,15 fill black circle 15,15 15,0" \
+	  -background white -alpha shape "$@"
 
 # TODO apple-touch-icon.png
 apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
@@ -270,7 +275,7 @@ mstile-icons: $(OUT)/mstile-310x310.png         \
               $(OUT)/mstile-150x150.png         \
               $(OUT)/mstile-144x144.png         \
               $(OUT)/mstile-70x70.png
-$(OUT)/mstile-%.png: $(OUT)/$(LOGO)
+$(OUT)/mstile-%.png: $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) $(CAPTION) -resize "$(patsubst $(OUT)/mstile-%.png,%,$@)" "$<" "$@"
 
 $(OUT)/safari-pinned-tab.svg: $(BLD)/shiva-transparent.$(LOGOEXT)
