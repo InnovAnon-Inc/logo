@@ -73,7 +73,8 @@ LOGO_ANIM_STEGO=logo-stego-animated.$(ANIMEXT)
 
 # TODO
 #WGET=[ -f $@ ] || { sleep 31 ; curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || exit $? ; }
-WGET=touch $@
+#WGET=touch $@
+WGET=if [ ! -f $@ ] ; then sleep 31 && curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || echo $@ 1>&2 ; fi && touch $@
 #WGET=[ -f $@ ] || pcurl `cat $^` $@
 RM=rm -fv
 IDENTIFY=identify -ping -format
