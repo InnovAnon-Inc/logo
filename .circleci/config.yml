@@ -6,9 +6,10 @@ jobs:
     steps:
       - run:
           name: Sanity Check
-          tor --verify-config
-          command -v outguess
-          command -v steghide
+          command: |
+            tor --verify-config
+            command -v outguess
+            command -v steghide
       - run:
           name: Checkout Project
           command: |
