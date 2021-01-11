@@ -4,12 +4,12 @@ rm -rf .gnupg
 mkdir -m 0700 .gnupg
 touch .gnupg/gpg.conf
 chmod 600 .gnupg/gpg.conf
-tail -n +4 /usr/share/gnupg2/gpg-conf.skel > .gnupg/gpg.conf
+#tail -n +4 /usr/share/gnupg2/gpg-conf.skel > .gnupg/gpg.conf
 
 cd .gnupg
 # I removed this line since these are created if a list key is done.
 # touch .gnupg/{pub,sec}ring.gpg
-gpg2 --list-keys
+gpg --list-keys
 
 
 cat >keydetails <<EOF
@@ -31,19 +31,28 @@ cat >keydetails <<EOF
     %echo done
 EOF
 
-gpg2 --verbose --batch --gen-key keydetails
+gpg --verbose --batch --gen-key keydetails
+
+gpg --quiet --list-keys 
+gpg --quiet --list-keys   |
+grep -A1 'pub[[:space:]]' |
+awk '!(NR%2)'
+SIGGY="$(gpg --quiet --list-keys   |
+         grep -A1 'pub[[:space:]]' |
+         awk '!(NR%2)')"
 
 # Set trust to 5 for the key so we can encrypt without prompt.
-echo -e "5\ny\n" |  gpg2 --command-fd 0 --expert --edit-key user@1.com trust;
+echo -e "5\ny\n" |  gpg --command-fd 0 --expert --edit-key "$SIGGY" trust;
 
 # Test that the key was created and the permission the trust was set.
-gpg2 --list-keys
+gpg --list-keys
 
 # Test the key can encrypt and decrypt.
-gpg2 -e -a -r user@1.com keydetails
+gpg -e -a -r "$SIGGY" keydetails
+#gpg -e -a keydetails
 
 # Delete the options and decrypt the original to stdout.
 rm keydetails
-gpg2 -d keydetails.asc
+gpg -d keydetails.asc
 rm keydetails.asc
 

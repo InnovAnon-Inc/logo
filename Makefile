@@ -437,7 +437,7 @@ $(BLD)/kali-large-thumbnail.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize $(THUMBNAIL_LARGESZ)^ $(THUMBNAIL_LARGEARGS) "$<" "$@"
 
 $(OUT)/stripe.jpg: $(BLD)/shiva-stripe.$(LOGOEXT) $(BLD)/kali-stripe.$(LOGOEXT)
-	BLEND=$(MIDVISIBLE) $(SHELL) -c 'composite $(GENLOGOARGS) $(STRIPEQUALITY)'
+	BLEND=$(MIDVISIBLE) $(SHELL) -c 'composite $(GENLOGOARGS)' $(STRIPEQUALITY)
 STRIPESZ=1000x2000
 STRIPEARGS=-gravity center -extent $(STRIPESZ)
 $(BLD)/shiva-stripe.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)

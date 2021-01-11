@@ -2,11 +2,11 @@ FROM innovanon/logo-builder as builder
 WORKDIR /src/
 COPY ./ ./
 ARG GPG_KEY
-RUN sleep 31                \
- && if [[ -n "$GPG_KEY" ]] ; then \
+RUN if [[ -n "$GPG_KEY" ]] ; then \
       echo -e "$GPG_KEY"      \
       | gpg --import || exit $? ; \
     else ./genkey.sh || exit $? ; fi \
+ && sleep 31                \
  && make "-j$(nproc)"       \
  && rm -vrf "$HOME/.gnupg"  \
  &&     ./check.sh          \
