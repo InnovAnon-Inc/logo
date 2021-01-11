@@ -204,13 +204,13 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 					   $(BLD)/rc-sw-%.png            \
 					   $(BLD)/rc-se-%.png
 	$(CONVERT) $<                                           \
-	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<) \
+	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<)" \
 	    -gravity northwest -composite                                 \
-	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<) \
+	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<)" \
 	    -gravity northeast -composite                                 \
-	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-sw-%.png,$<) \
+	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-sw-%.png,$<)" \
 	    -gravity southwest -composite                                 \
-	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-se-%.png,$<) \
+	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-se-%.png,$<)" \
 	    -gravity southeast -composite                                 \
 	  $@
 $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
@@ -218,10 +218,10 @@ $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
 	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                                  ; \
 	echo $$K                                                                 ; \
 	k="$$(echo $$K | sed 's/x.*//')"                                         ; \
-	k="$$((k-1))"                                                            ; \
+	k="$$(expr $$k - 1)"                                                            ; \
 	echo $$k                                                                 ; \
 	t="$$(echo $$K | sed 's/[^x]*x//')"                                      ; \
-	t="$$((t-1))"                                                            ; \
+	t="$$(expr $$t - 1)"                                                            ; \
 	echo $$t                                                                 ; \
 	[ "$$k" -eq "$$t" ]                                                      ; \
 	$(CONVERT) -size $$Kx$$K xc:none                       \
@@ -616,7 +616,7 @@ $(OUT)/$(LOGO_ANIM_STEGO): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(B
 #$(BLD)/logo-small-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
 # embed data in logo frames
 $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
-	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) ]
+	[ -f "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" ]
 	@case $(STEGEXT) in           \
 	  ppm)                       \
 	    set +x                    \
@@ -662,7 +662,7 @@ $(BLD)/random-2.sz: $(BLD)/small.dim
 
 # animated logo is 256x256
 $(BLD)/shiva-small-2.$(LOGOEXT): $(BLD)/shiva-transparent.$(LOGOEXT) $(BLD)/small.dim
-	$(RESIZE) $(TRANSPARENT) -resize "$(cat $(BLD)/small.dim)"\> -extent "$(cat $(BLD)/small.dim)" $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/small.dim)"\> -extent "$$(cat $(BLD)/small.dim)" $< $@
 $(BLD)/kali-small.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT) $(BLD)/small.dim
 	$(RESIZE) -resize "$$(cat $(BLD)/small.dim)"^ -extent "$$(cat $(BLD)/small.dim)" $< $@	
 $(BLD)/small.dim: $(BLD)/.sentinel
