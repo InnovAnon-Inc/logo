@@ -1,20 +1,5 @@
-#*.tar*
-#*.tlrzpq*
-#*.gpg
-#*.jpg
-#*.png
-#*.bmp
-#*.ico
-#*.gif
-#*.xpm*
-#*.dim
-#*.txt
 *.out
 */
-#!dld/e-corp.jpg
-#!dld/sith.jpg
-#!dld/shiva.jpg
-#!dld/kali.jpg
 !dld/
 dld/.sentinel
 
@@ -25,7 +10,6 @@ dld/.sentinel
 .AppleDouble
 .LSOverride
 Icon
-
 
 ._*
 .DocumentRevisions-V100

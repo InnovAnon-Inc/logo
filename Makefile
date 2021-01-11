@@ -241,7 +241,7 @@ apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
                    $(OUT)/apple-touch-icon-72x72.png   \
                    $(OUT)/apple-touch-icon-60x60.png   \
                    $(OUT)/apple-touch-icon-57x57.png
-$(OUT)/apple-touch-icon-%.png: $(OUT)/$(LOGO)
+$(OUT)/apple-touch-icon-%.png: $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) -resize $(patsubst $(OUT)/apple-touch-icon-%.png,%,$@) $^ $@
 
 # TODO
@@ -254,7 +254,7 @@ android-chrome-icons: $(OUT)/android-chrome-384x384.png \
                       $(OUT)/android-chrome-72x72.png   \
                       $(OUT)/android-chrome-48x48.png   \
                       $(OUT)/android-chrome-36x36.png
-$(OUT)/android-chrome-%.png: $(OUT)/$(LOGO)
+$(OUT)/android-chrome-%.png: $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) -resize $(patsubst $(OUT)/android-chrome-%.png,%,$@) $^ $@
 
 # TODO
@@ -281,12 +281,12 @@ $(OUT)/favicon.ico: $(OUT)/favicon-194x194.ico \
                     $(OUT)/favicon-16x16.ico   \
                     $(OUT)/favicon-8x8.ico
 	$(CONVERT) $^ $@
-$(OUT)/favicon-%.ico: $(OUT)/$(LOGO_MIDVISIBLE)
+$(OUT)/favicon-%.ico: $(OUT)/$(LOGO_VISIBLE)
 	DIM=$(patsubst $(OUT)/favicon-%.ico,%,$@) $(SHELL) -c \
 	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
 #$(BLD)/$(LOGO_MIDVISIBLE): $(OUT)/$(LOGO_MIDVISIBLE)
 #	cp -v $< $@
-$(OUT)/favicon-%.png: $(OUT)/$(LOGO_MIDVISIBLE)
+$(OUT)/favicon-%.png: $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) -resize $(patsubst $(OUT)/favicon-%.png,%,$@) $^ $@
 
 
@@ -305,7 +305,7 @@ $(OUT)/syslinux-splash.bmp: $(BLD)/boot.$(LOGOEXT)
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 $(BLD)/boot.$(LOGOEXT): $(BLD)/shiva-boot.$(LOGOEXT) $(BLD)/kali-boot.$(LOGOEXT)
-	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
 BOOTSZ=640x480
 BOOTARGS=-gravity center -extent $(BOOTSZ)
 $(BLD)/shiva-boot.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)

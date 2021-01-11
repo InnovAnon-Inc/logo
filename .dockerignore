@@ -1,16 +1,13 @@
-#*/
-#.*/
+README.md
+LICENSE
+.circleci/
+.travis/
+.travis.yml
 !dld/
 dld/.sentinel
-*.out
 bld
 tst
 stg
 out
-old
-.circleci/
-.travis/
-.travis.yml
-README.md
-LICENSE
+*.out
 
