@@ -19,6 +19,7 @@ cat >keydetails <<EOF
     Key-Length: 2048
     Subkey-Type: RSA
     Subkey-Length: 2048
+    Subkey-Usage: sign, encrypt
     Name-Real: User 1
     Name-Comment: User 1
     Name-Email: user@1.com
