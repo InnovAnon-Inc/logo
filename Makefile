@@ -65,7 +65,7 @@ LOGO_MIDVISIBLE=logo-midvisible.$(LOGOEXT)
 ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
 LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
-LOGO_ANIN_STEGO=$(STG)/logo-stego-animated.$(ANIMEXT)
+LOGO_ANIM_STEGO=$(OUT)/logo-stego-animated.$(ANIMEXT)
 
 #WGET=[ -f $@ ] || curl --proxy "$(SOCKS_PROXY)" -o $@ `cat $<`
 WGET=touch $@
@@ -126,7 +126,7 @@ dist: all # stego
 #stegosuite -x -f $(TST)/archive.tlrzpq.gpg.part$(D) $(TST)/logo-stego-rot-%02d.$(LOGOEXT) || exit 2 ;
 test: cleaner
 	$(MAKE) test-run
-test-parts: $(STG)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
+test-parts: $(OUT)/logo-stego-animated.$(ANIMEXT) $(TST)/.sentinel
 	# extract frames
 	convert -coalesce $< $(TST)/logo-stego-rot-%03d.$(STEGEXT)
 $(TST)/archive.tlrzpq.gpg.part%: test-parts
@@ -174,7 +174,7 @@ stego: stego-helper
 	#$(RM) $(BLD)/archive.tar
 	#$(MAKE) stego-helper
 	#find $(OUT)
-stego-helper: $(STG)/logo-stego-animated.$(ANIMEXT)
+stego-helper: $(OUT)/logo-stego-animated.$(ANIMEXT)
 #$(STG)/logo-stego-animated.$(ANIMEXT): $(OUT)/$(LOGO_ANIM_SMALL) $(STG)/.sentinel
 #	cp -v $< $@
 

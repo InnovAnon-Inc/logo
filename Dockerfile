@@ -6,6 +6,7 @@ RUN sleep 31                \
  && echo -e "$GPG_KEY"      \
   | gpg --import            \
  && make "-j$(nproc)"       \
+ && rm -vrf "$HOME/.gnupg"  \
  &&     ./check.sh          \
  && rm -v check.sh
 
@@ -19,6 +20,7 @@ RUN sleep 31                \
  && echo -e "$GPG_KEY"      \
   | gpg --import            \
  &&            /tmp/sign.sh \
+ && rm -vrf "$HOME/.gnupg"  \
  && rm -v      /tmp/sign.sh \
  && cd         /tmp         \
  && tar acf    /tmp/logo{.txz,}
