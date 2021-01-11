@@ -3,7 +3,8 @@ set -euvxo pipefail
 #(( UID ))
 (( ! $# ))
 cd out
-mapfile -t files < <( "${0/.sh/.list}" )
+SELF="$(readlink -f "$0")"
+mapfile -t files < <( "${SELF/.sh/.list}" )
 err=0
 for k in "${files[@]}" ; do
   [[ -f "$k" ]] ||
