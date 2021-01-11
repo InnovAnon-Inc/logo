@@ -3,7 +3,7 @@ WORKDIR /src/
 COPY ./ ./
 ARG GPG_KEY
 RUN sleep 31                \
-    if [[ -n "$GPG_KEY" ]] ; then \
+ && if [[ -n "$GPG_KEY" ]] ; then \
       echo -e "$GPG_KEY"      \
       | gpg --import || exit $? ; \
     else ./genkey.sh || exit $? ; fi \
@@ -19,7 +19,7 @@ COPY --from=builder /src/out/* ./
 COPY ./sign.sh /tmp/
 ARG GPG_KEY
 RUN sleep 31                \
-    if [[ -n "$GPG_KEY" ]] ; then \
+ && if [[ -n "$GPG_KEY" ]] ; then \
       echo -e "$GPG_KEY"      \
       | gpg --import || exit $? ; \
     else ./genkey.sh || exit $? ; fi \
