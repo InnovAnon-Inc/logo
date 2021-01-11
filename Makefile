@@ -186,42 +186,43 @@ $(STG)/logo-stego-animated.$(ANIMEXT): $(OUT)/$(LOGO_ANIM_SMALL) $(STG)/.sentine
 icons: apple-touch-icons-precomposed android-chrome-icons mstile-icons favicons $(OUT)/safari-pinned-tab.svg
 
 # TODO $(OUT)/apple-touch-icon-precomposed.png
-apple-touch-icons-precomposed: $(OUT)/apple-touch-icon-114x114-precomposed.png \
-                               $(OUT)/apple-touch-icon-120x120-precomposed.png \
-                               $(OUT)/apple-touch-icon-144x144-precomposed.png \
-                               $(OUT)/apple-touch-icon-152x152-precomposed.png \
-                               $(OUT)/apple-touch-icon-180x180-precomposed.png \
-                               $(OUT)/apple-touch-icon-57x57-precomposed.png   \
-                               $(OUT)/apple-touch-icon-60x60-precomposed.png   \
-                               $(OUT)/apple-touch-icon-72x72-precomposed.png   \
-                               $(OUT)/apple-touch-icon-76x76-precomposed.png
-$(OUT)/apple-touch-icon-%-precomposed.png: $(OUT)/apple-touch-icon-%.png \
+apple-touch-icons-precomposed: \
+                               $(OUT)/precomposed-apple-touch-icon-114x114.png \
+                               $(OUT)/precomposed-apple-touch-icon-120x120.png \
+                               $(OUT)/precomposed-apple-touch-icon-144x144.png \
+                               $(OUT)/precomposed-apple-touch-icon-152x152.png \
+                               $(OUT)/precomposed-apple-touch-icon-180x180.png \
+                               $(OUT)/precomposed-apple-touch-icon-57x57.png   \
+                               $(OUT)/precomposed-apple-touch-icon-60x60.png   \
+                               $(OUT)/precomposed-apple-touch-icon-72x72.png   \
+                               $(OUT)/precomposed-apple-touch-icon-76x76.png
+$(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	                                   $(BLD)/rc-ne-%.png            \
 					   $(BLD)/rc-sw-%.png            \
 					   $(BLD)/rc-se-%.png
-	convert -quality 100 $<                                                 \
-	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<) $^ $@ \
-	    -gravity northwest -composite                                       \
-	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<) $^ $@ \
-	    -gravity northeast -composite                                       \
-	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-sw-%.png,$<) $^ $@ \
-	    -gravity southwest -composite                                       \
-	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-se-%.png,$<) $^ $@ \
-	    -gravity southeast -composite                                       \
+	convert -quality 100 $<                                           \
+	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<) \
+	    -gravity northwest -composite                                 \
+	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<) \
+	    -gravity northeast -composite                                 \
+	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-sw-%.png,$<) \
+	    -gravity southwest -composite                                 \
+	  $(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-se-%.png,$<) \
+	    -gravity southeast -composite                                 \
 	  $@
 $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
 	set -e                                                              ; \
 	K=$(patsubst $(BLD)/rc-nw-%.png,%,$@)                               ; \
 	k=$$((K-1))                                                         ; \
-	convert -size $Kx$K xc:none                                           \
+	convert -quality 100 -size $Kx$K xc:none                              \
 	  -draw "fill white rectangle 0,0 $k,$k fill black circle $k,$k $k,0" \
 	  -background white -alpha shape $@
 $(BLD)/rc-ne-%.png: $(BLD)/rc-nw-%.png
-	convert $< -flop $@
+	convert -quality 100 $< -flop $@
 $(BLD)/rc-sw-%.png: $(BLD)/rc-nw-%.png
-	convert $< -flip $@
+	convert -quality 100 $< -flip $@
 $(BLD)/rc-se-%.png: $(BLD)/rc-ne-%.png
-	convert $< -flip $@
+	convert -quality 100 $< -flip $@
 
 # TODO apple-touch-icon.png
 apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
@@ -800,9 +801,13 @@ $(OUT)/$(LOGO_MIDVISIBLE): $(BLD)/shiva-resize.$(LOGOEXT) $(BLD)/kali-2.$(LOGOEX
 $(BLD)/%-resize.$(LOGOEXT): $(BLD)/%-transparent.$(LOGOEXT) $(BLD)/kali.dim
 	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`\< -extent `cat $(BLD)/kali.dim` $< $@
 	#$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
+# already transparent
 $(BLD)/hermes-resize.$(LOGOEXT): $(BLD)/hermes.$(LOGOEXT) $(BLD)/kali.dim
 	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`\< -extent `cat $(BLD)/kali.dim` $< $@
 	#$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
+# already transparent
+$(BLD)/maltese-resize.$(LOGOEXT): $(BLD)/maltese.$(LOGOEXT) $(BLD)/kali.dim
+	$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`\< -extent `cat $(BLD)/kali.dim` $< $@
 $(BLD)/%-transparent.$(LOGOEXT):         $(BLD)/%-2.$(LOGOEXT)
 	$(CONVERT) $^ $(TRANSPARENT) $@
 # not a black-and-white image
