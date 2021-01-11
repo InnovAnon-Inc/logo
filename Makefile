@@ -27,6 +27,8 @@ STEGEXT ?= ppm
 PW ?= InnovAnon
 #endif
 
+CAPTION ?= -caption "Free Code for a Free World!"
+
 #VISIBLE=0.9
 #INVISIBLE=0.6
 #VISIBLE=60
@@ -79,7 +81,7 @@ CONVERT=convert $(QUAL) +compress
 TRANSPARENT=-fuzz 0% -transparent white -background 'rgba(0,0,0,0)'
 RESIZE=$(CONVERT) -gravity center
 GENLOGOARGS=-blend $$BLEND -gravity center $^ $@
-GENLOGO=composite $(QUAL) $(GENLOGOARGS)
+GENLOGO=composite $(QUAL) $(GENLOGOARGS) $(CAPTION) 
 #GENLOGO=$(CONVERT) $^ -gravity center             \
 #        \( -clone 0 -alpha extract \)             \
 #        \( -clone 1 -clone 2 -alpha off           \
@@ -203,7 +205,7 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	                                   $(BLD)/rc-ne-%.png            \
 					   $(BLD)/rc-sw-%.png            \
 					   $(BLD)/rc-se-%.png
-	$(CONVERT) "$<"                                           \
+	$(CONVERT) $(CAPTION) "$<"                                           \
 	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<)" \
 	    -gravity northwest -composite                                 \
 	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<)" \
@@ -245,7 +247,7 @@ apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
                    $(OUT)/apple-touch-icon-60x60.png   \
                    $(OUT)/apple-touch-icon-57x57.png
 $(OUT)/apple-touch-icon-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize "$(patsubst $(OUT)/apple-touch-icon-%.png,%,$@)" "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize "$(patsubst $(OUT)/apple-touch-icon-%.png,%,$@)" "$<" "$@"
 
 # TODO
 android-chrome-icons: $(OUT)/android-chrome-384x384.png \
@@ -258,7 +260,7 @@ android-chrome-icons: $(OUT)/android-chrome-384x384.png \
                       $(OUT)/android-chrome-48x48.png   \
                       $(OUT)/android-chrome-36x36.png
 $(OUT)/android-chrome-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize "$(patsubst $(OUT)/android-chrome-%.png,%,$@)" "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize "$(patsubst $(OUT)/android-chrome-%.png,%,$@)" "$<" "$@"
 
 # TODO
 mstile-icons: $(OUT)/mstile-310x310.png         \
@@ -267,10 +269,10 @@ mstile-icons: $(OUT)/mstile-310x310.png         \
               $(OUT)/mstile-144x144.png         \
               $(OUT)/mstile-70x70.png
 $(OUT)/mstile-%.png: $(OUT)/$(LOGO)
-	$(CONVERT) -resize "$(patsubst $(OUT)/mstile-%.png,%,$@)" "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize "$(patsubst $(OUT)/mstile-%.png,%,$@)" "$<" "$@"
 
 $(OUT)/safari-pinned-tab.svg: $(BLD)/shiva-transparent.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize 563x563 "$<" "$@"
+	$(CONVERT) $(CAPTION) $(TRANSPARENT) -resize 563x563 "$<" "$@"
 
 favicons: $(OUT)/favicon.ico         \
 	  $(OUT)/favicon-194x194.png \
@@ -286,11 +288,11 @@ $(OUT)/favicon.ico: $(OUT)/favicon-194x194.ico \
 	$(CONVERT) $^ "$@"
 $(OUT)/favicon-%.ico: $(OUT)/$(LOGO_VISIBLE)
 	DIM="$(patsubst $(OUT)/favicon-%.ico,%,$@)" $(SHELL) -c \
-	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $< $@'
+	'$(CONVERT) $(CAPTION) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $< $@'
 #$(BLD)/$(LOGO_MIDVISIBLE): $(OUT)/$(LOGO_MIDVISIBLE)
 #	cp -v $< $@
 $(OUT)/favicon-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize "$(patsubst $(OUT)/favicon-%.png,%,$@)" "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize "$(patsubst $(OUT)/favicon-%.png,%,$@)" "$<" "$@"
 
 
 
@@ -299,11 +301,11 @@ boot-splashes: $(OUT)/grub-splash.xpm.gz \
 $(OUT)/grub-splash.xpm.gz: $(OUT)/grub-splash.xpm
 	pigz -c9 "$<" > "$@"
 $(OUT)/grub-splash.xpm: $(BLD)/boot.$(LOGOEXT)
-	$(CONVERT) -colors 14 "$<" "$@"
+	$(CONVERT) $(CAPTION) -colors 14 "$<" "$@"
 	#$(CONVERT) -resize 640x480^ -gravity center -extent 640x480 -colors 14 $^ $@
 
 $(OUT)/syslinux-splash.bmp: $(BLD)/boot.$(LOGOEXT)
-	$(CONVERT) -colors 14 -depth 16 "$<" "$@"
+	$(CONVERT) $(CAPTION) -colors 14 -depth 16 "$<" "$@"
 	#$(CONVERT) -resize 640x480^ -gravity center -extent 640x480 -colors 14 -depth 16 $^ $@
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
@@ -324,15 +326,15 @@ $(BLD)/kali-boot.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 profiles: $(OUT)/github.$(LOGOEXT) $(OUT)/youtube-banner.$(LOGOEXT) $(OUT)/twitter-banner.$(LOGOEXT) $(OUT)/linkedin-banner.$(LOGOEXT) $(OUT)/soundcloud-banner.$(LOGOEXT) $(OUT)/avatar.$(LOGOEXT) $(OUT)/avatar.$(LOGOEXT) $(OUT)/small-thumbnail.$(LOGOEXT) $(OUT)/large-thumbnail.$(LOGOEXT) $(OUT)/stripe.jpg $(OUT)/stripe-icon.$(LOGOEXT) $(OUT)/patreon.$(LOGOEXT) $(OUT)/patreon-banner.$(LOGOEXT) $(OUT)/youtube-watermark-logo.$(LOGOEXT) $(OUT)/dtube-banner.$(LOGOEXT) $(OUT)/tumblr-banner.$(LOGOEXT) $(OUT)/gab-banner.$(LOGOEXT) $(OUT)/gab.$(LOGOEXT) $(OUT)/opencollective-banner.$(LOGOEXT) $(OUT)/bitbucket.$(LOGOEXT) $(OUT)/bitbucket-banner.$(LOGOEXT) $(OUT)/hashvault-banner.$(LOGOEXT) $(OUT)/facebook-banner.$(LOGOEXT)
 
 $(OUT)/github.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize 500x500^ -gravity center -extent 500x500 "$<" "$@"
 $(OUT)/avatar.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 80x80^ -gravity center -extent 80x80 "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize 80x80^ -gravity center -extent 80x80 "$<" "$@"
 $(OUT)/patreon.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 256x256^ -gravity center -extent 256x256 "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize 256x256^ -gravity center -extent 256x256 "$<" "$@"
 $(OUT)/gab.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 400x400^ -gravity center -extent 400x400 "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize 400x400^ -gravity center -extent 400x400 "$<" "$@"
 $(OUT)/bitbucket.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 2048x2048^ -gravity center -extent 2048x2048 "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize 2048x2048^ -gravity center -extent 2048x2048 "$<" "$@"
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 $(OUT)/youtube-banner.$(LOGOEXT): $(BLD)/shiva-youtube-banner.$(LOGOEXT) $(BLD)/kali-youtube-banner.$(LOGOEXT)
@@ -433,7 +435,7 @@ $(BLD)/kali-large-thumbnail.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize $(THUMBNAIL_LARGESZ)^ $(THUMBNAIL_LARGEARGS) "$<" "$@"
 
 $(OUT)/stripe.jpg: $(BLD)/shiva-stripe.$(LOGOEXT) $(BLD)/kali-stripe.$(LOGOEXT)
-	BLEND=$(MIDVISIBLE) $(SHELL) -c 'composite $(GENLOGOARGS)' $(STRIPEQUALITY)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c 'composite $(GENLOGOARGS) $(STRIPEQUALITY)'
 STRIPESZ=1000x2000
 STRIPEARGS=-gravity center -extent $(STRIPESZ)
 $(BLD)/shiva-stripe.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
@@ -442,7 +444,7 @@ $(BLD)/kali-stripe.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize $(STRIPESZ)^ $(STRIPEARGS) "$<" "$@"
 
 $(OUT)/stripe-icon.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 128x128^ -gravity center -extent 128x128 "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize 128x128^ -gravity center -extent 128x128 "$<" "$@"
 
 
 
@@ -580,7 +582,7 @@ $(BLD)/kali-youtube-watermark-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)^ $(YOUTUBE_WATERMARK_LOGOARGS) "$<" "$@"
 
 $(OUT)/gpg-logo.jpg: $(BLD)/tmp-gpg-logo.$(LOGOEXT)
-	$(LOWQUALITY) "$<" "$@"
+	$(LOWQUALITY) $(CAPTION) "$<" "$@"
 $(BLD)/tmp-gpg-logo.$(LOGOEXT): $(BLD)/shiva-gpg-logo.$(LOGOEXT) $(BLD)/kali-gpg-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 GPGSZ=240x288
@@ -608,42 +610,33 @@ $(BLD)/kali-gpg-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	
 	
 $(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-rot-$(d).$(STEGEXT))
-	$(CONVERT) -dispose Background -layers OptimizePlus $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 "$@"
+	$(CONVERT) $(CAPTION) -dispose Background -layers OptimizePlus $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 "$@"
 # TODO 00000000000000000000000000
 $(OUT)/$(LOGO_ANIM_STEGO): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-stego-rot-$(d).$(STEGEXT))
-	$(CONVERT) -dispose Background -layers RemoveZero   $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 "$@"
+	$(CONVERT) $(CAPTION) -dispose Background -layers RemoveZero   $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 "$@"
 
 #$(BLD)/logo-small-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
 # embed data in logo frames
 $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
 	[ -f "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" ]
-	case $(STEGEXT) in           \
-	  ppm)                       \
-	    set -vx                   \
+	[ "$(STEGEXT)" != ppm ] ||    \
 	    outguess                  \
 	      -k "$(PW)"              \
 	      -d "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" \
-	      "$<" "$@"                      \
-	    ;;                       \
-	  bmp)                       \
-	    set -vx                   \
+	      "$<" "$@"
+	[ "$(STEGEXT)" != bmp ] ||    \
 	    steghide embed          \
 	      -p "$(PW)"              \
 	      -ef "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" \
 	      -cf "$<" -sf "$@"        \
-	      -e none -Z -N \
-	    ;;                       \
-	  *)                         \
-	    set -vx                   \
-	    exit 1                   \
+	      -e none -Z -N
+	[ "$(STEGEXT)" == ppm ] || \
+	[ "$(STEGEXT)" == bmp ] ||  \
 	    stegosuite              \
 	      -k "$(PW)"             \
 	      -d -e                 \
 	      -f "$(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" \
-	      "$@"                      || \
-	    { rm -fv "$@" ; exit 2 ; } \
-	    ;;                       \
-	esac
+	      "$@"
 	[ -f "$@" ]
 
 #$(BLD)/logo-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
@@ -807,9 +800,9 @@ $(OUT)/logo.txt:     $(OUT)/$(LOGO_VISIBLE)
 
 slack: $(OUT)/slack-hermes-$(LOGO_VISIBLE) $(OUT)/slack-e-corp-$(LOGO_VISIBLE)
 $(OUT)/slack-hermes-$(LOGO_VISIBLE): $(OUT)/hermes-$(LOGO_VISIBLE) $(BLD)/slack.dim
-	$(CONVERT) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
 $(OUT)/slack-e-corp-$(LOGO_VISIBLE): $(OUT)/e-corp-$(LOGO_VISIBLE) $(BLD)/slack.dim
-	$(CONVERT) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
+	$(CONVERT) $(CAPTION) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
 $(BLD)/slack.dim: $(BLD)/.sentinel
 	echo 1000x1000 > "$@"
 
