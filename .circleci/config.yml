@@ -15,7 +15,7 @@ jobs:
       - run:
           name: Checkout Project
           command: |
-            $SHELL -l -c "git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git"
+            $SHELL -l -c "sleep 31 && git clone --recursive https://github.com/InnovAnon-Inc/${CIRCLE_PROJECT_REPONAME}.git"
       - run:
           name: Check Scripts
           command: |
@@ -89,12 +89,12 @@ jobs:
             VERSION="$cleanversion.$revisioncount"
 
             #ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} ../tmp
-            $SHELL -l -c "ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
+            $SHELL -l -c "sleep 31 && ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
             #$SHELL -l -c "env GOPATH=${HOME}/go PATH=${PATH}:${HOME}/go/bin ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete v${VERSION} /tmp/logo"
       - run:
           name: Update Home Page
           command: |
-            $SHELL -l -c 'git clone --depth=1 --recursive https://github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git'
+            $SHELL -l -c 'sleep 31 && git clone --depth=1 --recursive https://github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git'
             #cp -v ../tmp/logo/favicon.ico             assets/images/favicon.ico
             #cp -v ../tmp/logo/logo-visible.png        assets/images/logo.png
             #cp -v ../tmp/logo/logo-visible.png               images/3600x3600.png
@@ -140,12 +140,14 @@ jobs:
                               apple-touch-icon-60x60-precomposed.png   \
                               apple-touch-icon-72x72-precomposed.png   \
                               apple-touch-icon-76x76-precomposed.png   \
+                  logo.png logo-midvisible.png logo-visible.png \
                   "$DIR/assets/images"
             mv -v logo-small-animated.gif                  \
                   "$DIR/assets/images/logo.gif"
             cd    "$DIR/assets/images"
             # manually managed math on black
             #ln -sv logo-visible.png 3600x3600.png
+            mv -v logo.png logo-invisible.png
             ln -fsv logo-visible.png logo.png
             cd    "$DIR"
 
@@ -153,7 +155,7 @@ jobs:
             git config --global user.name  "Innovations Anonymous"
             git add .
             git commit -m '[CircleCI] updated corporate logo'
-            $SHELL -l -c "git push https://${GITHUB_TOKEN}@github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git"
+            $SHELL -l -c "sleep 31 && git push https://${GITHUB_TOKEN}@github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git"
 
 workflows:
   version: 2.1
