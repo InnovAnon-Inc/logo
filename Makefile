@@ -64,6 +64,7 @@ LOGO_MIDVISIBLE=logo-midvisible.$(LOGOEXT)
 ANIMEXT=gif
 LOGO_ANIM=logo-animated.$(ANIMEXT)
 LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
+LOGO_ANIN_STEGO=$(STG)/logo-stego-animated.$(ANIMEXT)
 
 #WGET=[ -f $@ ] || curl --proxy "$(SOCKS_PROXY)" -o $@ `cat $<`
 WGET=touch $@
@@ -110,7 +111,7 @@ all: extra_logos logos icons boot-splashes profiles wallpapers $(OUT)/archive.ta
 #dist: cleaner
 #	. /etc/profile
 #	$(MAKE) all stego
-dist: all stego
+dist: all # stego
 	#[ ! -d .git ]
 	#$(MAKE) stego
 	#$(MAKE)
@@ -118,7 +119,7 @@ dist: all stego
 	#$(RM) Makefile .Makefile make support* nohup.out *.url *.jpg hermes.png *.mk archive.* .gitignore \
 	#      aperture.png umbrella.png quine.sh dist.sh sauron.png maltese.png
 	[ $(LOL) -eq 0 ] || $(MAKE) test
-	tar acvf /tmp/logo.txz $(OUT) $(STG)
+	#tar acvf /tmp/logo.txz $(OUT) $(STG)
 #test: logo-stego-animated.$(LOGOEXT)
 #test: stego
 #stegosuite -x -f $(TST)/archive.tlrzpq.gpg.part$(D) $(TST)/logo-stego-rot-%02d.$(LOGOEXT) || exit 2 ;
@@ -173,8 +174,8 @@ stego: stego-helper
 	#$(MAKE) stego-helper
 	#find $(OUT)
 stego-helper: $(STG)/logo-stego-animated.$(ANIMEXT)
-$(STG)/logo-stego-animated.$(ANIMEXT): $(OUT)/$(LOGO_ANIM_SMALL) $(STG)/.sentinel
-	cp -v $< $@
+#$(STG)/logo-stego-animated.$(ANIMEXT): $(OUT)/$(LOGO_ANIM_SMALL) $(STG)/.sentinel
+#	cp -v $< $@
 
 
 
@@ -528,7 +529,7 @@ $(BLD)/kali-wallpaper4.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize $(WALLPAPER4SZ)^ $(WALLPAPER4ARGS) $^ $@
 
 
-anim: $(OUT)/$(LOGO_ANIM_SMALL) # $(OUT)/$(LOGO_ANIM)
+anim: $(OUT)/$(LOGO_ANIM_SMALL) $(OUT)/$(LOGO_ANIM_STEGO) # $(OUT)/$(LOGO_ANIM)
 
 logos: shiva $(OUT)/doxygen-logo.$(LOGOEXT) $(OUT)/gpg-logo.jpg $(OUT)/logo.txt $(OUT)/sphinx-logo.$(LOGOEXT) $(OUT)/stackoverflow-logo.$(LOGOEXT) $(OUT)/google-cover-logo.$(LOGOEXT) slack
 # $(LOGO_ANIM) $(LOGO_ANIM_SMALL)
@@ -604,9 +605,13 @@ $(BLD)/kali-gpg-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	
 	
 	
-$(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-stego-rot-$(d).$(STEGEXT))
-	$(CONVERT) $^ -loop 0 -delay $(FPS) -layers optimize $@
+$(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-small-rot-$(d).$(STEGEXT))
+	$(CONVERT) -layers optimize $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
+# TODO 00000000000000000000000000
+$(OUT)/$(LOGO_ANIM_STEGO): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-stego-rot-$(d).$(STEGEXT))
+	$(CONVERT) -layers dispose  $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
 
+$(BLD)/logo-small-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
 # embed data in logo frames
 $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
 	[ -f $(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@) ]
