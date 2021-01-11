@@ -156,13 +156,13 @@ $(TST)/archive.tlrzpq: $(TST)/archive.tlrzpq.gpg
 $(TST)/archive.tar.lrz.zpaq: $(TST)/archive.tlrzpq
 	mv -v            "$(TST)/archive.tlrzpq" "$(TST)/archive.tar.lrz.zpaq"
 $(TST)/archive.tar.lrz: $(TST)/archive.tar.lrz.zpaq
-	zpaq x                          $(TST)/archive.tar.lrz.zpaq -f
+	zpaq x                          "$(TST)/archive.tar.lrz.zpaq" -f
 $(TST)/archive.tar: $(TST)/archive.tar.lrz
-	lrunzip -f                      $(TST)/archive.tar.lrz
-	chmod -v +x                     $(TST)/archive.tar
+	lrunzip -f                      "$(TST)/archive.tar.lrz"
+	chmod -v +x                     "$(TST)/archive.tar"
 # run
 test-run: $(TST)/archive.tar
-	+$<
+	+"$<"
 #release:
 #	#LOL=$(LOL) ./quine.sh
 #	#$(MAKE) stego
@@ -203,7 +203,7 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	                                   $(BLD)/rc-ne-%.png            \
 					   $(BLD)/rc-sw-%.png            \
 					   $(BLD)/rc-se-%.png
-	$(CONVERT) $<                                           \
+	$(CONVERT) "$<"                                           \
 	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<)" \
 	    -gravity northwest -composite                                 \
 	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<)" \
@@ -212,7 +212,7 @@ $(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
 	    -gravity southwest -composite                                 \
 	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-se-%.png,$<)" \
 	    -gravity southeast -composite                                 \
-	  $@
+	  "$@"
 $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
 	set -e                                                                   ; \
 	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                                  ; \
@@ -224,15 +224,15 @@ $(BLD)/rc-nw-%.png: $(BLD)/.sentinel
 	t="$$(expr $$t - 1)"                                                            ; \
 	echo $$t                                                                 ; \
 	[ "$$k" -eq "$$t" ]                                                      ; \
-	$(CONVERT) -size $$Kx$$K xc:none                       \
+	$(CONVERT) -size "$$Kx$$K" xc:none                       \
 	  -draw "fill white rectangle 0,0 $$k,$$k fill black circle $$k,$$k $$k,0" \
-	  -background white -alpha shape $@
+	  -background white -alpha shape "$@"
 $(BLD)/rc-ne-%.png: $(BLD)/rc-nw-%.png
-	$(CONVERT) $< -flop $@
+	$(CONVERT) "$<" -flop "$@"
 $(BLD)/rc-sw-%.png: $(BLD)/rc-nw-%.png
-	$(CONVERT) $< -flip $@
+	$(CONVERT) "$<" -flip "$@"
 $(BLD)/rc-se-%.png: $(BLD)/rc-ne-%.png
-	$(CONVERT) $< -flip $@
+	$(CONVERT) "$<" -flip "$@"
 
 # TODO apple-touch-icon.png
 apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
@@ -245,7 +245,7 @@ apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
                    $(OUT)/apple-touch-icon-60x60.png   \
                    $(OUT)/apple-touch-icon-57x57.png
 $(OUT)/apple-touch-icon-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize "$(patsubst $(OUT)/apple-touch-icon-%.png,%,$@)" $^ $@
+	$(CONVERT) -resize "$(patsubst $(OUT)/apple-touch-icon-%.png,%,$@)" "$<" "$@"
 
 # TODO
 android-chrome-icons: $(OUT)/android-chrome-384x384.png \
@@ -258,7 +258,7 @@ android-chrome-icons: $(OUT)/android-chrome-384x384.png \
                       $(OUT)/android-chrome-48x48.png   \
                       $(OUT)/android-chrome-36x36.png
 $(OUT)/android-chrome-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize "$(patsubst $(OUT)/android-chrome-%.png,%,$@)" $^ $@
+	$(CONVERT) -resize "$(patsubst $(OUT)/android-chrome-%.png,%,$@)" "$<" "$@"
 
 # TODO
 mstile-icons: $(OUT)/mstile-310x310.png         \
@@ -267,10 +267,10 @@ mstile-icons: $(OUT)/mstile-310x310.png         \
               $(OUT)/mstile-144x144.png         \
               $(OUT)/mstile-70x70.png
 $(OUT)/mstile-%.png: $(OUT)/$(LOGO)
-	$(CONVERT) -resize "$(patsubst $(OUT)/mstile-%.png,%,$@)" $^ $@
+	$(CONVERT) -resize "$(patsubst $(OUT)/mstile-%.png,%,$@)" "$<" "$@"
 
 $(OUT)/safari-pinned-tab.svg: $(BLD)/shiva-transparent.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize 563x563 $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize 563x563 "$<" "$@"
 
 favicons: $(OUT)/favicon.ico         \
 	  $(OUT)/favicon-194x194.png \
@@ -283,27 +283,27 @@ $(OUT)/favicon.ico: $(OUT)/favicon-194x194.ico \
                     $(OUT)/favicon-32x32.ico   \
                     $(OUT)/favicon-16x16.ico   \
                     $(OUT)/favicon-8x8.ico
-	$(CONVERT) $^ $@
+	$(CONVERT) $^ "$@"
 $(OUT)/favicon-%.ico: $(OUT)/$(LOGO_VISIBLE)
 	DIM="$(patsubst $(OUT)/favicon-%.ico,%,$@)" $(SHELL) -c \
-	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $^ $@'
+	'$(CONVERT) -resize $$DIM -gravity center -crop $$DIM+0+0 -flatten -colors 256 $< $@'
 #$(BLD)/$(LOGO_MIDVISIBLE): $(OUT)/$(LOGO_MIDVISIBLE)
 #	cp -v $< $@
 $(OUT)/favicon-%.png: $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize "$(patsubst $(OUT)/favicon-%.png,%,$@)" $^ $@
+	$(CONVERT) -resize "$(patsubst $(OUT)/favicon-%.png,%,$@)" "$<" "$@"
 
 
 
 boot-splashes: $(OUT)/grub-splash.xpm.gz \
                $(OUT)/syslinux-splash.bmp
 $(OUT)/grub-splash.xpm.gz: $(OUT)/grub-splash.xpm
-	pigz -c9 $^ > $@
+	pigz -c9 "$<" > "$@"
 $(OUT)/grub-splash.xpm: $(BLD)/boot.$(LOGOEXT)
-	$(CONVERT) -colors 14 $^ $@
+	$(CONVERT) -colors 14 "$<" "$@"
 	#$(CONVERT) -resize 640x480^ -gravity center -extent 640x480 -colors 14 $^ $@
 
 $(OUT)/syslinux-splash.bmp: $(BLD)/boot.$(LOGOEXT)
-	$(CONVERT) -colors 14 -depth 16 $^ $@
+	$(CONVERT) -colors 14 -depth 16 "$<" "$@"
 	#$(CONVERT) -resize 640x480^ -gravity center -extent 640x480 -colors 14 -depth 16 $^ $@
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
@@ -312,9 +312,9 @@ $(BLD)/boot.$(LOGOEXT): $(BLD)/shiva-boot.$(LOGOEXT) $(BLD)/kali-boot.$(LOGOEXT)
 BOOTSZ=640x480
 BOOTARGS=-gravity center -extent $(BOOTSZ)
 $(BLD)/shiva-boot.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(BOOTSZ)\< $(BOOTARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(BOOTSZ)\< $(BOOTARGS) "$<" "$@"
 $(BLD)/kali-boot.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(BOOTSZ)^ $(BOOTARGS) $^ $@
+	$(CONVERT) -resize $(BOOTSZ)^ $(BOOTARGS) "$<" "$@"
 
 
 
@@ -324,30 +324,30 @@ $(BLD)/kali-boot.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 profiles: $(OUT)/github.$(LOGOEXT) $(OUT)/youtube-banner.$(LOGOEXT) $(OUT)/twitter-banner.$(LOGOEXT) $(OUT)/linkedin-banner.$(LOGOEXT) $(OUT)/soundcloud-banner.$(LOGOEXT) $(OUT)/avatar.$(LOGOEXT) $(OUT)/avatar.$(LOGOEXT) $(OUT)/small-thumbnail.$(LOGOEXT) $(OUT)/large-thumbnail.$(LOGOEXT) $(OUT)/stripe.jpg $(OUT)/stripe-icon.$(LOGOEXT) $(OUT)/patreon.$(LOGOEXT) $(OUT)/patreon-banner.$(LOGOEXT) $(OUT)/youtube-watermark-logo.$(LOGOEXT) $(OUT)/dtube-banner.$(LOGOEXT) $(OUT)/tumblr-banner.$(LOGOEXT) $(OUT)/gab-banner.$(LOGOEXT) $(OUT)/gab.$(LOGOEXT) $(OUT)/opencollective-banner.$(LOGOEXT) $(OUT)/bitbucket.$(LOGOEXT) $(OUT)/bitbucket-banner.$(LOGOEXT) $(OUT)/hashvault-banner.$(LOGOEXT) $(OUT)/facebook-banner.$(LOGOEXT)
 
 $(OUT)/github.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 $^ $@
+	$(CONVERT) -resize 500x500^ -gravity center -extent 500x500 "$<" "$@"
 $(OUT)/avatar.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 80x80^ -gravity center -extent 80x80 $^ $@
+	$(CONVERT) -resize 80x80^ -gravity center -extent 80x80 "$<" "$@"
 $(OUT)/patreon.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 256x256^ -gravity center -extent 256x256 $^ $@
+	$(CONVERT) -resize 256x256^ -gravity center -extent 256x256 "$<" "$@"
 $(OUT)/gab.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 400x400^ -gravity center -extent 400x400 $^ $@
+	$(CONVERT) -resize 400x400^ -gravity center -extent 400x400 "$<" "$@"
 $(OUT)/bitbucket.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 2048x2048^ -gravity center -extent 2048x2048 $^ $@
+	$(CONVERT) -resize 2048x2048^ -gravity center -extent 2048x2048 "$<" "$@"
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 $(OUT)/youtube-banner.$(LOGOEXT): $(BLD)/shiva-youtube-banner.$(LOGOEXT) $(BLD)/kali-youtube-banner.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/shiva-youtube-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize 1546x423\< -gravity center -extent 1546x423 $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize 1546x423\< -gravity center -extent 1546x423 "$<" "$@"
 $(BLD)/kali-youtube-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize 2560x1440^ -gravity center -extent 2560x1440 $^ $@
+	$(CONVERT) -resize 2560x1440^ -gravity center -extent 2560x1440 "$<" "$@"
 
 $(OUT)/patreon-banner.$(LOGOEXT): $(BLD)/shiva-patreon-banner.$(LOGOEXT) $(BLD)/kali-patreon-banner.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/shiva-patreon-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize 1600x400\< -gravity center -extent 1600x400 $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize 1600x400\< -gravity center -extent 1600x400 "$<" "$@"
 $(BLD)/kali-patreon-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize 1600x400^ -gravity center -extent 1600x400 $^ $@
+	$(CONVERT) -resize 1600x400^ -gravity center -extent 1600x400 "$<" "$@"
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 $(OUT)/twitter-banner.$(LOGOEXT): $(BLD)/shiva-twitter-banner.$(LOGOEXT) $(BLD)/kali-twitter-banner.$(LOGOEXT)
@@ -355,9 +355,9 @@ $(OUT)/twitter-banner.$(LOGOEXT): $(BLD)/shiva-twitter-banner.$(LOGOEXT) $(BLD)/
 TWITTERSZ=1263x421
 TWITTERARGS=-gravity center -extent $(TWITTERSZ)
 $(BLD)/shiva-twitter-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(TWITTERSZ)\< $(TWITTERARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(TWITTERSZ)\< $(TWITTERARGS) "$<" "$@"
 $(BLD)/kali-twitter-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(TWITTERSZ)^ $(TWITTERARGS) $^ $@
+	$(CONVERT) -resize $(TWITTERSZ)^ $(TWITTERARGS) "$<" "$@"
 
 $(OUT)/facebook-banner.$(LOGOEXT): $(BLD)/shiva-facebook-banner.$(LOGOEXT) $(BLD)/kali-facebook-banner.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -365,20 +365,20 @@ $(OUT)/facebook-banner.$(LOGOEXT): $(BLD)/shiva-facebook-banner.$(LOGOEXT) $(BLD
 FACEBOOKSZ1=720x461.25
 FACEBOOKARGS=-gravity center -extent $(FACEBOOKSZ1)
 $(BLD)/shiva-facebook-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(FACEBOOKSZ1)\< $(FACEBOOKARGS1) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(FACEBOOKSZ1)\< $(FACEBOOKARGS1) "$<" "$@"
 FACEBOOKSZ2=820x461.25
 FACEBOOKARGS=-gravity center -extent $(FACEBOOKSZ2)
 $(BLD)/kali-facebook-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(FACEBOOKSZ2)^ $(FACEBOOKARGS2) $^ $@
+	$(CONVERT) -resize $(FACEBOOKSZ2)^ $(FACEBOOKARGS2) "$<" "$@"
 
 $(OUT)/hashvault-banner.$(LOGOEXT): $(BLD)/shiva-hashvault-banner.$(LOGOEXT) $(BLD)/kali-hashvault-banner.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 HASHVAULTSZ=1133x378
 HASHVAULTARGS=-gravity center -extent $(HASHVAULTSZ)
 $(BLD)/shiva-hashvault-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(HASHVAULTSZ)\< $(HASHVAULTARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(HASHVAULTSZ)\< $(HASHVAULTARGS) "$<" "$@"
 $(BLD)/kali-hashvault-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(HASHVAULTSZ)^ $(HASHVAULTARGS) $^ $@
+	$(CONVERT) -resize $(HASHVAULTSZ)^ $(HASHVAULTARGS) "$<" "$@"
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 $(OUT)/linkedin-banner.$(LOGOEXT): $(BLD)/shiva-linkedin-banner.$(LOGOEXT) $(BLD)/kali-linkedin-banner.$(LOGOEXT)
@@ -388,9 +388,9 @@ $(OUT)/linkedin-banner.$(LOGOEXT): $(BLD)/shiva-linkedin-banner.$(LOGOEXT) $(BLD
 LINKEDINSZ=1584x396
 LINKEDINARGS=-gravity center -extent $(LINKEDINSZ)
 $(BLD)/shiva-linkedin-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(LINKEDINSZ)\< $(LINKEDINARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(LINKEDINSZ)\< $(LINKEDINARGS) "$<" "$@"
 $(BLD)/kali-linkedin-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(LINKEDINSZ)^ $(LINKEDINARGS) $^ $@
+	$(CONVERT) -resize $(LINKEDINSZ)^ $(LINKEDINARGS) "$<" "$@"
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 $(OUT)/soundcloud-banner.$(LOGOEXT): $(BLD)/shiva-soundcloud-banner.$(LOGOEXT) $(BLD)/kali-soundcloud-banner.$(LOGOEXT)
@@ -398,9 +398,9 @@ $(OUT)/soundcloud-banner.$(LOGOEXT): $(BLD)/shiva-soundcloud-banner.$(LOGOEXT) $
 SOUNDCLOUDSZ=2480x520
 SOUNDCLOUDARGS=-gravity center -extent $(SOUNDCLOUDSZ)
 $(BLD)/shiva-soundcloud-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(SOUNDCLOUDSZ)\< $(SOUNDCLOUDARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(SOUNDCLOUDSZ)\< $(SOUNDCLOUDARGS) "$<" "$@"
 $(BLD)/kali-soundcloud-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(SOUNDCLOUDSZ)^ $(SOUNDCLOUDARGS) $^ $@
+	$(CONVERT) -resize $(SOUNDCLOUDSZ)^ $(SOUNDCLOUDARGS) "$<" "$@"
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 $(OUT)/doxygen-logo.$(LOGOEXT): $(BLD)/shiva-doxygen-logo.$(LOGOEXT) $(BLD)/kali-doxygen-logo.$(LOGOEXT)
@@ -408,41 +408,41 @@ $(OUT)/doxygen-logo.$(LOGOEXT): $(BLD)/shiva-doxygen-logo.$(LOGOEXT) $(BLD)/kali
 DOXYGENSZ=55x200
 DOXYGENARGS=-gravity center -extent $(DOXYGENSZ)
 $(BLD)/shiva-doxygen-logo.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(DOXYGENSZ)\< $(DOXYGENARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(DOXYGENSZ)\< $(DOXYGENARGS) "$<" "$@"
 $(BLD)/kali-doxygen-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(DOXYGENSZ)^ $(DOXYGENARGS) $^ $@
+	$(CONVERT) -resize $(DOXYGENSZ)^ $(DOXYGENARGS) "$<" "$@"
 
 $(OUT)/small-thumbnail.$(LOGOEXT): $(BLD)/shiva-small-thumbnail.$(LOGOEXT) $(BLD)/kali-small-thumbnail.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 THUMBNAIL_SMALLSZ=150x112
 THUMBNAIL_SMALLARGS=-gravity center -extent $(THUMBNAIL_SMALLSZ)
 $(BLD)/shiva-small-thumbnail.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_SMALLSZ)\> $(THUMBNAIL_SMALLARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_SMALLSZ)\> $(THUMBNAIL_SMALLARGS) "$<" "$@"
 	#$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_SMALLSZ)\< $(THUMBNAIL_SMALLARGS) $^ $@
 $(BLD)/kali-small-thumbnail.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(THUMBNAIL_SMALLSZ)^ $(THUMBNAIL_SMALLARGS) $^ $@
+	$(CONVERT) -resize $(THUMBNAIL_SMALLSZ)^ $(THUMBNAIL_SMALLARGS) "$<" "$@"
 
 $(OUT)/large-thumbnail.$(LOGOEXT): $(BLD)/shiva-large-thumbnail.$(LOGOEXT) $(BLD)/kali-large-thumbnail.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 THUMBNAIL_LARGESZ=320x240
 THUMBNAIL_LARGEARGS=-gravity center -extent $(THUMBNAIL_LARGESZ)
 $(BLD)/shiva-large-thumbnail.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_LARGESZ)\> $(THUMBNAIL_LARGEARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_LARGESZ)\> $(THUMBNAIL_LARGEARGS) "$<" "$@"
 	#$(CONVERT) $(TRANSPARENT) -resize $(THUMBNAIL_LARGESZ)\< $(THUMBNAIL_LARGEARGS) $^ $@
 $(BLD)/kali-large-thumbnail.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(THUMBNAIL_LARGESZ)^ $(THUMBNAIL_LARGEARGS) $^ $@
+	$(CONVERT) -resize $(THUMBNAIL_LARGESZ)^ $(THUMBNAIL_LARGEARGS) "$<" "$@"
 
 $(OUT)/stripe.jpg: $(BLD)/shiva-stripe.$(LOGOEXT) $(BLD)/kali-stripe.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c 'composite $(GENLOGOARGS)' $(STRIPEQUALITY)
 STRIPESZ=1000x2000
 STRIPEARGS=-gravity center -extent $(STRIPESZ)
 $(BLD)/shiva-stripe.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(STRIPESZ)\< $(STRIPEARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(STRIPESZ)\< $(STRIPEARGS) "$<" "$@"
 $(BLD)/kali-stripe.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(STRIPESZ)^ $(STRIPEARGS) $^ $@
+	$(CONVERT) -resize $(STRIPESZ)^ $(STRIPEARGS) "$<" "$@"
 
 $(OUT)/stripe-icon.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
-	$(CONVERT) -resize 128x128^ -gravity center -extent 128x128 $^ $@
+	$(CONVERT) -resize 128x128^ -gravity center -extent 128x128 "$<" "$@"
 
 
 
@@ -453,45 +453,45 @@ $(OUT)/wallpaper1.$(LOGOEXT): $(BLD)/shiva-wallpaper1.$(LOGOEXT) $(BLD)/kali-wal
 WALLPAPER1SZ=800x600
 WALLPAPER1ARGS=-gravity center -extent $(WALLPAPER1SZ)
 $(BLD)/shiva-wallpaper1.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER1SZ)\< $(WALLPAPER1ARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER1SZ)\< $(WALLPAPER1ARGS) "$<" "$@"
 $(BLD)/kali-wallpaper1.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(WALLPAPER1SZ)^ $(WALLPAPER1ARGS) $^ $@
+	$(CONVERT) -resize $(WALLPAPER1SZ)^ $(WALLPAPER1ARGS) "$<" "$@"
 
 $(OUT)/dtube-banner.$(LOGOEXT): $(BLD)/shiva-dtube-banner.$(LOGOEXT) $(BLD)/kali-dtube-banner.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 DTUBE_BANNERSZ=1900x265
 DTUBE_BANNERARGS=-gravity center -extent $(DTUBE_BANNERSZ)
 $(BLD)/shiva-dtube-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(DTUBE_BANNERSZ)\< $(DTUBE_BANNERARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(DTUBE_BANNERSZ)\< $(DTUBE_BANNERARGS) "$<" "$@"
 $(BLD)/kali-dtube-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(DTUBE_BANNERSZ)^ $(DTUBE_BANNERARGS) $^ $@
+	$(CONVERT) -resize $(DTUBE_BANNERSZ)^ $(DTUBE_BANNERARGS) "$<" "$@"
 
 $(OUT)/tumblr-banner.$(LOGOEXT): $(BLD)/shiva-tumblr-banner.$(LOGOEXT) $(BLD)/kali-tumblr-banner.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 TUMBLR_BANNERSZ=3000x1055
 TUMBLR_BANNERARGS=-gravity center -extent $(TUMBLR_BANNERSZ)
 $(BLD)/shiva-tumblr-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(TUMBLR_BANNERSZ)\< $(TUMBLR_BANNERARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(TUMBLR_BANNERSZ)\< $(TUMBLR_BANNERARGS) "$<" "$@"
 $(BLD)/kali-tumblr-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(TUMBLR_BANNERSZ)^ $(TUMBLR_BANNERARGS) $^ $@
+	$(CONVERT) -resize $(TUMBLR_BANNERSZ)^ $(TUMBLR_BANNERARGS) "$<" "$@"
 
 $(OUT)/gab-banner.$(LOGOEXT): $(BLD)/shiva-gab-banner.$(LOGOEXT) $(BLD)/kali-gab-banner.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 GAB_BANNERSZ=1500x500
 GAB_BANNERARGS=-gravity center -extent $(GAB_BANNERSZ)
 $(BLD)/shiva-gab-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(GAB_BANNERSZ)\< $(GAB_BANNERARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(GAB_BANNERSZ)\< $(GAB_BANNERARGS) "$<" "$@"
 $(BLD)/kali-gab-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(GAB_BANNERSZ)^ $(GAB_BANNERARGS) $^ $@
+	$(CONVERT) -resize $(GAB_BANNERSZ)^ $(GAB_BANNERARGS) "$<" "$@"
 
 $(OUT)/opencollective-banner.$(LOGOEXT): $(BLD)/shiva-opencollective-banner.$(LOGOEXT) $(BLD)/kali-opencollective-banner.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 OPENCOLLECTIVE_BANNERSZ=1268x360
 OPENCOLLECTIVE_BANNERARGS=-gravity center -extent $(OPENCOLLECTIVE_BANNERSZ)
 $(BLD)/shiva-opencollective-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(OPENCOLLECTIVE_BANNERSZ)\< $(OPENCOLLECTIVE_BANNERARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(OPENCOLLECTIVE_BANNERSZ)\< $(OPENCOLLECTIVE_BANNERARGS) "$<" "$@"
 $(BLD)/kali-opencollective-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(OPENCOLLECTIVE_BANNERSZ)^ $(OPENCOLLECTIVE_BANNERARGS) $^ $@
+	$(CONVERT) -resize $(OPENCOLLECTIVE_BANNERSZ)^ $(OPENCOLLECTIVE_BANNERARGS) "$<" "$@"
 
 $(OUT)/bitbucket-banner.$(LOGOEXT): $(BLD)/shiva-bitbucket-banner.$(LOGOEXT) $(BLD)/kali-bitbucket-banner.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -499,36 +499,36 @@ BITBUCKET_BANNERSZ=1600x200
 #BITBUCKET_BANNERSZ=720x480
 BITBUCKET_BANNERARGS=-gravity center -extent $(BITBUCKET_BANNERSZ)
 $(BLD)/shiva-bitbucket-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(BITBUCKET_BANNERSZ)\< $(BITBUCKET_BANNERARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(BITBUCKET_BANNERSZ)\< $(BITBUCKET_BANNERARGS) "$<" "$@"
 $(BLD)/kali-bitbucket-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(BITBUCKET_BANNERSZ)^ $(BITBUCKET_BANNERARGS) $^ $@
+	$(CONVERT) -resize $(BITBUCKET_BANNERSZ)^ $(BITBUCKET_BANNERARGS) "$<" "$@"
 
 $(OUT)/wallpaper2.$(LOGOEXT): $(BLD)/shiva-wallpaper2.$(LOGOEXT) $(BLD)/kali-wallpaper2.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 WALLPAPER2SZ=1024x768
 WALLPAPER2ARGS=-gravity center -extent $(WALLPAPER2SZ)
 $(BLD)/shiva-wallpaper2.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER2SZ)\< $(WALLPAPER2ARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER2SZ)\< $(WALLPAPER2ARGS) "$<" "$@"
 $(BLD)/kali-wallpaper2.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(WALLPAPER2SZ)^ $(WALLPAPER2ARGS) $^ $@
+	$(CONVERT) -resize $(WALLPAPER2SZ)^ $(WALLPAPER2ARGS) "$<" "$@"
 
 $(OUT)/wallpaper3.$(LOGOEXT): $(BLD)/shiva-wallpaper3.$(LOGOEXT) $(BLD)/kali-wallpaper3.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 WALLPAPER3SZ=1280x1024
 WALLPAPER3ARGS=-gravity center -extent $(WALLPAPER3SZ)
 $(BLD)/shiva-wallpaper3.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER3SZ)\< $(WALLPAPER3ARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER3SZ)\< $(WALLPAPER3ARGS) "$<" "$@"
 $(BLD)/kali-wallpaper3.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(WALLPAPER3SZ)^ $(WALLPAPER3ARGS) $^ $@
+	$(CONVERT) -resize $(WALLPAPER3SZ)^ $(WALLPAPER3ARGS) "$<" "$@"
 
 $(OUT)/wallpaper4.$(LOGOEXT): $(BLD)/shiva-wallpaper4.$(LOGOEXT) $(BLD)/kali-wallpaper4.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 WALLPAPER4SZ=1600x1200
 WALLPAPER4ARGS=-gravity center -extent $(WALLPAPER4SZ)
 $(BLD)/shiva-wallpaper4.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER4SZ)\< $(WALLPAPER4ARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(WALLPAPER4SZ)\< $(WALLPAPER4ARGS) "$<" "$@"
 $(BLD)/kali-wallpaper4.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(WALLPAPER4SZ)^ $(WALLPAPER4ARGS) $^ $@
+	$(CONVERT) -resize $(WALLPAPER4SZ)^ $(WALLPAPER4ARGS) "$<" "$@"
 
 
 anim: $(OUT)/$(LOGO_ANIM_SMALL) $(OUT)/$(LOGO_ANIM_STEGO) # $(OUT)/$(LOGO_ANIM)
@@ -541,10 +541,10 @@ $(OUT)/sphinx-logo.$(LOGOEXT): $(BLD)/shiva-sphinx-logo.$(LOGOEXT) $(BLD)/kali-s
 SPHINX_LOGOSZ=200x200
 SPHINX_LOGOARGS=-gravity center -extent $(SPHINX_LOGOSZ)
 $(BLD)/shiva-sphinx-logo.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(SPHINX_LOGOSZ)\> $(SPHINX_LOGOARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(SPHINX_LOGOSZ)\> $(SPHINX_LOGOARGS) "$<" "$@"
 	#$(CONVERT) $(TRANSPARENT) -resize $(SPHINX_LOGOSZ)\< $(SPHINX_LOGOARGS) $^ $@
 $(BLD)/kali-sphinx-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(SPHINX_LOGOSZ)^ $(SPHINX_LOGOARGS) $^ $@
+	$(CONVERT) -resize $(SPHINX_LOGOSZ)^ $(SPHINX_LOGOARGS) "$<" "$@"
 
 $(OUT)/stackoverflow-logo.$(LOGOEXT): $(BLD)/shiva-stackoverflow-logo.$(LOGOEXT) $(BLD)/kali-stackoverflow-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -552,10 +552,10 @@ $(OUT)/stackoverflow-logo.$(LOGOEXT): $(BLD)/shiva-stackoverflow-logo.$(LOGOEXT)
 STACKOVERFLOW_LOGOSZ=2560x2560
 STACKOVERFLOW_LOGOARGS=-gravity center -extent $(STACKOVERFLOW_LOGOSZ)
 $(BLD)/shiva-stackoverflow-logo.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(STACKOVERFLOW_LOGOSZ)\< $(STACKOVERFLOW_LOGOARGS) "$<" "$@"
 	#$(CONVERT) $(TRANSPARENT) -resize $(STACKOVERFLOW_LOGOSZ)\> $(STACKOVERFLOW_LOGOARGS) $^ $@
-	$(CONVERT) $(TRANSPARENT) -resize $(STACKOVERFLOW_LOGOSZ)\< $(STACKOVERFLOW_LOGOARGS) $^ $@
 $(BLD)/kali-stackoverflow-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(STACKOVERFLOW_LOGOSZ)^ $(STACKOVERFLOW_LOGOARGS) $^ $@
+	$(CONVERT) -resize $(STACKOVERFLOW_LOGOSZ)^ $(STACKOVERFLOW_LOGOARGS) "$<" "$@"
 
 $(OUT)/google-cover-logo.$(LOGOEXT): $(BLD)/shiva-google-cover-logo.$(LOGOEXT) $(BLD)/kali-google-cover-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -563,10 +563,10 @@ $(OUT)/google-cover-logo.$(LOGOEXT): $(BLD)/shiva-google-cover-logo.$(LOGOEXT) $
 GOOGLE_COVER_LOGOSZ=2120x1192
 GOOGLE_COVER_LOGOARGS=-gravity center -extent $(GOOGLE_COVER_LOGOSZ)
 $(BLD)/shiva-google-cover-logo.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(GOOGLE_COVER_LOGOSZ)\< $(GOOGLE_COVER_LOGOARGS) "$<" "$@"
 	#$(CONVERT) $(TRANSPARENT) -resize $(GOOGLE_COVER_LOGOSZ)\> $(GOOGLE_COVER_LOGOARGS) $^ $@
-	$(CONVERT) $(TRANSPARENT) -resize $(GOOGLE_COVER_LOGOSZ)\< $(GOOGLE_COVER_LOGOARGS) $^ $@
 $(BLD)/kali-google-cover-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(GOOGLE_COVER_LOGOSZ)^ $(GOOGLE_COVER_LOGOARGS) $^ $@
+	$(CONVERT) -resize $(GOOGLE_COVER_LOGOSZ)^ $(GOOGLE_COVER_LOGOARGS) "$<" "$@"
 
 $(OUT)/youtube-watermark-logo.$(LOGOEXT): $(BLD)/shiva-youtube-watermark-logo.$(LOGOEXT) $(BLD)/kali-youtube-watermark-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
@@ -574,22 +574,22 @@ $(OUT)/youtube-watermark-logo.$(LOGOEXT): $(BLD)/shiva-youtube-watermark-logo.$(
 YOUTUBE_WATERMARK_LOGOSZ=150x150
 YOUTUBE_WATERMARK_LOGOARGS=-gravity center -extent $(YOUTUBE_WATERMARK_LOGOSZ)
 $(BLD)/shiva-youtube-watermark-logo.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)\> $(YOUTUBE_WATERMARK_LOGOARGS) "$<" "$@"
 	#$(CONVERT) $(TRANSPARENT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)\> $(YOUTUBE_WATERMARK_LOGOARGS) $^ $@
-	$(CONVERT) $(TRANSPARENT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)\> $(YOUTUBE_WATERMARK_LOGOARGS) $^ $@
 $(BLD)/kali-youtube-watermark-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)^ $(YOUTUBE_WATERMARK_LOGOARGS) $^ $@
+	$(CONVERT) -resize $(YOUTUBE_WATERMARK_LOGOSZ)^ $(YOUTUBE_WATERMARK_LOGOARGS) "$<" "$@"
 
 $(OUT)/gpg-logo.jpg: $(BLD)/tmp-gpg-logo.$(LOGOEXT)
-	$(LOWQUALITY) $^ $@
+	$(LOWQUALITY) "$<" "$@"
 $(BLD)/tmp-gpg-logo.$(LOGOEXT): $(BLD)/shiva-gpg-logo.$(LOGOEXT) $(BLD)/kali-gpg-logo.$(LOGOEXT)
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 GPGSZ=240x288
 GPGARGS=-gravity center -extent $(GPGSZ)
 $(BLD)/shiva-gpg-logo.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -resize $(GPGSZ)\> $(GPGARGS) $^ $@
+	$(CONVERT) $(TRANSPARENT) -resize $(GPGSZ)\> $(GPGARGS) "$<" "$@"
 	#$(CONVERT) $(TRANSPARENT) -resize $(GPGSZ)\< $(GPGARGS) $^ $@
 $(BLD)/kali-gpg-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
-	$(CONVERT) -resize $(GPGSZ)^ $(GPGARGS) $^ $@
+	$(CONVERT) -resize $(GPGSZ)^ $(GPGARGS) "$<" "$@"
 
 ##$(LOGO): kali.$(LOGOEXT) shiva-resize.$(LOGOEXT)
 #$(LOGO):            shiva-resize.$(LOGOEXT) kali.$(LOGOEXT)
@@ -608,10 +608,10 @@ $(BLD)/kali-gpg-logo.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	
 	
 $(OUT)/$(LOGO_ANIM_SMALL): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-rot-$(d).$(STEGEXT))
-	$(CONVERT) -dispose Background -layers OptimizePlus $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
+	$(CONVERT) -dispose Background -layers OptimizePlus $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 "$@"
 # TODO 00000000000000000000000000
 $(OUT)/$(LOGO_ANIM_STEGO): $(foreach d,$(shell seq -w 0 1 $$(($(NROT) - 1))),$(BLD)/logo-stego-rot-$(d).$(STEGEXT))
-	$(CONVERT) -dispose Background -layers RemoveZero   $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 $@
+	$(CONVERT) -dispose Background -layers RemoveZero   $$(printf -- '-delay $(FPS) %s ' $^) -loop 0 "$@"
 
 #$(BLD)/logo-small-rot-%.$(LOGOEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
 # embed data in logo frames
@@ -620,24 +620,35 @@ $(BLD)/logo-stego-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(STEGEXT) stego-parts
 	case $(STEGEXT) in           \
 	  ppm)                       \
 	    set -vx                   \
-	    outguess -k "$(PW)" -d "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" $< $@                              \
+	    outguess                  \
+	      -k "$(PW)"              \
+	      -d "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" \
+	      "$<" "$@"                      \
 	    ;;                       \
 	  bmp)                       \
 	    set -vx                   \
-	    steghide embed -p "$(PW)" -ef "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" -cf $< -sf $@ -e none -Z -N \
+	    steghide embed          \
+	      -p "$(PW)"              \
+	      -ef "$(patsubst $(BLD)/logo-stego-rot-%.$(STEGEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" \
+	      -cf "$<" -sf "$@"        \
+	      -e none -Z -N \
 	    ;;                       \
 	  *)                         \
 	    set -vx                   \
 	    exit 1                   \
-	    stegosuite -k "$(PW)" -d -e -f "$(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" $@                      || \
-	    { rm -fv $@ ; exit 2 ; } \
+	    stegosuite              \
+	      -k "$(PW)"             \
+	      -d -e                 \
+	      -f "$(patsubst $(BLD)/logo-stego-rot-%.$(LOGOEXT),$(BLD)/stego.tlrzpq.gpg.part%,$@)" \
+	      "$@"                      || \
+	    { rm -fv "$@" ; exit 2 ; } \
 	    ;;                       \
 	esac
-	[ -f $@ ]
+	[ -f "$@" ]
 
 #$(BLD)/logo-rot-%.$(STEGEXT): $(BLD)/logo-rot-%.$(LOGOEXT)
 $(BLD)/%.$(STEGEXT): $(BLD)/%.$(LOGOEXT)
-	$(CONVERT) $< $@
+	$(CONVERT) "$<" "$@"
 	
 
 
@@ -647,46 +658,46 @@ $(BLD)/logo-rot-%.$(LOGOEXT): $(BLD)/shiva-rot-%.$(LOGOEXT) $(BLD)/kali-%.$(LOGO
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
 # dancing shiva
 $(BLD)/shiva-rot-%.$(LOGOEXT): $(BLD)/shiva-small-2.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -rotate "$(shell echo 'scale=$(SCALE); $(patsubst $(BLD)/shiva-rot-%.$(LOGOEXT),%,$@) * -$(DEG)' | bc)" $^ $@
+	$(CONVERT) $(TRANSPARENT) -rotate "$(shell echo 'scale=$(SCALE); $(patsubst $(BLD)/shiva-rot-%.$(LOGOEXT),%,$@) * -$(DEG)' | bc)" "$<" "$@"
 
 # kali yantra background with randomized fingerprint
 $(BLD)/kali-%.$(LOGOEXT): $(BLD)/random-%.$(LOGOEXT) $(BLD)/kali-small.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random-%.$(LOGOEXT): $(BLD)/random-%.out $(BLD)/small.dim
-	convert -depth 8 -size "$$(cat "$(BLD)/small.dim")" RGB:- $@ < $<
+	convert -depth 8 -size "$$(cat "$(BLD)/small.dim")" RGB:- "$@" < "$<"
 $(BLD)/random-%.out: $(BLD)/random-2.sz fingerprint
-	head -c "$$(cat "$<")" /dev/urandom > $@
+	head -c "$$(cat "$<")" /dev/urandom > "$@"
 	#head -c "$$((3*$$(sed 's/x/*/' $<)))" /dev/urandom > $@
 $(BLD)/random-2.sz: $(BLD)/small.dim
-	echo $$((3*$$(sed 's/x/*/' "$<"))) | tee $@
+	echo $$((3*$$(sed 's/x/*/' "$<"))) | tee "$@"
 
 # animated logo is 256x256
 $(BLD)/shiva-small-2.$(LOGOEXT): $(BLD)/shiva-transparent.$(LOGOEXT) $(BLD)/small.dim
-	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/small.dim)"\> -extent "$$(cat $(BLD)/small.dim)" $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/small.dim)"\> -extent "$$(cat $(BLD)/small.dim)" "$<" "$@"
 $(BLD)/kali-small.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT) $(BLD)/small.dim
-	$(RESIZE) -resize "$$(cat $(BLD)/small.dim)"^ -extent "$$(cat $(BLD)/small.dim)" $< $@	
+	$(RESIZE) -resize "$$(cat $(BLD)/small.dim)"^ -extent "$$(cat $(BLD)/small.dim)" "$<" "$@"	
 $(BLD)/small.dim: $(BLD)/.sentinel
-	echo 256x256 > $@
+	echo 256x256 > "$@"
 	
 # data to hide
 $(BLD)/archive.tlrzpq.gpg.part%: parts
 $(BLD)/stego.tlrzpq.gpg.part%: stego-parts
 parts: $(BLD)/archive.tlrzpq.gpg
-	split -d -n $(NROT) $< $<.part
+	split -d -n $(NROT) "$<" "$<.part"
 stego-parts: $(BLD)/stego.tlrzpq.gpg
-	split -d -n $(NROT) $< $<.part
+	split -d -n $(NROT) "$<" "$<.part"
 $(BLD)/%.gpg: $(BLD)/%
-	rm -vf $@
-	gpg --sign $(RECP) -o $@ $<
+	rm -vf "$@"
+	gpg --sign $(RECP) -o "$@" "$<"
 #gpg --encrypt --sign -r $(RECP) -o $@ $<
 $(BLD)/%.tlrzpq: $(BLD)/%.tar.lrz.zpaq
-	cp -v $^ $@
+	cp -v "$<" "$@"
 $(BLD)/%.zpaq: $(BLD)/%
-	zpaq a $@ $^ -m511.7
+	zpaq a "$@" "$<" -m511.7
 $(BLD)/%.lrz: $(BLD)/%
-	lrzip -fUno $@ $^
+	lrzip -fUno "$@" "$<"
 $(BLD)/stego.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
-	TARCHIVE="$@" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
+	TARCHIVE="$@" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" "./$<"
 #$(BLD)/%.tar: $(BLD)/%
 #	tar vcf $@              \
 #	  --absolute-names      \
@@ -705,7 +716,7 @@ $(BLD)/stego.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
 #archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(BLD)/small.dim $(BLD)/slack.dim
 #$(OUT)/archive.tar: quine.sh make Makefile .Makefile support support-wrapper support.sh *.url $(shell find "$(DLD)" -maxdepth 1)
 $(OUT)/archive.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
-	TARCHIVE="$@" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" ./$<
+	TARCHIVE="$@" LOL="$(LOL)" OUT="$(OUT)" DLD="$(DLD)" BLD="$(BLD)" STG="$(STG)" TST="$(TST)" PW="$(PW)" RECP="$(RECP)" "./$<"
 #quine.sh:        shellcheck
 #	$< -ax     $@
 #make:            shellcheck
@@ -729,21 +740,21 @@ $(OUT)/archive.tar: quine.sh Makefile *.url $(shell find "$(DLD)" -maxdepth 1)
 $(BLD)/logo-rot-%.$(LOGOEXT): $(BLD)/shiva-rot-%.$(LOGOEXT) $(BLD)/kali.$(LOGOEXT)
 	BLEND=$(VISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/shiva-rot-%.$(LOGOEXT): $(BLD)/shiva-small.$(LOGOEXT)
-	$(CONVERT) $(TRANSPARENT) -rotate "$(patsubst $(BLD)/shiva-rot-%.$(LOGOEXT),%,$@)" $^ $@
+	$(CONVERT) $(TRANSPARENT) -rotate "$(patsubst $(BLD)/shiva-rot-%.$(LOGOEXT),%,$@)" "$<" "$@"
 $(BLD)/shiva-small.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT) $(BLD)/kali-small.dim
-	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali-small.dim)"\< -extent "$$(cat $(BLD)/kali-small.dim)" $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali-small.dim)"\< -extent "$$(cat $(BLD)/kali-small.dim)" "$<" "$@"
 
 #logo.txt: logo-visible.$(LOGOEXT)
 #	img2txt $^ > $@
 
 $(BLD)/kali-small.dim: $(BLD)/kali-d.dim
 	D="$$(cat $<)" \
-	$(SHELL) -c 'echo $${D}x$${D}' > $@
+	$(SHELL) -c 'echo $${D}x$${D}' > "$@"
 $(BLD)/kali-d.dim: $(BLD)/kali.dim
 	W="$$(awk 'BEGIN{FS="x"}{print $$1}' $<)" \
 	H="$$(awk 'BEGIN{FS="x"}{print $$2}' $<)" \
 	D=$$((W < H ? W : H))                 \
-	$(SHELL) -c 'echo "scale=0; sqrt($$D * $$D / 2)" | bc' | tee $@
+	$(SHELL) -c 'echo "scale=0; sqrt($$D * $$D / 2)" | bc' | tee "$@"
 #
 ##shiva-resize.$(LOGOEXT): shiva-2.$(LOGOEXT) $(BLD)/kali.dim
 #shiva-resize.$(LOGOEXT): shiva-transparent.$(LOGOEXT) $(BLD)/kali.dim
@@ -754,7 +765,7 @@ $(BLD)/kali-d.dim: $(BLD)/kali.dim
 #kali.dim: kali.$(LOGOEXT)
 #	$(IDENTIFY) '%wx%h' $< > $@
 $(BLD)/%.dim: $(BLD)/%.$(LOGOEXT)
-	$(IDENTIFY) '%wx%h' $< | tee $@
+	$(IDENTIFY) '%wx%h' "$<" | tee "$@"
 
 #shiva-transparent.$(LOGOEXT): shiva-2.$(LOGOEXT)
 #	$(CONVERT) $^ $(TRANSPARENT) $@
@@ -790,17 +801,17 @@ wolfram:             $(OUT)/wolfram-$(LOGO)       $(OUT)/wolfram-$(LOGO_VISIBLE)
 shiva:                       $(OUT)/$(LOGO)               $(OUT)/$(LOGO_VISIBLE)               $(OUT)/$(LOGO_MIDVISIBLE)
 
 $(OUT)/%-logo.txt: $(OUT)/%-$(LOGO_VISIBLE)
-	img2txt $^ | tee $@
+	img2txt "$<" | tee "$@"
 $(OUT)/logo.txt:     $(OUT)/$(LOGO_VISIBLE)
-	img2txt $^ | tee $@
+	img2txt "$<" | tee "$@"
 
 slack: $(OUT)/slack-hermes-$(LOGO_VISIBLE) $(OUT)/slack-e-corp-$(LOGO_VISIBLE)
 $(OUT)/slack-hermes-$(LOGO_VISIBLE): $(OUT)/hermes-$(LOGO_VISIBLE) $(BLD)/slack.dim
-	$(CONVERT) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" $< $@
+	$(CONVERT) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
 $(OUT)/slack-e-corp-$(LOGO_VISIBLE): $(OUT)/e-corp-$(LOGO_VISIBLE) $(BLD)/slack.dim
-	$(CONVERT) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" $< $@
+	$(CONVERT) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
 $(BLD)/slack.dim: $(BLD)/.sentinel
-	echo 1000x1000 > $@
+	echo 1000x1000 > "$@"
 
 $(OUT)/%-$(LOGO):              $(BLD)/%-resize.$(LOGOEXT) $(BLD)/kali-2.$(LOGOEXT)
 	BLEND=$(INVISIBLE)  $(SHELL) -c '$(GENLOGO)'
@@ -816,54 +827,54 @@ $(OUT)/$(LOGO_MIDVISIBLE): $(BLD)/shiva-resize.$(LOGOEXT) $(BLD)/kali-2.$(LOGOEX
 	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
 
 $(BLD)/%-resize.$(LOGOEXT): $(BLD)/%-transparent.$(LOGOEXT) $(BLD)/kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" "$<" "$@"
 	#$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
 # already transparent
 $(BLD)/hermes-resize.$(LOGOEXT): $(BLD)/hermes.$(LOGOEXT) $(BLD)/kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" "$<" "$@"
 	#$(RESIZE) $(TRANSPARENT) -resize `cat $(BLD)/kali.dim`^ -extent `cat $(BLD)/kali.dim` $< $@
 # already transparent
 $(BLD)/maltese-resize.$(LOGOEXT): $(BLD)/maltese.$(LOGOEXT) $(BLD)/kali.dim
-	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" $< $@
+	$(RESIZE) $(TRANSPARENT) -resize "$$(cat $(BLD)/kali.dim)"\< -extent "$$(cat $(BLD)/kali.dim)" "$<" "$@"
 $(BLD)/%-transparent.$(LOGOEXT):         $(BLD)/%-2.$(LOGOEXT)
-	$(CONVERT) $^ $(TRANSPARENT) $@
+	$(CONVERT) "$<" $(TRANSPARENT) "$@"
 # not a black-and-white image
 $(BLD)/sauron-transparent.$(LOGOEXT): $(BLD)/sauron.$(LOGOEXT)
-	$(CONVERT) $^ $(TRANSPARENT) $@
+	$(CONVERT) "$<" $(TRANSPARENT) "$@"
 	#$(CONVERT) $^ -fuzz 0% -transparent red -background 'rgba(0,0,0,0)'
 $(BLD)/%-2.$(LOGOEXT):                         $(BLD)/%.$(LOGOEXT)
-	$(CONVERT) $< -colorspace gray -colors 2 -type bilevel $@
+	$(CONVERT) "$<" -colorspace gray -colors 2 -type bilevel "$@"
 
 $(BLD)/kali-2.$(LOGOEXT): $(BLD)/random.$(LOGOEXT) $(BLD)/kali.$(LOGOEXT)
 	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random.$(LOGOEXT): $(BLD)/random.out $(BLD)/kali.dim
-	convert -depth 8 -size "$$(cat $(BLD)/kali.dim)" RGB:- $@ < $<
+	convert -depth 8 -size "$$(cat $(BLD)/kali.dim)" RGB:- "$@" < "$<"
 $(BLD)/random.out: $(BLD)/random.sz fingerprint
-	head -c "$$(cat $<)" /dev/urandom > $@
+	head -c "$$(cat $<)" /dev/urandom > "$@"
 $(BLD)/random.sz: $(BLD)/kali.dim
-	echo $$((3*$$(sed 's/x/*/' $<))) | tee $@
+	echo $$((3*$$(sed 's/x/*/' $<))) | tee "$@"
 fingerprint: # unique every time
 
 $(BLD)/%.$(LOGOEXT): $(DLD)/%.jpg $(BLD)/.sentinel
-	$(CONVERT) -strip $< $@
+	$(CONVERT) -strip "$<" "$@"
 $(BLD)/kali.$(LOGOEXT): $(DLD)/kali.jpg $(BLD)/.sentinel
-	$(CONVERT) -strip -normalize $< $@
+	$(CONVERT) -strip -normalize "$<" "$@"
 $(DLD)/%.jpg: %.url $(DLD)/.sentinel
 	$(WGET)
 $(BLD)/aperture.$(LOGOEXT): $(DLD)/aperture.$(LOGOEXT) $(BLD)/.sentinel
-	$(CONVERT) -strip $< $@
+	$(CONVERT) -strip "$<" "$@"
 	#cp -v $< $@
 $(BLD)/hermes.$(LOGOEXT): $(DLD)/hermes.$(LOGOEXT) $(BLD)/.sentinel
-	$(CONVERT) -strip $< $@
+	$(CONVERT) -strip "$<" "$@"
 	#cp -v $< $@
 $(BLD)/maltese.$(LOGOEXT): $(DLD)/maltese.$(LOGOEXT) $(BLD)/.sentinel
-	$(CONVERT) -strip $< $@
+	$(CONVERT) -strip "$<" "$@"
 	#cp -v $< $@
 $(BLD)/sauron.$(LOGOEXT): $(DLD)/sauron.$(LOGOEXT) $(BLD)/.sentinel
-	$(CONVERT) -strip -normalize $< $@
+	$(CONVERT) -strip -normalize "$<" "$@"
 	#cp -v $< $@
 $(BLD)/umbrella.$(LOGOEXT): $(DLD)/umbrella.$(LOGOEXT) $(BLD)/.sentinel
-	$(CONVERT) -strip $< $@
+	$(CONVERT) -strip "$<" "$@"
 	#cp -v $< $@
 $(DLD)/%.png: %.url $(DLD)/.sentinel
 	$(WGET)
@@ -871,23 +882,23 @@ $(DLD)/%.png: %.url $(DLD)/.sentinel
 $(DLD)/.sentinel: # $(OUT)/.sentinel
 	[ -d   "$$(dirname $@)" ] || \
 	mkdir -v "$$(dirname $@)"
-	touch               $@
+	touch               "$@"
 $(BLD)/.sentinel: $(OUT)/.sentinel
 	[ -d   "$$(dirname $@)" ] || \
 	mkdir -v "$$(dirname $@)"
-	touch               $@
+	touch               "$@"
 $(OUT)/.sentinel:
 	[ -d   "$$(dirname $@)" ] || \
 	mkdir -v "$$(dirname $@)"
-	touch               $@
+	touch               "$@"
 $(TST)/.sentinel: $(OUT)/.sentinel
 	[ -d   "$$(dirname $@)" ] || \
 	mkdir -v "$$(dirname $@)"
-	touch               $@
+	touch               "$@"
 $(STG)/.sentinel: $(OUT)/.sentinel
 	[ -d   "$$(dirname $@)" ] || \
 	mkdir -v "$$(dirname $@)"
-	touch               $@
+	touch               "$@"
 
 
 
