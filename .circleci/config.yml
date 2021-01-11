@@ -11,6 +11,8 @@ jobs:
             command -v outguess
             command -v steghide
             command -v ghr
+            export GOPATH="${HOME}/go"
+            export   PATH="${PATH}:${GOPATH}/bin"
             $SHELL -l -c 'command -v ghr'
       - run:
           name: Checkout Project
