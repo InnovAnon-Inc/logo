@@ -44,5 +44,6 @@ RUN sleep 31               \
  && rm -v /tmp/archive.tar \
  && exec true || exec false
 
-FROM final
+FROM scratch as squash
+COPY --from=final / /
 
