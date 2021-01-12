@@ -1,4 +1,9 @@
 version: 2.1
+
+orbs:
+  jira: circleci/jira@1.0.5
+  slack: circleci/slack@4.2.0
+
 jobs:
   build:
     docker: 
