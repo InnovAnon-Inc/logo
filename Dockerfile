@@ -1,4 +1,5 @@
 FROM innovanon/logo-builder as builder
+USER root
 COPY --from=innovanon/signer /etc/gnupg       /etc/gnupg
 COPY --from=innovanon/signer /home/lfs/.gnupg /home/lfs/
 COPY --from=innovanon/signer /app             /signer
@@ -15,6 +16,7 @@ RUN sleep 91                            \
  && exec true || exec false
 
 FROM innovanon/builder as signer
+USER root
 COPY --from=innovanon/signer /etc/gnupg       /etc/
 COPY --from=innovanon/signer /home/lfs/.gnupg /home/lfs/
 COPY --from=innovanon/signer /app             /signer

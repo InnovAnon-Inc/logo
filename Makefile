@@ -72,9 +72,9 @@ LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
 LOGO_ANIM_STEGO=logo-stego-animated.$(ANIMEXT)
 
 # TODO
-#WGET=[ -f $@ ] || { sleep 31 ; curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || exit $? ; }
+WGET=[ -f $@ ] || { sleep 31 ; curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || exit $? ; }
 #WGET=touch $@
-WGET=if [ ! -f $@ ] ; then sleep 31 && curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || echo $@ 1>&2 ; fi && touch $@
+#WGET=if [ ! -f $@ ] ; then sleep 31 && curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || echo $@ 1>&2 ; fi && touch $@
 #WGET=[ -f $@ ] || pcurl `cat $^` $@
 RM=rm -fv
 IDENTIFY=identify -ping -format
@@ -806,12 +806,14 @@ $(OUT)/%-logo.txt: $(OUT)/%-$(LOGO_VISIBLE)
 $(OUT)/logo.txt:     $(OUT)/$(LOGO_VISIBLE)
 	img2txt "$<" | tee "$@"
 
-slack: $(OUT)/slack-hermes-$(LOGO_VISIBLE) $(OUT)/slack-e-corp-$(LOGO_VISIBLE) $(OUT)/slack-umbrella-$(LOGO_VISIBLE)
-$(OUT)/slack-hermes-$(LOGO_VISIBLE):   $(OUT)/hermes-$(LOGO_VISIBLE)   $(BLD)/slack.dim
-	$(CONVERT) $(CAPTION) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
-$(OUT)/slack-e-corp-$(LOGO_VISIBLE):   $(OUT)/e-corp-$(LOGO_VISIBLE)   $(BLD)/slack.dim
-	$(CONVERT) $(CAPTION) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
-$(OUT)/slack-umbrella-$(LOGO_VISIBLE): $(OUT)/umbrella-$(LOGO_VISIBLE) $(BLD)/slack.dim
+slack: $(OUT)/slack-hermes-$(LOGO_VISIBLE) $(OUT)/slack-e-corp-$(LOGO_VISIBLE) $(OUT)/slack-umbrella-$(LOGO_VISIBLE) $(OUT)/slack-sauron-$(LOGO_VISIBLE)
+#$(OUT)/slack-hermes-$(LOGO_VISIBLE):   $(OUT)/hermes-$(LOGO_VISIBLE)   $(BLD)/slack.dim
+#	$(CONVERT) $(CAPTION) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
+#$(OUT)/slack-e-corp-$(LOGO_VISIBLE):   $(OUT)/e-corp-$(LOGO_VISIBLE)   $(BLD)/slack.dim
+#	$(CONVERT) $(CAPTION) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
+#$(OUT)/slack-umbrella-$(LOGO_VISIBLE): $(OUT)/umbrella-$(LOGO_VISIBLE) $(BLD)/slack.dim
+#	$(CONVERT) $(CAPTION) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
+$(OUT)/slack-%-$(LOGO_VISIBLE): $(OUT)/%-$(LOGO_VISIBLE) $(BLD)/slack.dim
 	$(CONVERT) $(CAPTION) -resize "$$(cat $(BLD)/slack.dim)"^ -gravity center -extent "$$(cat $(BLD)/slack.dim)" "$<" "$@"
 $(BLD)/slack.dim: $(BLD)/.sentinel
 	echo 1000x1000 > "$@"

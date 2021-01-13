@@ -1,8 +1,25 @@
 version: 2.1
 
 orbs:
+  deepcode: arrai/deepcode@1.1.0
   jira: circleci/jira@1.0.5
   slack: circleci/slack@4.2.0
+
+workflows:
+  my-workflow:
+    jobs:
+      - build:
+          context:
+            - default
+          #post-steps:
+          #  - jira/notify
+  #approval:
+  #  jobs:
+  #    - hold:
+  #        type: approval
+      #- deploy:
+      #    requires:
+      #      - hold
 
 jobs:
   build:
@@ -171,16 +188,11 @@ jobs:
             git commit -m '[CircleCI] updated corporate logo'
             $SHELL -l -c "sleep 31 && git push https://${GITHUB_TOKEN}@github.com/InnovAnon-Inc/InnovAnon-Inc.github.io.git"
 
-workflows:
-  version: 2.1
-  commit:
-    jobs:
-      - build
-  #approval:
-  #  jobs:
-  #    - hold:
-  #        type: approval
-      #- deploy:
-      #    requires:
-      #      - hold
+      - slack/notify:
+          event: fail
+          mentions: '@InnovAnon-Inc'
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
