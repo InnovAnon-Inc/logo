@@ -40,6 +40,7 @@ COMMENT ?= -comment "$(SLOGAN)"
 VISIBLE=65
 MIDVISIBLE=40
 INVISIBLE=15
+INVISIBLER=5
 
 TRANCE=8
 #TRANCE=4
@@ -72,7 +73,7 @@ LOGO_ANIM_SMALL=logo-small-animated.$(ANIMEXT)
 LOGO_ANIM_STEGO=logo-stego-animated.$(ANIMEXT)
 
 # TODO
-WGET=[ -f $@ ] || { sleep 31 ; curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || exit $? ; }
+WGET=[ -f $@ ] || { sleep 31 ; curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || exit $$? ; }
 #WGET=touch $@
 #WGET=if [ ! -f $@ ] ; then sleep 31 && curl --proxy "$(SOCKS_PROXY)" -o $@ "$$(cat $<)" || echo $@ 1>&2 ; fi && touch $@
 #WGET=[ -f $@ ] || pcurl `cat $^` $@
@@ -204,22 +205,42 @@ apple-touch-icons-precomposed: \
                                $(OUT)/precomposed-apple-touch-icon-60x60.png   \
                                $(OUT)/precomposed-apple-touch-icon-72x72.png   \
                                $(OUT)/precomposed-apple-touch-icon-76x76.png
-$(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
-	                                   $(BLD)/rc-ne-%.png            \
-					   $(BLD)/rc-sw-%.png            \
-					   $(BLD)/rc-se-%.png
-	$(CONVERT) $(COMMENT) "$<"                                           \
-	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-nw-%.png,$<)" \
-	    -gravity northwest -composite                                 \
-	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-ne-%.png,$<)" \
-	    -gravity northeast -composite                                 \
-	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-sw-%.png,$<)" \
-	    -gravity southwest -composite                                 \
-	  "$(patsubst $(OUT)/apple-touch-icon-%.png,$(BLD)/rc-se-%.png,$<)" \
-	    -gravity southeast -composite                                 \
-	  "$@"
-$(BLD)/rc-nw-%.png: $(BLD)/rc-nw-16x16.png $(BLD)/.sentinel
-	$(CONVERT) -resize "$(patsubst $(BLD)/rc-nw-%.png,%,$@)" "$<" "$@"
+
+#$(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png $(BLD)/RoundFrame-%.png
+#	set -e                                             ; \
+#	K="$(patsubst $(OUT)/apple-touch-icon-%.png,%,$@)" ; \
+#	$(CONVERT) -size "$$K" xc:white "$<" "$(BLD)/RoundFrame$$K.png" -composite -flatten "$@"
+#$(BLD)/RoundFrame-%.png: $(BLD)/.sentinel
+#	set -e                                                                   ; \
+#	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                                  ; \
+#	k="$$(echo $$K | sed 's/x.*//')"                                         ; \
+#	k="$$(expr $$k - 1)"                                                     ; \
+#	$(CONVERT) -size "$$K" xc:black -fill white -draw "roundRectangle 0,0 $${k}x$${k} 8,8" "$@"
+
+$(OUT)/precomposed-apple-touch-icon-%.png: $(OUT)/tmp-precomposed-apple-touch-icon-%.png
+	$(CONVERT) $(CAPTION) -transparent white -background 'rgba(0,0,0,0)' "$<" "$@"
+$(OUT)/tmp-precomposed-apple-touch-icon-%.png: $(OUT)/apple-touch-icon-%.png \
+	                                   $(BLD)/rc-nw-16x16.png        \
+	                                   $(BLD)/rc-ne-16x16.png        \
+					   $(BLD)/rc-sw-16x16.png        \
+					   $(BLD)/rc-se-16x16.png
+	set -e                                                         ; \
+	K="$(patsubst $(OUT)/apple-touch-icon-%.png,%,$<)"             ; \
+	[ -n "$$K" ]                                                   ; \
+	$(CONVERT)                                                       \
+	  "$<"                                                           \
+	    -gravity center -resize "$$K"                                \
+	  "$(BLD)/rc-nw-16x16.png"                                       \
+	    -gravity northwest -composite                                \
+	  "$(BLD)/rc-ne-16x16.png"                                       \
+	    -gravity northeast -composite                                \
+	  "$(BLD)/rc-sw-16x16.png"                                       \
+	    -gravity southwest -composite                                \
+	  "$(BLD)/rc-se-16x16.png"                                       \
+	    -gravity southeast -composite                                \
+	  -flatten -strip "$@"
+#$(BLD)/rc-nw-%.png: $(BLD)/rc-nw-16x16.png $(BLD)/.sentinel
+#	$(CONVERT) -resize "$(patsubst $(BLD)/rc-nw-%.png,%,$@)" "$<" "$@"
 #	set -e                                                                   ; \
 #	K="$(patsubst $(BLD)/rc-nw-%.png,%,$@)"                                  ; \
 #	echo $$K                                                                 ; \
@@ -233,16 +254,19 @@ $(BLD)/rc-nw-%.png: $(BLD)/rc-nw-16x16.png $(BLD)/.sentinel
 #	$(CONVERT) -size "$$Kx$$K" xc:none                       \
 #	  -draw "fill white rectangle 0,0 $$k,$$k fill black circle $$k,$$k $$k,0" \
 #	  -background white -alpha shape "$@"
-$(BLD)/rc-ne-%.png: $(BLD)/rc-nw-%.png
-	$(CONVERT) "$<" -flop "$@"
-$(BLD)/rc-sw-%.png: $(BLD)/rc-nw-%.png
-	$(CONVERT) "$<" -flip "$@"
-$(BLD)/rc-se-%.png: $(BLD)/rc-ne-%.png
-	$(CONVERT) "$<" -flip "$@"
+$(BLD)/rc-ne-16x16.png: $(BLD)/rc-nw-16x16.png
+	$(CONVERT) "$<" -flop -strip "$@"
+$(BLD)/rc-sw-16x16.png: $(BLD)/rc-nw-16x16.png
+	$(CONVERT) "$<" -flip -strip "$@"
+$(BLD)/rc-se-16x16.png: $(BLD)/rc-ne-16x16.png
+	$(CONVERT) "$<" -flip -strip "$@"
 $(BLD)/rc-nw-16x16.png: $(BLD)/.sentinel
 	$(CONVERT) -size 16x16 xc:none                       \
 	  -draw "fill white rectangle 0,0 15,15 fill black circle 15,15 15,0" \
-	  -background white -alpha shape "$@"
+	  -background white -alpha shape -strip "$@"
+#	$(CONVERT) $(TRANSPARENT) -size 16x16 xc:none                       \
+#	  -draw "fill white rectangle 0,0 15,15 fill black circle 15,15 15,0" \
+#	  -alpha shape -strip "$@"
 
 # TODO apple-touch-icon.png
 apple-touch-icons: $(OUT)/apple-touch-icon-180x180.png \
@@ -663,7 +687,7 @@ $(BLD)/shiva-rot-%.$(LOGOEXT): $(BLD)/shiva-small-2.$(LOGOEXT)
 
 # kali yantra background with randomized fingerprint
 $(BLD)/kali-%.$(LOGOEXT): $(BLD)/random-%.$(LOGOEXT) $(BLD)/kali-small.$(LOGOEXT)
-	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+	BLEND=$(INVISIBLER) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random-%.$(LOGOEXT): $(BLD)/random-%.out $(BLD)/small.dim
 	convert -depth 8 -size "$$(cat "$(BLD)/small.dim")" RGB:- "$@" < "$<"
 $(BLD)/random-%.out: $(BLD)/random-2.sz fingerprint
@@ -851,7 +875,7 @@ $(BLD)/%-2.$(LOGOEXT):                         $(BLD)/%.$(LOGOEXT)
 	$(CONVERT) "$<" -colorspace gray -colors 2 -type bilevel "$@"
 
 $(BLD)/kali-2.$(LOGOEXT): $(BLD)/random.$(LOGOEXT) $(BLD)/kali.$(LOGOEXT)
-	BLEND=$(INVISIBLE) $(SHELL) -c '$(GENLOGO)'
+	BLEND=$(INVISIBLER) $(SHELL) -c '$(GENLOGO)'
 $(BLD)/random.$(LOGOEXT): $(BLD)/random.out $(BLD)/kali.dim
 	convert -depth 8 -size "$$(cat $(BLD)/kali.dim)" RGB:- "$@" < "$<"
 $(BLD)/random.out: $(BLD)/random.sz fingerprint
