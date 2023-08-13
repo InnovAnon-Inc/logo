@@ -355,16 +355,22 @@ $(BLD)/kali-boot.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 
 
 
-profiles: $(OUT)/github.$(LOGOEXT) $(OUT)/youtube-banner.$(LOGOEXT) $(OUT)/twitter-banner.$(LOGOEXT) $(OUT)/linkedin-banner.$(LOGOEXT) $(OUT)/soundcloud-banner.$(LOGOEXT) $(OUT)/avatar.$(LOGOEXT) $(OUT)/avatar.$(LOGOEXT) $(OUT)/small-thumbnail.$(LOGOEXT) $(OUT)/large-thumbnail.$(LOGOEXT) $(OUT)/stripe.jpg $(OUT)/stripe-icon.$(LOGOEXT) $(OUT)/patreon.$(LOGOEXT) $(OUT)/patreon-banner.$(LOGOEXT) $(OUT)/youtube-watermark-logo.$(LOGOEXT) $(OUT)/dtube-banner.$(LOGOEXT) $(OUT)/tumblr-banner.$(LOGOEXT) $(OUT)/gab-banner.$(LOGOEXT) $(OUT)/gab.$(LOGOEXT) $(OUT)/opencollective-banner.$(LOGOEXT) $(OUT)/bitbucket.$(LOGOEXT) $(OUT)/bitbucket-banner.$(LOGOEXT) $(OUT)/hashvault-banner.$(LOGOEXT) $(OUT)/facebook-banner.$(LOGOEXT)
+profiles: $(OUT)/github.$(LOGOEXT) $(OUT)/youtube-banner.$(LOGOEXT) $(OUT)/twitter-banner.$(LOGOEXT) $(OUT)/linkedin-banner.$(LOGOEXT) $(OUT)/soundcloud-banner.$(LOGOEXT) $(OUT)/avatar.$(LOGOEXT) $(OUT)/avatar.$(LOGOEXT) $(OUT)/small-thumbnail.$(LOGOEXT) $(OUT)/large-thumbnail.$(LOGOEXT) $(OUT)/stripe.jpg $(OUT)/stripe-icon.$(LOGOEXT) $(OUT)/patreon.$(LOGOEXT) $(OUT)/patreon-banner.$(LOGOEXT) $(OUT)/youtube-watermark-logo.$(LOGOEXT) $(OUT)/dtube-banner.$(LOGOEXT) $(OUT)/tumblr-banner.$(LOGOEXT) $(OUT)/gab-banner.$(LOGOEXT) $(OUT)/gab.$(LOGOEXT) $(OUT)/opencollective-banner.$(LOGOEXT) $(OUT)/bitbucket.$(LOGOEXT) $(OUT)/bitbucket-banner.$(LOGOEXT) $(OUT)/hashvault-banner.$(LOGOEXT) $(OUT)/facebook-banner.$(LOGOEXT) $(OUT)/htb-banner.$(LOGOEXT) $(OUT)/htb.$(LOGOEXT)
 
 $(OUT)/github.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) $(CAPTION) -resize 500x500^ -gravity center -extent 500x500 "$<" "$@"
+$(OUT)/stackoverflow.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
+	$(CONVERT) $(CAPTION) -resize 512x512^ -gravity center -extent 512x512 "$<" "$@"
 $(OUT)/avatar.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) $(CAPTION) -resize 80x80^ -gravity center -extent 80x80 "$<" "$@"
 $(OUT)/patreon.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) $(CAPTION) -resize 256x256^ -gravity center -extent 256x256 "$<" "$@"
 $(OUT)/gab.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) $(CAPTION) -resize 400x400^ -gravity center -extent 400x400 "$<" "$@"
+$(OUT)/htb.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
+	$(CONVERT) $(CAPTION) -resize 1000x1000^ -gravity center -extent 1000x1000 "$<" "$@"
+$(OUT)/htb-2.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
+	$(CONVERT) $(CAPTION) -resize 900x900^ -gravity center -extent 900x900 "$<" "$@"
 $(OUT)/bitbucket.$(LOGOEXT): $(OUT)/$(LOGO_VISIBLE)
 	$(CONVERT) $(CAPTION) -resize 2048x2048^ -gravity center -extent 2048x2048 "$<" "$@"
 
@@ -382,6 +388,13 @@ $(BLD)/shiva-patreon-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
 	$(CONVERT) $(TRANSPARENT) -resize 1600x400\< -gravity center -extent 1600x400 "$<" "$@"
 $(BLD)/kali-patreon-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
 	$(CONVERT) -resize 1600x400^ -gravity center -extent 1600x400 "$<" "$@"
+
+$(OUT)/htb-banner.$(LOGOEXT): $(BLD)/shiva-htb-banner.$(LOGOEXT) $(BLD)/kali-htb-banner.$(LOGOEXT)
+	BLEND=$(MIDVISIBLE) $(SHELL) -c '$(GENLOGO)'
+$(BLD)/shiva-htb-banner.$(LOGOEXT): $(BLD)/shiva-2.$(LOGOEXT)
+	$(CONVERT) $(TRANSPARENT) -resize 2880x225\< -gravity center -extent 2880x225 "$<" "$@"
+$(BLD)/kali-htb-banner.$(LOGOEXT): $(BLD)/kali.$(LOGOEXT)
+	$(CONVERT) -resize 2880x225^ -gravity center -extent 2880x225 "$<" "$@"
 
 #$(LOGO_BOOT): kali-boot.$(LOGOEXT) shiva-boot.$(LOGOEXT)
 $(OUT)/twitter-banner.$(LOGOEXT): $(BLD)/shiva-twitter-banner.$(LOGOEXT) $(BLD)/kali-twitter-banner.$(LOGOEXT)
